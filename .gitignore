@@ -19,10 +19,6 @@ zen-desktop/gen/
 # Local configuration file (sdk path, etc)
 local.properties
 
-# Eclipse project files
-.classpath
-
-
 *.class
 
 # Package Files #
