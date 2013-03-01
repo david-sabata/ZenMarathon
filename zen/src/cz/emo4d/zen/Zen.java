@@ -45,7 +45,7 @@ public class Zen implements ApplicationListener, DeviceEventHandler {
 		// create player we want to move around the world
 		int height = (Integer) map.getProperties().get("height");
 
-		player = new Player(new Vector2(13, height - 3), 0, 0);
+		player = new Player(new Vector2(7, height - 5), 0, 0);
 		
 		rc = new RemoteControl();
 		rc.RegisterEventHandler(this);
