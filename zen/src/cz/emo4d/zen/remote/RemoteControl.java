@@ -16,6 +16,7 @@ import com.badlogic.gdx.Gdx;
 public class RemoteControl {
 
 	private static final int serverPort = 5869;
+	private static final int discoveryPort = 10869;
 	private final static String SERIALIZER_DELIMITER = "&&&&";
 
 	private ArrayList<Thread> clients;
@@ -29,12 +30,16 @@ public class RemoteControl {
 		events = new ArrayList<DeviceEvent>();
 		clientMoves = new ArrayList<RemoteControl.ClientMove>();
 
+		startTCPServer();
+
+	}
+	
+	private void startTCPServer() {
 		RemoteControlAsync rca = new RemoteControlAsync();
 		rca.start();
 
 		MessageGetter mg = new MessageGetter();
 		mg.start();
-
 	}
 
 	class ClientMove {
