@@ -89,8 +89,12 @@ public class ControlActivity extends Activity {
 			
 			if ((xOnField < 100) && (yOnField < 100) && (xOnField > -100) && (yOnField > -100)) {
 				// arrows
-				Log.i(LOG_TAG, "on arrows (x, y) = " + Integer.toString(xOnField)
-						+ "   " + Integer.toString(yOnField));
+				//Log.i(LOG_TAG, "on arrows (x, y) = " + Integer.toString(xOnField)
+				//		+ "   " + Integer.toString(yOnField));
+				if (mServiceBound) {
+					mService.sendControlEvent(EventTypes.MOVE, xOnField, yOnField);
+				}
+				
 				return super.onTouchEvent(event);
 			}
 			
@@ -99,6 +103,9 @@ public class ControlActivity extends Activity {
 			
 			if (((xOnField < 150) && (yOnField < 150) && (xOnField > 0) && (yOnField > 0))) {
 				Log.i(LOG_TAG, "Button A");
+				if (mServiceBound) {
+					mService.sendControlEvent(EventTypes.PRESS_A, 0, 0);
+				}
 				
 				
 				return super.onTouchEvent(event);
@@ -109,12 +116,18 @@ public class ControlActivity extends Activity {
 			
 			if (((xOnField < 150) && (yOnField < 150) && (xOnField > 0) && (yOnField > 0))) {
 				Log.i(LOG_TAG, "Button B");
+				if (mServiceBound) {
+					mService.sendControlEvent(EventTypes.PRESS_B, 0, 0);
+				}
 				return super.onTouchEvent(event);
 			}
 			
 		}
 		
 		if (event.getAction() == MotionEvent.ACTION_UP) {
+			if (mServiceBound) {
+				mService.sendControlEvent(EventTypes.MOVE, 0, 0);
+			}
 			Log.i(LOG_TAG, "End of gesture");
 		}
 		

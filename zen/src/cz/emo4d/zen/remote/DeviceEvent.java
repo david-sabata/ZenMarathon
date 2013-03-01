@@ -5,12 +5,11 @@ public class DeviceEvent {
 	private final static int DISCONNECT = 1; 
 	private final static int PRESS_A = 2;
 	private final static int PRESS_B = 3;
-	private final static int MOVE_UP = 4;
-	private final static int MOVE_DOWN = 5;
-	private final static int MOVE_LEFT = 6;
-	private final static int MOVE_RIGHT = 7;
+	private final static int MOVE = 4;
+
 	
 	public int eventType;
 	public int player;
-	public float value;
+	public float valueX;
+	public float valueY;
 }
