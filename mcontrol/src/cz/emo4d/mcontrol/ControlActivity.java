@@ -24,6 +24,9 @@ public class ControlActivity extends Activity {
 	
 	private boolean mServiceBound = false;
 	private NetService mService = null;
+	
+	int lastX;
+	int lastY;
 
 
 	@Override

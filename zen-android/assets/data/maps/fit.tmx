@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="fit" tilewidth="32" tileheight="32">
+  <image source="fit.png" trans="ff00ff" width="512" height="512"/>
+ </tileset>
+ <layer name="background" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt1UsKgDAMRVFnRTeg7n+j1lkJ6UfQ8gz3QEa2kKdNXRZgni1XMrV2nts1Co5cu6lzYE9vzWyRc9zlnaVU7FHM8bQncnyn7Kl2N9kamaHZyhy1WVHs24qYo7XG3mGK/8HRHMrfx3vX3lz/JUer1HoeZbNFyeGdO7U590Q5a+TQQg4AAAAAAAAAwNsuFoQOuw==
+  </data>
+ </layer>
+ <layer name="walls" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt11sKhTAMRdHORu38B6h+CP2oaWKlTcpeEBBqoOcaHzeldW0/lAf5qv2lcmP9OceDo7Emrbf6R9LkqJWmfyRpH5pZipBD0+MxhzRHkebqPpaeTWXV+mfq/W2j5pBmbCZrjgjvQc19LfXPVO5Dc19L/TP17iNiDuvMjWTZm+fv3RrrNfKKHL6Qw5eVcnz5LwIAAAAAAAAA3pz9Yxom
+  </data>
+ </layer>
+</map>
