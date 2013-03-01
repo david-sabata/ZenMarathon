@@ -20,6 +20,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 
+import cz.emo4d.zen.remote.RemoteControl;
+
 public class Zen implements ApplicationListener {
 		
 	private TiledMap map;
@@ -46,6 +48,8 @@ public class Zen implements ApplicationListener {
 		// create player we want to move around the world
 		int height = (Integer) map.getProperties().get("height");
 		player = new Player(new Vector2(13, height - 3), 0, 0);
+		
+		RemoteControl rc = new RemoteControl();
 	}
 
 	@Override
