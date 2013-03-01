@@ -5,17 +5,17 @@
     android:background="#0099cc"
     tools:context=".ControlActivity" >
 
-
-    <TextView
-        android:id="@+id/fullscreen_content"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:keepScreenOn="true"
-        android:text="@string/dummy_content"
-        android:textColor="#33b5e5"
-        android:textSize="50sp"
-        android:textStyle="bold" />
+        android:gravity="center" >
 
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/controlwheel" />
+
+    </LinearLayout>
 
 </FrameLayout>
