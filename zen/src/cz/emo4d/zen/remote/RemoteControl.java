@@ -20,6 +20,7 @@ public class RemoteControl {
 
 	private ArrayList<Thread> clients;
 	private ArrayList<DeviceEvent> events;
+	private DeviceEventHandler callback = null;
 
 	public RemoteControl() {
 		clients = new ArrayList<Thread>();
@@ -31,6 +32,10 @@ public class RemoteControl {
 		MessageGetter mg = new MessageGetter();
 		mg.start();
 
+	}
+	
+	public void RegisterEventHandler(DeviceEventHandler cb) {
+		callback = cb;
 	}
 
 	private synchronized DeviceEvent getMessage() throws InterruptedException {
@@ -136,10 +141,15 @@ public class RemoteControl {
 							"Incoming type: " + Integer.toString(de.eventType)
 									+ ", valX:" + Float.toString(de.valueX)
 									+ ", valY:" + Float.toString(de.valueY));
+					
+					// TODO: Multiple devices
+					callback.acceptEvent(de.eventType, 1, de.valueX, de.valueY);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
 		}
 	}
+	
+	
 }
