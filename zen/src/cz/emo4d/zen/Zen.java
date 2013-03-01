@@ -2,58 +2,113 @@ package cz.emo4d.zen;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 
+import cz.emo4d.zen.remote.DeviceEvent;
+import cz.emo4d.zen.remote.DeviceEventHandler;
 import cz.emo4d.zen.remote.RemoteControl;
+import cz.emo4d.zen.remote.ClientMove;
 
-public class Zen implements ApplicationListener {
+
+public class Zen implements ApplicationListener, DeviceEventHandler {
+
+	private TiledMap map;
+	private OrthogonalTiledMapRenderer renderer;
+
+	private Player player;
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
-	private Texture texture;
-	private Sprite sprite;
+	Vector2 moveVec = new Vector2();
+	
+	RemoteControl rc;
 	
 	@Override
-	public void create() {		
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
+	public void create() {
+		// load the map, set the unit scale to 1/32 (1 unit == 32 pixels)
+		map = new TmxMapLoader().load("data/maps/fit.tmx");
+		renderer = new OrthogonalTiledMapRenderer(map, 1 / 32f);
+		map.getTileSets().getTile(1).getTextureRegion().getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+
+		// create an orthographic camera, shows us 30x20 units of the world
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, 30, 20);
+		camera.update();
+
+		// create player we want to move around the world
+		int height = (Integer) map.getProperties().get("height");
+
+		player = new Player(new Vector2(7, height - 5), 0, 0);
 		
-		camera = new OrthographicCamera(1, h/w);
-		batch = new SpriteBatch();
+		rc = new RemoteControl();
+		rc.RegisterEventHandler(this);
+
+	}
+
+	@Override
+	public void render() {
+		// clear the screen
+		Gdx.gl.glClearColor(0.7f, 0.7f, 1.0f, 1);
+		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+
+		// get the delta time
+		float deltaTime = Gdx.graphics.getDeltaTime();
+
+		// process input 
+		moveVec.set(0, 0);
+
+		ClientMove cm = rc.getClientMove(1);
+		if (cm != null) {
+			moveVec.set(cm.X * player.MAX_VELOCITY, -cm.Y * player.MAX_VELOCITY);		
+		}
 		
-		texture = new Texture(Gdx.files.internal("data/libgdx.png"));
-		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		
-		TextureRegion region = new TextureRegion(texture, 0, 0, 512, 275);
-		
-		sprite = new Sprite(region);
-		sprite.setSize(0.9f, 0.9f * sprite.getHeight() / sprite.getWidth());
-		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
-		sprite.setPosition(-sprite.getWidth()/2, -sprite.getHeight()/2);
-		
-		RemoteControl rc = new RemoteControl();
+		if (Gdx.input.isKeyPressed(Keys.UP)) {
+			moveVec.y = player.MAX_VELOCITY;
+		} else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+			moveVec.y = -player.MAX_VELOCITY;
+		}
+		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+			moveVec.x = -player.MAX_VELOCITY;
+		} else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+			moveVec.x = player.MAX_VELOCITY;
+		}
+
+		if (moveVec.x != 0 || moveVec.y != 0) {
+			player.move(moveVec);
+		}
+
+		// update
+		player.update(deltaTime, map);
+
+		// let the camera follow the player
+		camera.position.x = player.position.x;
+		camera.position.y = player.position.y;
+		camera.update();
+
+		// set the tile map renderer view based on what the
+		// camera sees and render the map
+		renderer.setView(camera);
+		renderer.render();
+
+		// render
+		SpriteBatch batch = renderer.getSpriteBatch();
+		batch.begin();
+		player.render(batch);
+
+		batch.end();
 	}
 
 	@Override
 	public void dispose() {
-		batch.dispose();
-		texture.dispose();
-	}
-
-	@Override
-	public void render() {		
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		sprite.draw(batch);
-		batch.end();
+		if (batch != null)
+			batch.dispose();
 	}
 
 	@Override
@@ -66,5 +121,13 @@ public class Zen implements ApplicationListener {
 
 	@Override
 	public void resume() {
+	}
+
+	@Override
+	public void acceptEvent(int type, int device, float X, float Y) {
+		if (type == DeviceEvent.MOVE) {
+			//player.move(new Vector2(X * player.MAX_VELOCITY,  -Y * player.MAX_VELOCITY));
+		}
+		
 	}
 }

@@ -23,26 +23,38 @@ public class RemoteControl {
 
 	private ArrayList<Thread> clients;
 	private ArrayList<DeviceEvent> events;
+	private ArrayList<ClientMove> clientMoves;
+
 	private DeviceEventHandler callback = null;
 
 	public RemoteControl() {
 		clients = new ArrayList<Thread>();
 		events = new ArrayList<DeviceEvent>();
+		clientMoves = new ArrayList<ClientMove>();
+
+		//startTCPServer();
 
 		AutoDiscoveryAsync exe = new AutoDiscoveryAsync();
 		exe.start();
 
 	}
 	
-	private void runTCPServer() {
+
+	
+	private void startTCPServer() {
+
 		RemoteControlAsync rca = new RemoteControlAsync();
 		rca.start();
 
 		MessageGetter mg = new MessageGetter();
 		mg.start();
+
 	}
 	
 	
+
+
+
 	public void RegisterEventHandler(DeviceEventHandler cb) {
 		callback = cb;
 	}
@@ -74,6 +86,7 @@ public class RemoteControl {
 		de.eventType = Integer.parseInt(first);
 		de.valueX = Float.parseFloat(second);
 		de.valueY = Float.parseFloat(third);
+		de.player = 1;
 
 		return de;
 	}
@@ -157,7 +170,7 @@ public class RemoteControl {
 					String message = in.readLine();
 					if (message == null)
 						break;
-					///Gdx.app.log("INC", message);
+					// /Gdx.app.log("INC", message);
 					putMessage(expandEvent(message));
 				}
 
@@ -181,10 +194,17 @@ public class RemoteControl {
 							"Incoming type: " + Integer.toString(de.eventType)
 									+ ", valX:" + Float.toString(de.valueX)
 									+ ", valY:" + Float.toString(de.valueY));
-					
+
 					// TODO: Multiple devices
-					if (callback != null)
-						callback.acceptEvent(de.eventType, 1, de.valueX, de.valueY);
+					if (de.eventType == DeviceEvent.MOVE) {
+						if (clientMoves.size() < de.player)
+							clientMoves.add(new ClientMove());
+						ClientMove cm = clientMoves.get(de.player - 1);
+						cm.X = de.valueX;
+						cm.Y = de.valueY;
+						clientMoves.set(de.player - 1, cm);
+					}
+
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -192,5 +212,12 @@ public class RemoteControl {
 		}
 	}
 	
-	
+	public ClientMove getClientMove(int client) {
+		if (clientMoves.size() >= client) {
+			return clientMoves.get(client - 1);
+		} else {
+			return null;
+		}
+	}
+
 }
