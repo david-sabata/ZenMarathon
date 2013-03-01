@@ -12,23 +12,28 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 
+import cz.emo4d.zen.remote.DeviceEvent;
+import cz.emo4d.zen.remote.DeviceEventHandler;
 import cz.emo4d.zen.remote.RemoteControl;
+import cz.emo4d.zen.remote.RemoteControl.ClientMove;
 
-public class Zen implements ApplicationListener {
-		
+
+public class Zen implements ApplicationListener, DeviceEventHandler {
+
 	private TiledMap map;
-	private OrthogonalTiledMapRenderer renderer;	
+	private OrthogonalTiledMapRenderer renderer;
 
 	private Player player;
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	Vector2 moveVec = new Vector2();
 	
-
+	RemoteControl rc;
+	
 	@Override
 	public void create() {
 		// load the map, set the unit scale to 1/32 (1 unit == 32 pixels)
-		map = new TmxMapLoader().load("data/maps/test.tmx");
+		map = new TmxMapLoader().load("data/maps/fit.tmx");
 		renderer = new OrthogonalTiledMapRenderer(map, 1 / 32f);
 		map.getTileSets().getTile(1).getTextureRegion().getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 
@@ -39,9 +44,12 @@ public class Zen implements ApplicationListener {
 
 		// create player we want to move around the world
 		int height = (Integer) map.getProperties().get("height");
+
 		player = new Player(new Vector2(13, height - 3), 0, 0);
 		
-		RemoteControl rc = new RemoteControl();
+		rc = new RemoteControl();
+		rc.RegisterEventHandler(this);
+
 	}
 
 	@Override
@@ -55,27 +63,30 @@ public class Zen implements ApplicationListener {
 
 		// process input 
 		moveVec.set(0, 0);
+
+		ClientMove cm = rc.getClientMove(1);
+		if (cm != null) {
+			moveVec.set(cm.X * player.MAX_VELOCITY, -cm.Y * player.MAX_VELOCITY);		
+		}
 		
 		if (Gdx.input.isKeyPressed(Keys.UP)) {
 			moveVec.y = player.MAX_VELOCITY;
-		}
-		else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+		} else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
 			moveVec.y = -player.MAX_VELOCITY;
 		}
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
 			moveVec.x = -player.MAX_VELOCITY;
-		}
-		else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+		} else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
 			moveVec.x = player.MAX_VELOCITY;
 		}
-		
-		if (moveVec.x != 0.f || moveVec.y != 0.f) {
+
+		if (moveVec.x != 0 || moveVec.y != 0) {
 			player.move(moveVec);
 		}
-		
+
 		// update
 		player.update(deltaTime, map);
-		
+
 		// let the camera follow the player
 		camera.position.x = player.position.x;
 		camera.position.y = player.position.y;
@@ -90,9 +101,9 @@ public class Zen implements ApplicationListener {
 		SpriteBatch batch = renderer.getSpriteBatch();
 		batch.begin();
 		player.render(batch);
-		batch.end();		
-	}	
-	
+
+		batch.end();
+	}
 
 	@Override
 	public void dispose() {
@@ -110,5 +121,13 @@ public class Zen implements ApplicationListener {
 
 	@Override
 	public void resume() {
+	}
+
+	@Override
+	public void acceptEvent(int type, int device, float X, float Y) {
+		if (type == DeviceEvent.MOVE) {
+			//player.move(new Vector2(X * player.MAX_VELOCITY,  -Y * player.MAX_VELOCITY));
+		}
+		
 	}
 }
