@@ -67,6 +67,7 @@ public class NetService extends Service {
 		    for (int k = 0; k < 4; k++)
 		      quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
 		   
+		  
 		    try {
 		    DatagramSocket socket = new DatagramSocket();
 		    socket.setBroadcast(true);
@@ -94,6 +95,7 @@ public class NetService extends Service {
 		    } catch (Exception e) {
 		    	e.printStackTrace();
 		    }
+		    
 		    
 			return null;
 		}

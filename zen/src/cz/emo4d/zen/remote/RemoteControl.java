@@ -38,9 +38,7 @@ public class RemoteControl {
 		exe.start();
 
 	}
-	
 
-	
 	private void startTCPServer() {
 
 		RemoteControlAsync rca = new RemoteControlAsync();
@@ -50,10 +48,6 @@ public class RemoteControl {
 		mg.start();
 
 	}
-	
-	
-
-
 
 	public void RegisterEventHandler(DeviceEventHandler cb) {
 		callback = cb;
@@ -94,41 +88,42 @@ public class RemoteControl {
 	class AutoDiscoveryAsync extends Thread {
 		@Override
 		public void run() {
-			try {
-			DatagramSocket socket = new DatagramSocket(discoveryPort);
-			//socket.setBroadcast(true);
-			
-			byte[] buf = new byte[1024];
-			DatagramPacket packet = new DatagramPacket(buf, buf.length);
-			Gdx.app.log("", "Discovery waiting");
-			socket.receive(packet);
-			
-			InetAddress clientAddr = packet.getAddress();
-			
-			InetAddress thisIp = InetAddress.getLocalHost();
-			String ip = thisIp.getHostAddress();
-			
-			Gdx.app.log("Discovery", clientAddr.getHostAddress());
-			
-			socket.close();
-			
-			DatagramSocket socket2 = new DatagramSocket();
-			
-			packet = new DatagramPacket(ip.getBytes(), ip.length(),
-				    clientAddr, discoveryPort);
-			socket2.send(packet);
-			socket2.close();
-				
-				Gdx.app.log("", "Discovery sent");
-			
-			} catch (Exception e) {
-				e.printStackTrace();
+			while (true) {
+				try {
+					DatagramSocket socket = new DatagramSocket(discoveryPort);
+					// socket.setBroadcast(true);
+
+					byte[] buf = new byte[1024];
+					DatagramPacket packet = new DatagramPacket(buf, buf.length);
+					Gdx.app.log("", "Discovery waiting");
+					socket.receive(packet);
+
+					InetAddress clientAddr = packet.getAddress();
+
+					InetAddress thisIp = InetAddress.getLocalHost();
+					String ip = thisIp.getHostAddress();
+
+					Gdx.app.log("Discovery", clientAddr.getHostAddress());
+
+					socket.close();
+
+					DatagramSocket socket2 = new DatagramSocket();
+
+					packet = new DatagramPacket(ip.getBytes(), ip.length(),
+							clientAddr, discoveryPort);
+					socket2.send(packet);
+					socket2.close();
+
+					Gdx.app.log("", "Discovery sent");
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
-			
-			
+
 		}
 	}
-	
+
 	class RemoteControlAsync extends Thread {
 
 		@Override
@@ -218,7 +213,7 @@ public class RemoteControl {
 			}
 		}
 	}
-	
+
 	public ClientMove getClientMove(int client) {
 		if (clientMoves.size() >= client) {
 			return clientMoves.get(client - 1);
