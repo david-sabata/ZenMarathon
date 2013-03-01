@@ -42,7 +42,7 @@ public class RemoteControl {
 		mg.start();
 	}
 
-	class ClientMove {
+	public class ClientMove {
 		public Float X;
 		public Float Y;
 	}
@@ -78,6 +78,7 @@ public class RemoteControl {
 		de.eventType = Integer.parseInt(first);
 		de.valueX = Float.parseFloat(second);
 		de.valueY = Float.parseFloat(third);
+		de.player = 1;
 
 		return de;
 	}
@@ -174,7 +175,7 @@ public class RemoteControl {
 	
 	public ClientMove getClientMove(int client) {
 		if (clientMoves.size() >= client) {
-			return clientMoves.get(client -1);
+			return clientMoves.get(client - 1);
 		} else {
 			return null;
 		}
