@@ -33,7 +33,7 @@ public class NetService extends Service{
 	
 	private String mHost = null;
 	
-	private final static int SERVERPORT = 22;
+	private final static int SERVERPORT = 5869;
 	private final static String SERIALIZER_DELIMITER = "&&&&";
 
 	@Override

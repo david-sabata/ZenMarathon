@@ -135,7 +135,7 @@ public class ControlActivity extends Activity {
 			//exe.execute();
 			Log.i(LOG_TAG,"Service bound");
 			
-			mService.openConnection("interperson.cz");
+			mService.openConnection("147.229.178.65");
 			
 		}
 

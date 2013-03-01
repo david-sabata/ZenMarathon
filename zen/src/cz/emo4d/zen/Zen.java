@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import cz.emo4d.zen.remote.RemoteControl;
+
 public class Zen implements ApplicationListener {
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
@@ -33,6 +35,8 @@ public class Zen implements ApplicationListener {
 		sprite.setSize(0.9f, 0.9f * sprite.getHeight() / sprite.getWidth());
 		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
 		sprite.setPosition(-sprite.getWidth()/2, -sprite.getHeight()/2);
+		
+		RemoteControl rc = new RemoteControl();
 	}
 
 	@Override
