@@ -49,25 +49,41 @@ public class Player {
 		
 		this.effect = new Effect(new Texture(Gdx.files.internal("data/effects/player_sheet.png")), 6, 8, 0.1f, 1);
 		WIDTH = 1/32f * (effect.width-3);
-		HEIGHT = 1/32f * (effect.height-3);
+		HEIGHT = 1/32f * (effect.height-3);	
 		
+		effect.update(0, true); // 0 = Direction.S 
 	}
 
 	public void move(Vector2 dir) {
+		float dirAngle = dir.angle();
 		
-		if (dir.x > 0) {
+		if (dirAngle > 337.5f) {
 			currentDir = Direction.E;						
 		}
-		else if (dir.x < 0) {
-			currentDir = Direction.W;			
+		else if (dirAngle > 292.5f) {
+			currentDir = Direction.SE;
 		}
-		else if (dir.y > 0) {
-			currentDir = Direction.N;			
-		}
-		else if (dir.y < 0) {
+		else if (dirAngle > 247.5f) {
 			currentDir = Direction.S;
 		}
-		
+		else if (dirAngle > 202.5f) {
+			currentDir = Direction.SW;
+		}
+		else if (dirAngle > 157.5f) {
+			currentDir = Direction.W;
+		}
+		else if (dirAngle > 112.5f) {
+			currentDir = Direction.NW;
+		}
+		else if (dirAngle > 67.5f) {
+			currentDir = Direction.N;			
+		}		
+		else if (dirAngle > 22.5f) {
+			currentDir = Direction.NE;			
+		}
+		else
+			currentDir = Direction.E;		
+				
 		velocity.add(dir);
 		state = Player.State.Walking;
 	}

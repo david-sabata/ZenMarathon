@@ -13,9 +13,12 @@ import com.badlogic.gdx.math.Vector2;
 
 import cz.emo4d.zen.Player;
 import cz.emo4d.zen.Zen;
+import cz.emo4d.zen.remote.DeviceEvent;
+import cz.emo4d.zen.remote.DeviceEventHandler;
 import cz.emo4d.zen.remote.RemoteControl;
+import cz.emo4d.zen.remote.RemoteControl.ClientMove;
 
-public class GameScreen extends BaseScreen {
+public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 	private TiledMap map;
 	private OrthogonalTiledMapRenderer renderer;
@@ -24,6 +27,7 @@ public class GameScreen extends BaseScreen {
 	private OrthographicCamera camera;
 	Vector2 moveVec = new Vector2();
 
+	private RemoteControl rc = new RemoteControl();
 
 	public GameScreen(Zen game) {
 		super(game);
@@ -42,7 +46,8 @@ public class GameScreen extends BaseScreen {
 		int height = (Integer) map.getProperties().get("height");
 		player = new Player(new Vector2(7, height - 4), 0, 0);
 
-		RemoteControl rc = new RemoteControl();
+
+		rc.RegisterEventHandler(this);
 	}
 
 
@@ -55,6 +60,11 @@ public class GameScreen extends BaseScreen {
 
 		// process input 
 		moveVec.set(0, 0);
+
+		ClientMove cm = rc.getClientMove(1);
+		if (cm != null) {
+			moveVec.set(cm.X * player.MAX_VELOCITY, -cm.Y * player.MAX_VELOCITY);
+		}
 
 		if (Gdx.input.isKeyPressed(Keys.UP)) {
 			moveVec.y = player.MAX_VELOCITY;
@@ -92,5 +102,13 @@ public class GameScreen extends BaseScreen {
 		batch.end();
 	}
 
+
+	@Override
+	public void acceptEvent(int type, int device, float X, float Y) {
+		if (type == DeviceEvent.MOVE) {
+			//player.move(new Vector2(X * player.MAX_VELOCITY,  -Y * player.MAX_VELOCITY));
+		}
+
+	}
 
 }

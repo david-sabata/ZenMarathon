@@ -17,6 +17,11 @@ public class Zen extends Game {
 	}
 
 
+
+
+
+
+
 	public void showGameScreen() {
 		if (game != null) {
 			game.dispose();
@@ -25,5 +30,8 @@ public class Zen extends Game {
 		game = new GameScreen(this);
 		setScreen(game);
 	}
+
+
+
 
 }
