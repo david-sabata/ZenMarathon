@@ -29,6 +29,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 	private RemoteControl rc = new RemoteControl();
 
+
 	public GameScreen(Zen game) {
 		super(game);
 
@@ -46,7 +47,6 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		int height = (Integer) map.getProperties().get("height");
 		player = new Player(new Vector2(7, height - 4), 0, 0);
 
-
 		rc.RegisterEventHandler(this);
 	}
 
@@ -57,6 +57,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		// clear the screen
 		Gdx.gl.glClearColor(0.7f, 0.7f, 1.0f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glDisable(GL10.GL_DEPTH_TEST);
 
 		// process input 
 		moveVec.set(0, 0);
@@ -98,7 +99,6 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		SpriteBatch batch = renderer.getSpriteBatch();
 		batch.begin();
 		player.render(batch);
-
 		batch.end();
 	}
 
