@@ -143,7 +143,8 @@ public class RemoteControl {
 									+ ", valY:" + Float.toString(de.valueY));
 					
 					// TODO: Multiple devices
-					callback.acceptEvent(de.eventType, 1, de.valueX, de.valueY);
+					if (callback != null)
+						callback.acceptEvent(de.eventType, 1, de.valueX, de.valueY);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

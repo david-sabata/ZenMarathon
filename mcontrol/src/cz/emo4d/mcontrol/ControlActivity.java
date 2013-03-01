@@ -78,11 +78,11 @@ public class ControlActivity extends Activity {
 	}
 
 	public boolean onTouchEvent(MotionEvent event) {
+		int eventX = (int) event.getX();
+		int eventY = (int) event.getY();
+		
 		if ((event.getAction() == MotionEvent.ACTION_DOWN)
 				|| (event.getAction() == MotionEvent.ACTION_MOVE)) {
-			
-			int eventX = (int) event.getX();
-			int eventY = (int) event.getY();
 			
 			int xOnField = eventX - arrowImgXY[0] - 130; // 130 - picture center
 			int yOnField = eventY - arrowImgXY[1] - 130;
