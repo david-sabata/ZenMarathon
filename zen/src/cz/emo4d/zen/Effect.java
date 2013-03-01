@@ -16,6 +16,9 @@ public class Effect {
 	
 	private TextureRegion  currentAnimFrame;    
     private float animStateTime;
+    
+    public int width;
+    public int height;
 	
     
     public Effect(Texture animSheet, int frameCols, int frameRows, float speed, int initialFrame) {  // 0.025
@@ -26,6 +29,9 @@ public class Effect {
 		//walkSheet.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		TextureRegion[][] tmp = TextureRegion.split(this.animSheet,
 				this.animSheet.getWidth() / this.frameCols, this.animSheet.getHeight() / this.frameRows);
+		
+		width = tmp[0][0].getRegionWidth();
+		height = tmp[0][0].getRegionHeight();
 		
 		animation = new Animation[this.frameRows];		
 		
@@ -48,5 +54,5 @@ public class Effect {
     
     public void render(SpriteBatch spriteBatch, float x, float y) {
     	spriteBatch.draw(currentAnimFrame, x, y);    	
-    }
+    } //batch.draw(frame, koala.position.x + Character.WIDTH, koala.position.y, -Character.WIDTH, Character.HEIGHT);
 }
