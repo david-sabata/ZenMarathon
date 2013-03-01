@@ -5,27 +5,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pool;
 
 import cz.emo4d.zen.remote.RemoteControl;
 
 public class Zen implements ApplicationListener {
-		
+
 	private TiledMap map;
-	private OrthogonalTiledMapRenderer renderer;	
+	private OrthogonalTiledMapRenderer renderer;
 
 	private Player player;
 	private OrthographicCamera camera;
@@ -34,7 +26,7 @@ public class Zen implements ApplicationListener {
 	@Override
 	public void create() {
 		// load the map, set the unit scale to 1/32 (1 unit == 32 pixels)
-		map = new TmxMapLoader().load("data/maps/test.tmx");
+		map = new TmxMapLoader().load("data/maps/fit.tmx");
 		renderer = new OrthogonalTiledMapRenderer(map, 1 / 32f);
 		map.getTileSets().getTile(1).getTextureRegion().getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 
@@ -45,8 +37,8 @@ public class Zen implements ApplicationListener {
 
 		// create player we want to move around the world
 		int height = (Integer) map.getProperties().get("height");
-		player = new Player(new Vector2(13, height - 3), 0, 0);
-		
+		player = new Player(new Vector2(7, height - 4), 0, 0);
+
 		RemoteControl rc = new RemoteControl();
 	}
 
@@ -61,7 +53,7 @@ public class Zen implements ApplicationListener {
 
 		// process input 
 		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			player.move(new Vector2(0,  player.MAX_VELOCITY));
+			player.move(new Vector2(0, player.MAX_VELOCITY));
 		}
 		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
 			player.move(new Vector2(0, -player.MAX_VELOCITY));
@@ -70,12 +62,12 @@ public class Zen implements ApplicationListener {
 			player.move(new Vector2(-player.MAX_VELOCITY, 0));
 		}
 		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			player.move(new Vector2( player.MAX_VELOCITY, 0));
-		}		
-		
+			player.move(new Vector2(player.MAX_VELOCITY, 0));
+		}
+
 		// update
 		player.update(deltaTime, map);
-		
+
 		// let the camera follow the player
 		camera.position.x = player.position.x;
 		camera.position.y = player.position.y;
@@ -90,10 +82,10 @@ public class Zen implements ApplicationListener {
 		SpriteBatch batch = renderer.getSpriteBatch();
 		batch.begin();
 		player.render(batch);
-		batch.end();		
-	}	
+		batch.end();
+	}
 
-	
+
 
 	@Override
 	public void dispose() {
