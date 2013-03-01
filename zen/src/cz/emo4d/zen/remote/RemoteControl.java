@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -27,13 +29,19 @@ public class RemoteControl {
 		clients = new ArrayList<Thread>();
 		events = new ArrayList<DeviceEvent>();
 
+		AutoDiscoveryAsync exe = new AutoDiscoveryAsync();
+		exe.start();
+
+	}
+	
+	private void runTCPServer() {
 		RemoteControlAsync rca = new RemoteControlAsync();
 		rca.start();
 
 		MessageGetter mg = new MessageGetter();
 		mg.start();
-
 	}
+	
 	
 	public void RegisterEventHandler(DeviceEventHandler cb) {
 		callback = cb;
@@ -70,6 +78,37 @@ public class RemoteControl {
 		return de;
 	}
 
+	class AutoDiscoveryAsync extends Thread {
+		@Override
+		public void run() {
+			try {
+			DatagramSocket socket = new DatagramSocket(discoveryPort);
+			//socket.setBroadcast(true);
+			
+			byte[] buf = new byte[1024];
+			DatagramPacket packet = new DatagramPacket(buf, buf.length);
+			Gdx.app.log("", "Discovery waiting");
+			socket.receive(packet);
+			
+			InetAddress clientAddr = packet.getAddress();
+			int port = packet.getPort();
+			
+			InetAddress thisIp = InetAddress.getLocalHost();
+			String ip = thisIp.toString();
+			
+			packet = new DatagramPacket(ip.getBytes(), ip.length(),
+				    clientAddr, port);
+			socket.send(packet);
+				
+				Gdx.app.log("", "Discovery sent");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			
+		}
+	}
+	
 	class RemoteControlAsync extends Thread {
 
 		@Override

@@ -48,6 +48,11 @@ public class NetService extends Service {
 
 		return mBinder;
 	}
+	
+	public void runAutoDiscovery() {
+		DiscoveryClass exe = new DiscoveryClass();
+		exe.execute();
+	}
 
 	
 	private class DiscoveryClass extends AsyncTask<Void, Void, Void> {
@@ -68,6 +73,8 @@ public class NetService extends Service {
 		    DatagramPacket packet = new DatagramPacket(discoveryData.getBytes(), discoveryData.length(),
 		        InetAddress.getByAddress(quads), DISCOVERYPORT);
 		    socket.send(packet);
+		    
+		    Log.i("Discovery","before recv");
 
 		    byte[] buf = new byte[1024];
 		    packet = new DatagramPacket(buf, buf.length);
