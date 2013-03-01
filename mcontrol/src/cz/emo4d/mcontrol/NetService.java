@@ -75,13 +75,22 @@ public class NetService extends Service {
 		    socket.send(packet);
 		    
 		    Log.i("Discovery","before recv");
-
+		    socket.close();
+		    
+		    
+		    DatagramSocket socket2 = new DatagramSocket(DISCOVERYPORT);
 		    byte[] buf = new byte[1024];
 		    packet = new DatagramPacket(buf, buf.length);
-		    socket.receive(packet);
+		    socket2.receive(packet);
 		    
-		    mHost = new String(buf);
+		    socket2.close();		
+		    
+		    mHost = new String(packet.getData());
+		    
+		    int pos = mHost.indexOf(buf[400]);
+		    mHost = mHost.substring(0, pos);
 		    Log.i("Discovery", mHost);
+		    		    
 		    } catch (Exception e) {
 		    	e.printStackTrace();
 		    }
@@ -102,9 +111,8 @@ public class NetService extends Service {
 		}
 	}
 	
-	public boolean openConnection(String host) {
+	public boolean openConnection() {
 
-		mHost = host;
 		OpenConnTask oc = new OpenConnTask();
 		oc.execute();
 

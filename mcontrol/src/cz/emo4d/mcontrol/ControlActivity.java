@@ -152,7 +152,7 @@ public class ControlActivity extends Activity {
 			Log.i(LOG_TAG,"Service bound");
 			
 			mService.runAutoDiscovery();
-			//mService.openConnection("147.229.178.65");
+			mService.openConnection();
 			
 		}
 

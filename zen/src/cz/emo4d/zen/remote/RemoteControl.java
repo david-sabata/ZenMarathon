@@ -32,7 +32,7 @@ public class RemoteControl {
 		events = new ArrayList<DeviceEvent>();
 		clientMoves = new ArrayList<ClientMove>();
 
-		//startTCPServer();
+		startTCPServer();
 
 		AutoDiscoveryAsync exe = new AutoDiscoveryAsync();
 		exe.start();
@@ -104,16 +104,23 @@ public class RemoteControl {
 			socket.receive(packet);
 			
 			InetAddress clientAddr = packet.getAddress();
-			int port = packet.getPort();
 			
 			InetAddress thisIp = InetAddress.getLocalHost();
-			String ip = thisIp.toString();
+			String ip = thisIp.getHostAddress();
+			
+			Gdx.app.log("Discovery", clientAddr.getHostAddress());
+			
+			socket.close();
+			
+			DatagramSocket socket2 = new DatagramSocket();
 			
 			packet = new DatagramPacket(ip.getBytes(), ip.length(),
-				    clientAddr, port);
-			socket.send(packet);
+				    clientAddr, discoveryPort);
+			socket2.send(packet);
+			socket2.close();
 				
 				Gdx.app.log("", "Discovery sent");
+			
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
