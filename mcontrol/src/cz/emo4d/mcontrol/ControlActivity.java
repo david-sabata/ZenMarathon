@@ -99,6 +99,8 @@ public class ControlActivity extends Activity {
 			
 			if (((xOnField < 150) && (yOnField < 150) && (xOnField > 0) && (yOnField > 0))) {
 				Log.i(LOG_TAG, "Button A");
+				
+				
 				return super.onTouchEvent(event);
 			}
 			
@@ -132,6 +134,9 @@ public class ControlActivity extends Activity {
 			//ExecTask exe = new ExecTask();
 			//exe.execute();
 			Log.i(LOG_TAG,"Service bound");
+			
+			mService.openConnection("interperson.cz");
+			
 		}
 
 		@Override
