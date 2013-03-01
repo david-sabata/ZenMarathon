@@ -20,9 +20,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 
+import cz.emo4d.zen.remote.DeviceEvent;
+import cz.emo4d.zen.remote.DeviceEventHandler;
 import cz.emo4d.zen.remote.RemoteControl;
 
-public class Zen implements ApplicationListener {
+public class Zen implements ApplicationListener, DeviceEventHandler {
 		
 	private TiledMap map;
 	private OrthogonalTiledMapRenderer renderer;	
@@ -48,6 +50,7 @@ public class Zen implements ApplicationListener {
 		player = new Player(new Vector2(13, height - 3), 0, 0);
 		
 		RemoteControl rc = new RemoteControl();
+		rc.RegisterEventHandler(this);
 	}
 
 	@Override
@@ -111,5 +114,13 @@ public class Zen implements ApplicationListener {
 
 	@Override
 	public void resume() {
+	}
+
+	@Override
+	public void acceptEvent(int type, int device, float X, float Y) {
+		if (type == DeviceEvent.MOVE) {
+			player.move(new Vector2(X * player.MAX_VELOCITY,  -Y * player.MAX_VELOCITY));
+		}
+		
 	}
 }
