@@ -22,6 +22,8 @@ public class Zen implements ApplicationListener {
 	private Player player;
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
+	Vector2 moveVec = new Vector2();
+
 
 	@Override
 	public void create() {
@@ -52,17 +54,21 @@ public class Zen implements ApplicationListener {
 		float deltaTime = Gdx.graphics.getDeltaTime();
 
 		// process input 
+		moveVec.set(0, 0);
+
 		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			player.move(new Vector2(0, player.MAX_VELOCITY));
-		}
-		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-			player.move(new Vector2(0, -player.MAX_VELOCITY));
+			moveVec.y = player.MAX_VELOCITY;
+		} else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+			moveVec.y = -player.MAX_VELOCITY;
 		}
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-			player.move(new Vector2(-player.MAX_VELOCITY, 0));
+			moveVec.x = -player.MAX_VELOCITY;
+		} else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+			moveVec.x = player.MAX_VELOCITY;
 		}
-		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			player.move(new Vector2(player.MAX_VELOCITY, 0));
+
+		if (moveVec.x != 0 || moveVec.y != 0) {
+			player.move(moveVec);
 		}
 
 		// update
@@ -82,10 +88,9 @@ public class Zen implements ApplicationListener {
 		SpriteBatch batch = renderer.getSpriteBatch();
 		batch.begin();
 		player.render(batch);
+
 		batch.end();
 	}
-
-
 
 	@Override
 	public void dispose() {

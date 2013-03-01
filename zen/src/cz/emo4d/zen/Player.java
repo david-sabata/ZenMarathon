@@ -50,9 +50,24 @@ public class Player {
 		this.effect = new Effect(new Texture(Gdx.files.internal("data/effects/player_sheet.png")), 6, 8, 0.1f, 1);
 		WIDTH = 1/32f * (effect.width-3);
 		HEIGHT = 1/32f * (effect.height-3);
+		
 	}
 
 	public void move(Vector2 dir) {
+		
+		if (dir.x > 0) {
+			currentDir = Direction.E;						
+		}
+		else if (dir.x < 0) {
+			currentDir = Direction.W;			
+		}
+		else if (dir.y > 0) {
+			currentDir = Direction.N;			
+		}
+		else if (dir.y < 0) {
+			currentDir = Direction.S;
+		}
+		
 		velocity.add(dir);
 		state = Player.State.Walking;
 	}
@@ -81,17 +96,39 @@ public class Player {
 		
 		switch (state) {
 		case Standing:
-			effect.update(0, true);
-			//frame = stand.getKeyFrame(koala.stateTime);
 			break;
-		case Walking:
-			//frame = walk.getKeyFrame(koala.stateTime);
-//walk.setPlayMode(Animation.LOOP_PINGPONG);*/
-			effect.update(1, true);
+		case Walking: {			
+			switch (currentDir) {
+			case S:
+				effect.update(0, true);
+				break;				
+			case SW:
+				effect.update(1, true);
+				break;
+			case W:
+				effect.update(2, true);
+				break;
+			case NW:
+				effect.update(3, true);
+				break;
+			case N:
+				effect.update(4, true);
+				break;
+			case NE:
+				effect.update(5, true);
+				break;
+			case E:
+				effect.update(6, true);
+				break;
+			case SE:
+				effect.update(7, true);
+				break;
+			}
 			break;
+		}
 		case Shooting:
 			//frame = jump.getKeyFrame(koala.stateTime);
-			effect.update(2, true);
+			//effect.update(2, true);
 			break;
 		}		
 		
