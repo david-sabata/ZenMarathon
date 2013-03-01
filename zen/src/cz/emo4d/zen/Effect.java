@@ -37,11 +37,17 @@ public class Effect {
 		
 		for (int i = 0; i < this.frameRows; i++) {
 			animation[i] = new Animation(speed, tmp[i]);
+			//setAnimPlayMode(i, playMode); //Animation.LOOP_PINGPONG;
 		}
 
 		animStateTime = 0f;	
 		currentAnimFrame = animation[initialFrame % this.frameRows].getKeyFrame(animStateTime);
 	}
+    
+    public void setAnimPlayMode(int row, int playMode) {
+    	animation[row % this.frameRows].setPlayMode(playMode);
+    }
+    
     
     public void update(int animRow, boolean looping) {
     	animStateTime += Gdx.graphics.getDeltaTime();              
