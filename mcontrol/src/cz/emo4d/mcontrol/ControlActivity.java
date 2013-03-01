@@ -1,7 +1,13 @@
 package cz.emo4d.mcontrol;
 
+import cz.emo4d.mcontrol.NetService.ServiceBinder;
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -11,10 +17,14 @@ import android.widget.ImageView;
 
 public class ControlActivity extends Activity {
 
-	private final String LOG_TAG = "IMG";
+	private final String LOG_TAG = "ZenMobileControl";
 	private int arrowImgXY[];
 	private int btnAXY[];
 	private int btnBXY[];
+	
+	private boolean mServiceBound = false;
+	private NetService mService = null;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +36,20 @@ public class ControlActivity extends Activity {
 
 		setContentView(R.layout.activity_control);
 	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+
+		getApplicationContext().bindService(new Intent(this, NetService.class), netServiceConnection, Context.BIND_AUTO_CREATE);
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+
+	}
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -94,4 +118,27 @@ public class ControlActivity extends Activity {
 		
 		return super.onTouchEvent(event);
 	}
+	
+	
+	private ServiceConnection netServiceConnection = new ServiceConnection() {
+
+		@Override
+		public void onServiceConnected(ComponentName className, IBinder service) {
+			final ServiceBinder binder = (ServiceBinder) service;
+
+			mService = binder.getService();
+			mServiceBound = true;
+
+			//ExecTask exe = new ExecTask();
+			//exe.execute();
+			Log.i(LOG_TAG,"Service bound");
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName arg0) {
+			mServiceBound = false;
+			mService = null;
+		}
+	};
+
 }
