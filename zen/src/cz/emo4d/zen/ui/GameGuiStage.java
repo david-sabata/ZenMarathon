@@ -85,14 +85,16 @@ public class GameGuiStage extends BaseStage {
 		p.updateHearts();
 
 		stats.row().spaceTop(5);
-		stats.add(new Label("RAGE", skin)).left().spaceRight(20);
-		Drawable rageOn = skin.getDrawable("rage-on");
-		Drawable rageOff = skin.getDrawable("rage");
-		stats.add(new Image(rageOn)).spaceRight(5);
-		stats.add(new Image(rageOn)).spaceRight(5);
-		stats.add(new Image(rageOff)).spaceRight(5);
-		stats.add(new Image(rageOff)).spaceRight(5);
-		stats.add(new Image(rageOff)).spaceRight(5);
+
+		stats.add(new Label("ZEN", skin)).left().spaceRight(20);
+		Drawable leaf = skin.getDrawable("leaf");
+		for (int i = 0; i < 5; i++) {
+			Image im = new Image(leaf);
+			stats.add(im).spaceRight(5);
+			p.leaves.add(im);
+		}
+
+		p.updateLeaves();
 
 		return tbl;
 	}
@@ -119,13 +121,14 @@ public class GameGuiStage extends BaseStage {
 		player.updateHearts();
 
 		stats.row().spaceTop(5);
-		Drawable rageOn = skin.getDrawable("rage-on");
-		Drawable rageOff = skin.getDrawable("rage");
-		stats.add(new Image(rageOn)).width(10).height(10).spaceRight(5);
-		stats.add(new Image(rageOn)).width(10).height(10).spaceRight(5);
-		stats.add(new Image(rageOff)).width(10).height(10).spaceRight(5);
-		stats.add(new Image(rageOff)).width(10).height(10).spaceRight(5);
-		stats.add(new Image(rageOff)).width(10).height(10).spaceRight(5);
+		Drawable leaf = skin.getDrawable("leaf");
+		for (int i = 0; i < 5; i++) {
+			Image im = new Image(leaf);
+			stats.add(im).width(10).height(10).spaceRight(5);
+			player.leaves.add(im);
+		}
+
+		player.updateLeaves();
 
 		return tbl;
 	}
