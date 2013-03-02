@@ -33,9 +33,6 @@ import cz.emo4d.zen.ui.GameGuiStage;
 
 public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
-	//	private TiledMap map;
-	//	private OrthogonalTiledMapRenderer renderer;
-	private static final int PLAYER_DAMAGE = 20;
 
 	private Map map;
 
@@ -47,7 +44,6 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 	private BulletManager bulletManager;
 	private EffectManager effectManager;
-	//private Enemy enemy;
 	private EnemyManager enemyManager;
 
 	private GameInputAdapter gameInputAdapter = new GameInputAdapter(this);
@@ -140,6 +136,8 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 			remoteSlaves.add(rp);
 			pendingSlaves.remove(i);
 			i--;
+
+			gui.regenerateSubplayersGui();
 		}
 
 		for (int i = 0; i < remoteSlaves.size(); i++) {

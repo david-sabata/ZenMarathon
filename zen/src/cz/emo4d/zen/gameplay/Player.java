@@ -23,6 +23,7 @@ public class Player extends Mob {
 	public final Color shadowColor;
 	private static int nextShadowColor = 0;
 
+	private static int MIN_DAMAGE = 5;
 	private static int MAX_DAMAGE = 20;
 
 	private Map.Position collidingInPoint;
@@ -67,7 +68,8 @@ public class Player extends Mob {
 	 */
 	public int getDamage() {
 		float percent = zen / (float) MAX_ZEN;
-		return (int) (MAX_DAMAGE * percent);
+		int dmg = (int) (MAX_DAMAGE * percent);
+		return Math.max(MIN_DAMAGE, dmg);
 	}
 
 
