@@ -1,16 +1,16 @@
 package cz.emo4d.zen.gameplay;
 
-import java.util.Random;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 
 import cz.emo4d.zen.screens.Map;
+import cz.emo4d.zen.ui.AnimatedImage;
 
 
 public class Player extends Mob {
@@ -27,10 +27,17 @@ public class Player extends Mob {
 	public boolean alive = true;
 
 	public static int MAX_ZEN = 100;
-	private int zen = MAX_ZEN;
+	private int zen = MAX_ZEN / 10;
 
 	// gui sem nastavuje obrazky s listkama, ktere si pak hrac updatuje
 	public final Array<Image> leaves = new Array<Image>();
+
+
+	// gui hracovy tabulky
+	private AnimatedImage faceAnimation;
+	private Animation okFaceAnimation;
+	private Animation koFaceAnimation;
+
 
 	public Player(Vector2 pos, float width, float height) {
 		super();
@@ -41,9 +48,6 @@ public class Player extends Mob {
 		HEIGHT = 1 / 32f * (effect.height - 15);
 
 		effect.update(0, true); // 0 = Direction.S 
-
-		Random r = new Random();
-		zen = Math.round(r.nextFloat() * 100);
 	}
 
 
@@ -74,6 +78,25 @@ public class Player extends Mob {
 			}
 		}
 	}
+
+
+	@Override
+	public void updateHearts() {
+		super.updateHearts();
+
+		if (faceAnimation != null) {
+			faceAnimation.setAnimation(health == 0 ? koFaceAnimation : okFaceAnimation);
+		}
+	}
+
+
+
+	public void setFaceAnimations(AnimatedImage image, Animation ok, Animation ko) {
+		faceAnimation = image;
+		okFaceAnimation = ok;
+		koFaceAnimation = ko;
+	}
+
 
 
 

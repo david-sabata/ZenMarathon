@@ -1,7 +1,5 @@
 package cz.emo4d.zen.gameplay;
 
-import java.util.Random;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -21,6 +19,7 @@ public class Mob extends Entity {
 	public final Array<Image> hearts = new Array<Image>();
 
 
+
 	protected enum State {
 		Standing, Walking, Shooting
 	}
@@ -32,9 +31,6 @@ public class Mob extends Entity {
 
 	public Mob() {
 		super();
-
-		Random r = new Random();
-		health = Math.round(r.nextFloat() * 100);
 	}
 
 
@@ -66,7 +62,11 @@ public class Mob extends Entity {
 				im.setColor(c.r, c.g, c.b, part);
 			}
 		}
+
+
 	}
+
+
 
 
 	public void move(Vector2 dir) {
