@@ -6,6 +6,8 @@ public class DeviceEvent {
 	public final static int PRESS_A = 2;
 	public final static int PRESS_B = 3;
 	public final static int MOVE = 4;
+	
+	public final static int VIBRATE = 5;
 
 	
 	public int eventType;

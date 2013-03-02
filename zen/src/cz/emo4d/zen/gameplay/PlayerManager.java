@@ -11,7 +11,7 @@ import cz.emo4d.zen.screens.Map;
 
 public class PlayerManager {
 
-	private Array<Player> players = new Array<Player>();
+	private final Array<Player> players = new Array<Player>();
 	private Vector2 moveVec = new Vector2();
 
 	public PlayerManager(Map map, Vector2 mainPlayerPos) {
@@ -25,16 +25,49 @@ public class PlayerManager {
 		return players.get(0);
 	}
 
+	public Player getPlayer(int id) {
+		return players.get(id);
+	}
+
+	public Array<Player> getPlayers() {
+		return players;
+	}
+
 	public int addPlayer(Vector2 playerPos) {
 		Player p = new Player(playerPos, 0, 0);
 		p.setMap(getMainPlayer().getMap());
 
 		players.add(p);
 
-		return 0;
+		return players.indexOf(p, true);
 	}
 
+	public void teleportAllPlayers(Vector2 newPos) {
+		for (Player p : players) {
+			// -1 kompenzuje to ze hrac pozicuje svuj levy dolni roh
+			p.position.set(newPos.x, newPos.y - 1);
+		}
+	}
+
+	public void setSwitchingRooms(boolean v) {
+		for (Player p : players) {
+			p.isSwitchingRooms = v;
+		}
+	}
+
+
+	public void applyKick(Vector2 force) {
+		for (Player p : players) {
+			p.move(force);
+		}
+	}
+
+
+
 	public void keyboardInput() {
+		if (players.get(0).isSwitchingRooms)
+			return;
+
 		// process input 
 		moveVec.set(0, 0);
 
@@ -55,7 +88,11 @@ public class PlayerManager {
 	}
 
 	public void controllerInput(int playerID, Vector2 moveVec) {
+		if (players.get(playerID).isSwitchingRooms)
+			return;
+
 		if (moveVec.x != 0 || moveVec.y != 0) {
+			//Gdx.app.log("INTER MOVE", Integer.toString(playerID));
 			players.get(playerID).move(moveVec);
 		}
 	}

@@ -68,7 +68,7 @@ public class Entity {
 		return -1;
 	}
 
-	public Entity collision() {
+	public boolean collisionWithMap() {
 		// perform basic collision detection
 
 		Rectangle playerRect = rectPool.obtain();
@@ -78,18 +78,35 @@ public class Entity {
 
 		for (Rectangle tile : tiles) {
 			if (playerRect.overlaps(tile)) {
-				//this.velocity.x = 0;
 				rectPool.free(playerRect);
-				return new Entity();
+				return true;
 			}
-		}
-
+		}		
 		rectPool.free(playerRect);
-		return null;
+		return false;
+	}
+	
+	public boolean collision(Entity other) {
+		Rectangle thisRect = rectPool.obtain();
+		thisRect.set(this.position.x, this.position.y, this.WIDTH, this.HEIGHT);
+				
+		Rectangle otherRect = rectPool.obtain();
+		otherRect.set(other.position.x, other.position.y, other.WIDTH, other.HEIGHT);
+		
+		boolean collision = false;
+		
+		if (thisRect.overlaps(otherRect)) {
+			collision = true;			
+		}	
+		
+		rectPool.free(otherRect);
+		rectPool.free(thisRect);
+		
+		return collision;
 	}
 
 	protected void getTiles(int startX, int startY, int endX, int endY, Array<Rectangle> tiles) {
-		TiledMapTileLayer layer = (TiledMapTileLayer) currentMap.map.getLayers().getLayer(1);
+		TiledMapTileLayer layer = (TiledMapTileLayer) currentMap.map.getLayers().getLayer("walls");
 		rectPool.freeAll(tiles);
 		tiles.clear();
 		for (int y = startY; y <= endY; y++) {

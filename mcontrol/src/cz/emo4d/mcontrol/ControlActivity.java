@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -47,28 +48,56 @@ public class ControlActivity extends Activity {
 		getApplicationContext().bindService(new Intent(this, NetService.class),
 				netServiceConnection, Context.BIND_AUTO_CREATE);
 
+//		final Button button = (Button) findViewById(R.id.button1);
+//		button.setOnClickListener(new View.OnClickListener() {
+//			public void onClick(View v) {
+//				if (mServiceBound) {
+//					mService.sendControlEvent(EventTypes.PRESS_A, 0, 0);
+//				}
+//			}
+//		});
+//		
+//		final Button button2 = (Button) findViewById(R.id.button2);
+//		button2.setOnClickListener(new View.OnClickListener() {
+//			public void onClick(View v) {
+//				if (mServiceBound) {
+//					mService.sendControlEvent(EventTypes.PRESS_B, 0, 0);
+//				}
+//			}
+//		});
+		
 		final Button button = (Button) findViewById(R.id.button1);
-		button.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
+		button.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
 				if (mServiceBound) {
 					mService.sendControlEvent(EventTypes.PRESS_A, 0, 0);
 				}
+				return true;
 			}
 		});
 		
 		final Button button2 = (Button) findViewById(R.id.button2);
-		button2.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
+		button2.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
 				if (mServiceBound) {
 					mService.sendControlEvent(EventTypes.PRESS_B, 0, 0);
 				}
+				return true;
 			}
 		});
+		
+		
 
 	}
 
 	@Override
 	public void onStop() {
+		//if (mServiceBound) mService.close();
+		
 		super.onStop();
 
 	}
@@ -85,46 +114,51 @@ public class ControlActivity extends Activity {
 		super.onWindowFocusChanged(hasFocus);
 
 		ImageView arrowController = (ImageView) findViewById(R.id.imageView1);
-		arrowImgXY = new int[2];
-		arrowController.getLocationOnScreen(arrowImgXY);
+		//arrowImgXY = new int[2];
+		//arrowController.getLocationOnScreen(arrowImgXY);
+		
+		arrowController.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				final int action = event.getAction();
+				int eventX = (int) event.getX();
+				int eventY = (int) event.getY();
+				
+				if ((action == MotionEvent.ACTION_DOWN) ||
+						(action == MotionEvent.ACTION_MOVE)) {
+					
+					int xOnField = eventX - 250; 
+																
+					int yOnField = eventY  - 250;
 
-	}
+					if ((xOnField < 250) && (yOnField < 250)
+							&& (xOnField > -250) && (yOnField > -250)) {
+						// arrows
+						// Log.i(LOG_TAG,
+						// "on arrows (x, y) = " + Integer.toString(xOnField)
+						// + "   " + Integer.toString(yOnField));
+						if (mServiceBound) {
+							mService.sendControlEvent(EventTypes.MOVE,
+									xOnField, yOnField);
+						}
 
-	public boolean onTouchEvent(MotionEvent event) {
-		int eventX = (int) event.getX();
-		int eventY = (int) event.getY();
-
-		if ((event.getAction() == MotionEvent.ACTION_DOWN)
-				|| (event.getAction() == MotionEvent.ACTION_MOVE)) {
-
-			int xOnField = eventX - arrowImgXY[0] - 250; // 130 - picture
-													// center
-			int yOnField = eventY - arrowImgXY[1] - 250;
-
-			if ((xOnField < 250) && (yOnField < 250) && (xOnField > -250)
-					&& (yOnField > -250)) {
-				// arrows
-				//Log.i(LOG_TAG,
-				//		"on arrows (x, y) = " + Integer.toString(xOnField)
-				//				+ "   " + Integer.toString(yOnField));
-				if (mServiceBound) {
-					mService.sendControlEvent(EventTypes.MOVE, xOnField,
-							yOnField);
+						return true;
+					}
+					
 				}
-
-				return super.onTouchEvent(event);
+				
+				if (action == MotionEvent.ACTION_UP) {
+					if (mServiceBound) {
+						mService.sendControlEvent(EventTypes.MOVE, 0, 0);
+					}
+					Log.i(LOG_TAG, "End of gesture");
+				}
+				
+				return false;
 			}
+		});
 
-		}
-
-		if (event.getAction() == MotionEvent.ACTION_UP) {
-			if (mServiceBound) {
-				mService.sendControlEvent(EventTypes.MOVE, 0, 0);
-			}
-			Log.i(LOG_TAG, "End of gesture");
-		}
-
-		return super.onTouchEvent(event);
 	}
 
 	private ServiceConnection netServiceConnection = new ServiceConnection() {
@@ -141,7 +175,7 @@ public class ControlActivity extends Activity {
 			Log.i(LOG_TAG, "Service bound");
 
 			mService.runAutoDiscovery();
-			mService.openConnection();
+			//mService.openConnection();
 
 		}
 
