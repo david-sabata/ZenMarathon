@@ -34,15 +34,29 @@ public class BulletManager {
 		activeBullets.add(bullet);
 	}
 	
-	public void collision() {
-		for (int i = 0; i < activeBullets.size; i++) {
-			if (activeBullets.get(i).collision() != null) {
+	public int collision(Entity enemy) {
+		int hits = 0;
+		for (int i = 0; i < activeBullets.size; i++) {					
+			if (activeBullets.get(i).collision(enemy)) {
 				explodePos.set(activeBullets.get(i).position);
 				activeBullets.removeIndex(i);
 				exploding = true;
 				explode.reset(0);
-			}				
+				hits++;
+			}			
 		}	
+		return hits;
+	}
+	
+	public void collisionWithMap() {
+		for (int i = 0; i < activeBullets.size; i++) {
+			if (activeBullets.get(i).collisionWithMap()) {
+				explodePos.set(activeBullets.get(i).position);
+				activeBullets.removeIndex(i);
+				exploding = true;
+				explode.reset(0);				
+			}			
+		}
 	}
 	
 	public void update(float deltaTime) {
@@ -68,7 +82,4 @@ public class BulletManager {
 		if (exploding)
 			explode.render(spriteBatch, explodePos.x, explodePos.y, 1/32f * explode.width, 1/32f * explode.height);		
 	}
-	
-	
-
 }
