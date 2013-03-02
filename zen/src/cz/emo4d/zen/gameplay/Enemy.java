@@ -25,7 +25,7 @@ public class Enemy extends Mob {
 
 	public void update(float deltaTime) {
 
-		//move((new Vector2(random.nextFloat() - 0.5f, random.nextFloat() - 0.5f)));
+		move((new Vector2(random.nextFloat() - 0.5f, random.nextFloat() - 0.5f)));
 
 		super.update(deltaTime);
 	}

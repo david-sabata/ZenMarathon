@@ -11,12 +11,13 @@ public class Mob extends Entity {
 
 	public static float MAX_VELOCITY = 8f;
 	public static float DAMPING = 0.87f;
-	public static int MAX_HEALTH = 100;
+	public static int MAX_HEALTH = 200;
 	public int health = MAX_HEALTH;
-
+	public boolean alive = true;
 
 	// gui sem nastavuje obrazky se srdickama, ktere si pak hrac updatuje
 	public final Array<Image> hearts = new Array<Image>();
+
 
 
 	protected enum State {
@@ -30,6 +31,9 @@ public class Mob extends Entity {
 
 	public Mob() {
 		super();
+
+		//Random r = new Random();
+		//health = Math.round(r.nextFloat() * 100);
 	}
 
 
@@ -61,7 +65,11 @@ public class Mob extends Entity {
 				im.setColor(c.r, c.g, c.b, part);
 			}
 		}
+
+
 	}
+
+
 
 
 	public void move(Vector2 dir) {
