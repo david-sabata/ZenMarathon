@@ -4,10 +4,12 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 import cz.emo4d.zen.Zen;
 import cz.emo4d.zen.screens.GameScreen;
@@ -29,15 +31,55 @@ public class GameGuiStage extends BaseStage {
 
 		rootPlayer = new Table(skin);
 		rootPlayer.setFillParent(true);
-		rootPlayer.debug();
+		//		rootPlayer.debug();
 
-		rootPlayer.add(new Label("test", skin)).left();
+		Table playerGui = createPlayerGui();
+		rootPlayer.add(playerGui).left();
 
 		rootPlayer.row();
 		rootPlayer.add().expand();
 
 		addActor(rootPlayer);
 	}
+
+
+
+
+
+	private Table createPlayerGui() {
+		Table tbl = new Table(skin);
+		//		tbl.debug();
+		tbl.setBackground(skin.getDrawable("gray-transparent"));
+
+
+		tbl.add(new Image(skin.getDrawable("avatar-main"))).width(60).height(60).pad(10);
+
+		Table stats = new Table(skin);
+		tbl.add(stats).pad(0, 0, 0, 10);
+
+		stats.add(new Label("LIVES", skin)).left().spaceRight(20);
+		Drawable heart = skin.getDrawable("heart-0");
+		stats.add(new Image(heart)).spaceRight(5);
+		stats.add(new Image(heart)).spaceRight(5);
+		stats.add(new Image(heart)).spaceRight(5);
+		stats.add(new Image(heart)).spaceRight(5);
+		stats.add(new Image(heart)).spaceRight(5);
+
+		stats.row().spaceTop(5);
+		stats.add(new Label("RAGE", skin)).left().spaceRight(20);
+		Drawable rageOn = skin.getDrawable("rage-on");
+		Drawable rageOff = skin.getDrawable("rage");
+		stats.add(new Image(rageOn)).spaceRight(5);
+		stats.add(new Image(rageOn)).spaceRight(5);
+		stats.add(new Image(rageOff)).spaceRight(5);
+		stats.add(new Image(rageOff)).spaceRight(5);
+		stats.add(new Image(rageOff)).spaceRight(5);
+
+		return tbl;
+	}
+
+
+
 
 
 
