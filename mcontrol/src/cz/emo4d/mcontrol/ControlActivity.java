@@ -6,6 +6,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.LightingColorFilter;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -66,14 +68,21 @@ public class ControlActivity extends Activity {
 //			}
 //		});
 		
+				
 		final Button button = (Button) findViewById(R.id.button1);
+		button.getBackground().setColorFilter(new LightingColorFilter(0xFF000000, 0xFFFF0000));
+		
 		button.setOnTouchListener(new OnTouchListener() {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if (mServiceBound) {
-					mService.sendControlEvent(EventTypes.PRESS_A, 0, 0);
-				}
+				
+				final int action = event.getAction();
+				if (action == MotionEvent.ACTION_DOWN) {
+					if (mServiceBound) {
+						mService.sendControlEvent(EventTypes.PRESS_A, 0, 0);
+					}
+				}				
 				return true;
 			}
 		});

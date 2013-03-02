@@ -16,8 +16,8 @@ public class EffectManager {
 
 	public EffectManager() {
 		explosionTexture = new Texture(Gdx.files.internal("data/effects/fx_bombsplosion_big_32.png"));
-		dieTexture = new Texture(Gdx.files.internal("data/effects/blood_death.png"));
-		hitBloodTexture = new Texture(Gdx.files.internal("data/effects/blood_hit.png"));
+		dieTexture = new Texture(Gdx.files.internal("data/effects/blood_death_s.png"));
+		hitBloodTexture = new Texture(Gdx.files.internal("data/effects/blood_hit_s.png"));
 	}
 
 	public void addEffect(AvailableEffects effect, float posX, float posY) {
