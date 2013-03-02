@@ -117,8 +117,15 @@ public class GameGuiStage extends BaseStage {
 		Texture animSheet = new Texture(Gdx.files.internal("data/effects/avatar.png"));
 		TextureRegion[][] tmp = TextureRegion.split(animSheet, animSheet.getWidth() / 3, animSheet.getHeight());
 		Animation animation = new Animation(10, tmp[0]);
+
+		Texture deadFace = new Texture(Gdx.files.internal("data/effects/avatar-dead.png"));
+		TextureRegion[][] tmp2 = TextureRegion.split(deadFace, animSheet.getWidth() / 3, animSheet.getHeight());
+		Animation koAnimation = new Animation(10, tmp2[0]);
+
 		AnimatedImage avatar = new AnimatedImage(animation);
 		avatar.setPlayMode(Animation.LOOP_PINGPONG);
+
+		player.setFaceAnimations(avatar, animation, koAnimation);
 
 		tbl.add(avatar).width(30).height(32).pad(10);
 

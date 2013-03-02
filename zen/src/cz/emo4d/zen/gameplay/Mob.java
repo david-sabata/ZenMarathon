@@ -19,6 +19,7 @@ public class Mob extends Entity {
 	public final Array<Image> hearts = new Array<Image>();
 
 
+
 	protected enum State {
 		Standing, Walking, Shooting
 	}
@@ -61,7 +62,11 @@ public class Mob extends Entity {
 				im.setColor(c.r, c.g, c.b, part);
 			}
 		}
+
+
 	}
+
+
 
 
 	public void move(Vector2 dir) {
