@@ -26,6 +26,7 @@ public class RemoteControl {
 	private ArrayList<ClientMove> clientMoves;
 
 	private DeviceEventHandler callback = null;
+	private PrintStream output;
 
 	public RemoteControl() {
 		clients = new ArrayList<Thread>();
@@ -164,7 +165,7 @@ public class RemoteControl {
 		@Override
 		public void run() {
 			try {
-				PrintStream output = new PrintStream(client.getOutputStream());
+				output = new PrintStream(client.getOutputStream());
 				BufferedReader in = new BufferedReader(new InputStreamReader(
 						client.getInputStream()));
 
@@ -220,6 +221,31 @@ public class RemoteControl {
 		} else {
 			return null;
 		}
+	}
+	
+	public void emitEvent(int client, int event) {
+		// TODO: More clients
+		SendAsync exe = new SendAsync(Integer.toString(event));
+		exe.start();
+		
+	}
+	
+	private class SendAsync extends Thread {
+
+		private String message;
+		
+		public SendAsync (String m) {
+			message = m;
+		}
+		
+		@Override
+		public void run() {
+			if (output != null) {
+				output.println(message);
+				output.flush();
+			}
+		}
+
 	}
 
 }

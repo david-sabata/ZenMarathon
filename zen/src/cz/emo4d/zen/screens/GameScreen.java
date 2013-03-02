@@ -109,6 +109,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		player.update(deltaTime, map);
 		bullet.update(deltaTime);
 		if (bullet.collision(map) != null) {
+			rc.emitEvent(1, DeviceEvent.VIBRATE);
 			bullet.alive = false;
 		}
 
