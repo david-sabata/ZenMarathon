@@ -227,7 +227,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		final Table background = gui.createBackground();
 
 		SequenceAction seq = new SequenceAction();
-		
+
 		SoundManager.getSound("teleport.wav").play();
 
 		seq.addAction(Actions.fadeIn(0.2f, Interpolation.fade));
@@ -237,9 +237,10 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 			public void run() {
 				map = new Map(newPos.mapName);
 				Map.Position targetPos = map.inPoints.get(newPos.identifier);
-				playerManager.teleportAllPlayers(targetPos.coordinates);
+				playerManager.teleportAllPlayers(map, targetPos.coordinates);
 
 				kickvector.set(targetPos.direction);
+				kickvector.y *= -1;
 				playerManager.applyKick(kickvector);
 			}
 		});
@@ -252,6 +253,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 				Map.Position targetPos = map.inPoints.get(newPos.identifier);
 
 				kickvector.set(targetPos.direction);
+				kickvector.y *= -1;
 				playerManager.applyKick(kickvector);
 			}
 		});
@@ -269,7 +271,6 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		background.addAction(seq);
 	}
-
 
 
 
