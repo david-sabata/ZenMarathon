@@ -23,6 +23,11 @@ public class BulletManager {
 	private Texture tex;
 	private EffectManager em;
 
+
+	public void setMap(Map map) {
+		this.map = map;
+	}
+
 	public void shoot(Vector2 origin, Direction dir, Player player) {
 		Bullet bullet = new Bullet(tex);
 		bullet.setMap(map);
