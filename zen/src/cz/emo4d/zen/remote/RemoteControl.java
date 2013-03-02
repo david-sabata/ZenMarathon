@@ -12,6 +12,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
 
@@ -23,7 +24,9 @@ public class RemoteControl {
 
 	private ArrayList<Thread> clients;
 	private ArrayList<DeviceEvent> events;
-	private ArrayList<ClientMove> clientMoves;
+	private HashMap<Integer,ClientMove> clientMoves;
+	
+	private int clientId = 0;
 
 	private DeviceEventHandler callback = null;
 	private PrintStream output;
@@ -31,7 +34,7 @@ public class RemoteControl {
 	public RemoteControl() {
 		clients = new ArrayList<Thread>();
 		events = new ArrayList<DeviceEvent>();
-		clientMoves = new ArrayList<ClientMove>();
+		clientMoves = new HashMap<Integer,ClientMove>();
 
 		startTCPServer();
 
@@ -81,7 +84,7 @@ public class RemoteControl {
 		de.eventType = Integer.parseInt(first);
 		de.valueX = Float.parseFloat(second);
 		de.valueY = Float.parseFloat(third);
-		de.player = 1;
+		de.player = clientId;
 
 		return de;
 	}
@@ -166,6 +169,9 @@ public class RemoteControl {
 
 		@Override
 		public void run() {
+						
+			clientId = clients.size() - 1;
+			
 			try {
 				output = new PrintStream(client.getOutputStream());
 				BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -195,19 +201,20 @@ public class RemoteControl {
 			while (true) {
 				try {
 					DeviceEvent de = getMessage();
-					Gdx.app.log("Incoming",
-							"Incoming type: " + Integer.toString(de.eventType)
-									+ ", valX:" + Float.toString(de.valueX)
-									+ ", valY:" + Float.toString(de.valueY));
+//					Gdx.app.log("Incoming",
+//							"Incoming type: " + Integer.toString(de.eventType)
+//									+ ", valX:" + Float.toString(de.valueX)
+//									+ ", valY:" + Float.toString(de.valueY));
 
-					// TODO: Multiple devices
 					if (de.eventType == DeviceEvent.MOVE) {
-						if (clientMoves.size() < de.player)
-							clientMoves.add(new ClientMove());
-						ClientMove cm = clientMoves.get(de.player - 1);
+						ClientMove cm = clientMoves.get(clientId);
 						cm.X = de.valueX;
 						cm.Y = de.valueY;
-						clientMoves.set(de.player - 1, cm);
+						clientMoves.put(clientId, cm);
+					}
+					
+					if (callback != null) {
+						callback.acceptEvent(de.eventType, de.player, de.valueX, de.valueY);
 					}
 
 				} catch (InterruptedException e) {
@@ -224,6 +231,11 @@ public class RemoteControl {
 			return null;
 		}
 	}
+	
+	
+	
+	/////////////////////////////////////////////////////////
+	
 	
 	public void emitEvent(int client, int event) {
 		// TODO: More clients

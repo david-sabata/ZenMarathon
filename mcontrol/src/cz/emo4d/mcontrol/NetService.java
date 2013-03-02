@@ -216,6 +216,12 @@ public class NetService extends Service {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
+			//send message about connection
+			if (mMode == MODE_MASTER)
+				sendControlEvent(EventTypes.CONNECT, 0, 0);
+			else
+				sendControlEvent(EventTypes.CONNECT, 1, 1);
 
 			InputListener il = new InputListener();
 			il.executeOnExecutor(THREAD_POOL_EXECUTOR);

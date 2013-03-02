@@ -69,6 +69,8 @@ public class ControlActivity extends Activity {
 
 	@Override
 	public void onStop() {
+		//if (mServiceBound) mService.unbindService(netServiceConnection);
+		
 		super.onStop();
 
 	}

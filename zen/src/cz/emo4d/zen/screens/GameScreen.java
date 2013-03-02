@@ -137,7 +137,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		if (type == DeviceEvent.MOVE) {
 			//player.move(new Vector2(X * player.MAX_VELOCITY,  -Y * player.MAX_VELOCITY));
 		} else if (type == DeviceEvent.CONNECT) {
-
+			Gdx.app.log("Player Connection", Float.toString(X));
 		} else if (type == DeviceEvent.DISCONNECT) {
 
 		}
