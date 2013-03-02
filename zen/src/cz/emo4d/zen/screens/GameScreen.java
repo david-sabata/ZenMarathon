@@ -267,6 +267,20 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 			
 		} else if (type == DeviceEvent.DISCONNECT) {
 
+		} else if (type == DeviceEvent.PRESS_A) {
+			// Master is shooting
+			if (device == remoteMaster)
+				bulletManager.shoot(playerManager.getMainPlayer().position, playerManager.getMainPlayer().currentDir);
+			
+			// Slave is shooting
+			for (int i = 0; i < remoteSlaves.size(); i++) {
+				if (remoteSlaves.get(i).remoteId == device) {
+					bulletManager.shoot(playerManager.getPlayer(remoteSlaves.get(i).localId).position,
+							playerManager.getPlayer(remoteSlaves.get(i).localId).currentDir);
+				}
+			}
+			
+			
 		}
 	}
 
