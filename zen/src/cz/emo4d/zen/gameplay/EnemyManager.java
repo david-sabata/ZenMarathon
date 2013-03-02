@@ -22,9 +22,15 @@ public class EnemyManager {
 	}
 	
 	public void update(float deltaTime) {
-		for (Enemy e : activeEnemies) {
-			e.update(deltaTime);			
+		for (int i = 0; i < activeEnemies.size; i++) {
+			activeEnemies.get(i).update(deltaTime);
+			if (!activeEnemies.get(i).alive)
+				activeEnemies.removeIndex(i);
 		}
+		
+		/*for (Enemy e : activeEnemies) {
+			e.update(deltaTime);			
+		}*/
 	}
 	
 	public void render(SpriteBatch spriteBatch) {		

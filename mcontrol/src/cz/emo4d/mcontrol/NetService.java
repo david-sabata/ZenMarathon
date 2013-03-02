@@ -13,6 +13,7 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.sql.ClientInfoStatus;
+import java.util.Calendar;
 
 import android.app.Service;
 import android.content.Context;
@@ -61,6 +62,8 @@ public class NetService extends Service {
 	private static final int DISCOVERYPORT = 10869;
 	private static final String discoveryData = "ZenDiscovery";
 	private final static String SERIALIZER_DELIMITER = "&&&&";
+	
+	private long lastFire = 0;
 
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -288,7 +291,16 @@ public class NetService extends Service {
 
 	public boolean sendControlEvent(int type, float X, float Y) {
 		String serialized = new String();
-
+		
+		if (type == EventTypes.PRESS_A) {
+			if (Calendar.getInstance().getTimeInMillis() - lastFire < 100) {
+				return true;
+			}
+			
+			lastFire = Calendar.getInstance().getTimeInMillis();
+				
+		}		
+		
 		serialized = Integer.toString(type) + SERIALIZER_DELIMITER
 				+ Float.toString(X) + SERIALIZER_DELIMITER + Float.toString(Y);
 

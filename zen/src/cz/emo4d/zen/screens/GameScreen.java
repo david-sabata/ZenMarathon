@@ -33,10 +33,8 @@ import cz.emo4d.zen.ui.GameGuiStage;
 
 public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
-	//	private TiledMap map;
-	//	private OrthogonalTiledMapRenderer renderer;
-	private static final int PLAYER_DAMAGE = 20;
-	
+	private static final float SHOOT_INTERVAL = 0.14f;
+
 	private Map map;
 
 	private GameGuiStage gui;
@@ -47,7 +45,6 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 	private BulletManager bulletManager;
 	private EffectManager effectManager;
-	//private Enemy enemy;
 	private EnemyManager enemyManager;
 
 	private GameInputAdapter gameInputAdapter = new GameInputAdapter(this);
@@ -69,7 +66,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		super(game);
 
 		map = new Map("floor1");
-		
+
 		SoundManager.getSound("background.wav").loop();
 
 		// create an orthographic camera, shows us 30x20 units of the world
@@ -85,11 +82,10 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		effectManager = new EffectManager();
 		bulletManager = new BulletManager(map, new Texture(Gdx.files.internal("data/bullet.png")), effectManager);
 		enemyManager = new EnemyManager();
-		
+
 		for (int i = 0; i < 100; i++) {
 			Enemy enemy = new Enemy(map.getCoord(56, 39));
 			enemy.setMap(map);
-		
 			enemyManager.addEnemy(enemy);
 		}
 
@@ -104,14 +100,16 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	}
 
 	public void onKeyPress(int keycode) {
-		if (keycode == Keys.CONTROL_LEFT) {
-			bulletManager.shoot(playerManager.getMainPlayer().position,
-					playerManager.getMainPlayer().currentDir, PLAYER_DAMAGE, playerManager.getMainPlayer());
-		}
-		if (keycode == Keys.TAB) {
-			//			doTeleport(map.getCoord(14, 36));
-		}
+		//if (keycode == Keys.CONTROL_LEFT) {
+		//bulletManager.shoot(playerManager.getMainPlayer().position,
+		//		playerManager.getMainPlayer().currentDir, PLAYER_DAMAGE, playerManager.getMainPlayer());
+		//}
+		//if (keycode == Keys.TAB) {
+		//			doTeleport(map.getCoord(14, 36));
+		//}
 	}
+
+	float lastTime = 0;
 
 
 	@Override
@@ -141,11 +139,15 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 			remoteSlaves.add(rp);
 			pendingSlaves.remove(i);
 			i--;
+
+			gui.regenerateSubplayersGui();
 		}
 
 		for (int i = 0; i < remoteSlaves.size(); i++) {
 			if ((cm = rc.getClientMove(remoteSlaves.get(i).remoteId)) != null) {
-				Gdx.app.log("MOVE","SLAVE " + Integer.toString(remoteSlaves.get(i).localId));
+
+				//Gdx.app.log("MOVE","SLAVE " + Integer.toString(remoteSlaves.get(i).localId));
+
 				moveVec.set(cm.X, -cm.Y);
 				playerManager.controllerInput(remoteSlaves.get(i).localId, moveVec);
 			}
@@ -153,6 +155,16 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		// keyboard input
 		playerManager.keyboardInput();
+
+
+		lastTime += deltaTime;
+		if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
+			if (lastTime > SHOOT_INTERVAL) {
+
+				bulletManager.shoot(playerManager.getMainPlayer().position, playerManager.getMainPlayer().currentDir, playerManager.getMainPlayer());
+				lastTime = 0;
+			}
+		}
 
 
 		// -- update --
@@ -179,7 +191,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		bulletManager.update(deltaTime);
 		bulletManager.collisionWithMap(rc);
 		bulletManager.collision(playerManager.getPlayers(), enemyManager.getEnemies());
-		
+
 		enemyManager.update(deltaTime);
 		/*if (enemy.health > 0) {
 
@@ -228,7 +240,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		final Table background = gui.createBackground();
 
 		SequenceAction seq = new SequenceAction();
-		
+
 		SoundManager.getSound("teleport.wav").play();
 
 		seq.addAction(Actions.fadeIn(0.2f, Interpolation.fade));
@@ -238,9 +250,12 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 			public void run() {
 				map = new Map(newPos.mapName);
 				Map.Position targetPos = map.inPoints.get(newPos.identifier);
-				playerManager.teleportAllPlayers(targetPos.coordinates);
+				playerManager.teleportAllPlayers(map, targetPos.coordinates);
+
+				bulletManager.setMap(map);
 
 				kickvector.set(targetPos.direction);
+				kickvector.y *= -1;
 				playerManager.applyKick(kickvector);
 			}
 		});
@@ -253,6 +268,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 				Map.Position targetPos = map.inPoints.get(newPos.identifier);
 
 				kickvector.set(targetPos.direction);
+				kickvector.y *= -1;
 				playerManager.applyKick(kickvector);
 			}
 		});
@@ -270,7 +286,6 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		background.addAction(seq);
 	}
-
 
 
 
@@ -299,19 +314,17 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		} else if (type == DeviceEvent.PRESS_A) {
 			// Master is shooting
 			if (device == remoteMaster)
-				bulletManager.shoot(playerManager.getMainPlayer().position,
-						playerManager.getMainPlayer().currentDir, PLAYER_DAMAGE, playerManager.getMainPlayer());
-			
+				bulletManager.shoot(playerManager.getMainPlayer().position, playerManager.getMainPlayer().currentDir, playerManager.getMainPlayer());
+
 			// Slave is shooting
 			for (int i = 0; i < remoteSlaves.size(); i++) {
 				if (remoteSlaves.get(i).remoteId == device) {
 					bulletManager.shoot(playerManager.getPlayer(remoteSlaves.get(i).localId).position,
-							playerManager.getPlayer(remoteSlaves.get(i).localId).currentDir, PLAYER_DAMAGE,
-							playerManager.getPlayer(remoteSlaves.get(i).localId));
+							playerManager.getPlayer(remoteSlaves.get(i).localId).currentDir, playerManager.getPlayer(remoteSlaves.get(i).localId));
 				}
 			}
-			
-			
+
+
 		}
 	}
 
