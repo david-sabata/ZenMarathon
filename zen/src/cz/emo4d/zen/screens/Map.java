@@ -19,9 +19,12 @@ public class Map {
 		public String identifier;
 		public Vector2 coordinates;
 
+		// smer kterym se nakopne hrac po pruchodu
+		public Vector2 direction;
+
 		@Override
 		public String toString() {
-			return "Position [mapName=" + mapName + ", identifier=" + identifier + ", coordinates=" + coordinates + "]";
+			return "Position [mapName=" + mapName + ", identifier=" + identifier + ", coordinates=" + coordinates + ", direction=" + direction + "]";
 		}
 	}
 
@@ -128,9 +131,38 @@ public class Map {
 				//				Gdx.app.log("OUT PT", pos.toString());
 			}
 		}
+
+		// doplnit smery pro IN body
+		it = props.getKeys();
+		while (it.hasNext()) {
+			String key = it.next();
+
+			// vstupni smery
+			if (key.indexOf("indir-") == 0) {
+				String id = key.substring(6);
+
+				inPoints.get(id).direction = parseVector(props.get(key, String.class));
+
+				//				Gdx.app.log("IN DIR", inPoints.get(id).toString());
+			}
+		}
 	}
 
-	private static Vector2 parseCoords(String s) {
+	private Vector2 parseCoords(String s) {
+		Vector2 vec = new Vector2();
+		int sep = s.indexOf('x');
+
+		vec.x = Integer.valueOf(s.substring(0, sep));
+		vec.y = Integer.valueOf(s.substring(sep + 1));
+
+		// prevest do souradneho systemu mapy - Y0 dole
+		vec.y = height - vec.y;
+
+		return vec;
+	}
+
+
+	private Vector2 parseVector(String s) {
 		Vector2 vec = new Vector2();
 		int sep = s.indexOf('x');
 

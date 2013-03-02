@@ -5,6 +5,10 @@
   <property name="in-horni2" value="14x3"/>
   <property name="in-vlevo" value="7x39"/>
   <property name="in-vpravo" value="23x39"/>
+  <property name="indir-horni1" value="-1x0"/>
+  <property name="indir-horni2" value="1x0"/>
+  <property name="indir-vlevo" value="0x1"/>
+  <property name="indir-vpravo" value="0x1"/>
   <property name="out-fit-horni1" value="7x39"/>
   <property name="out-fit-horni2" value="23x39"/>
   <property name="out-fit-vlevo" value="17x6"/>
