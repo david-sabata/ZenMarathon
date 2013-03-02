@@ -227,6 +227,8 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		final Table background = gui.createBackground();
 
 		SequenceAction seq = new SequenceAction();
+		
+		SoundManager.getSound("teleport.wav").play();
 
 		seq.addAction(Actions.fadeIn(0.2f, Interpolation.fade));
 
