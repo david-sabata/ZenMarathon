@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 
 import cz.emo4d.zen.Zen;
+import cz.emo4d.zen.gameplay.SoundManager;
 import cz.emo4d.zen.ui.MainMenuStage;
 
 public class MainMenuScreen extends BaseScreen {
