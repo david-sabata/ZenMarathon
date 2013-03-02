@@ -3,14 +3,29 @@
  <tileset firstgid="1" name="fit" tilewidth="32" tileheight="32">
   <image source="fit.png" trans="ff00ff" width="512" height="512"/>
  </tileset>
- <layer name="background" width="50" height="50">
+ <layer name="background2" width="50" height="50">
   <data encoding="base64" compression="zlib">
-   eJzt1UsKgDAMRVFnRTeg7n+j1lkJ6UfQ8gz3QEa2kKdNXRZgni1XMrV2nts1Co5cu6lzYE9vzWyRc9zlnaVU7FHM8bQncnyn7Kl2N9kamaHZyhy1WVHs24qYo7XG3mGK/8HRHMrfx3vX3lz/JUer1HoeZbNFyeGdO7U590Q5a+TQQg4AAAAAAAAAwNsuFoQOuw==
+   eJztlUEOgzAMBLmh9gO0T21/1F8Ct8gyxJUaa3FnpD2RCA+OwzQB5HHfMpvcOs/tGgUeWxaTZ2BPb002lT32eGdpbvYoenxbEx7jaGs6uptsIjOUTetxNCuKdVsqepytsXeY4n8w6qHcH+9be3N9FY+zqNUcxbpV8fDOndqce1Q5a3hogQcAwO94JQWP//J4J2U09IN+jIB+aPWj9/5PMHgAAAAA1GAF+oCZ9w==
+  </data>
+ </layer>
+ <layer name="background1" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt0bEJwDAMBEDvv0E2MNnATWYzLlJbIUQocAffqdDzrQEAAAAA8GcjKcQcSSHGHrXYg2z9we352Rfv3T2uTZbKPQAAMkySDUn9
   </data>
  </layer>
  <layer name="walls" width="50" height="50">
   <data encoding="base64" compression="zlib">
-   eJzt11sKhTAMRdHORu38B6h+CP2oaWKlTcpeEBBqoOcaHzeldW0/lAf5qv2lcmP9OceDo7Emrbf6R9LkqJWmfyRpH5pZipBD0+MxhzRHkebqPpaeTWXV+mfq/W2j5pBmbCZrjgjvQc19LfXPVO5Dc19L/TP17iNiDuvMjWTZm+fv3RrrNfKKHL6Qw5eVcnz5LwIAAAAAAAAA3pz9Yxom
+   eJztmdEOwiAMRfkbdd+u008UH0x4YKVlhbbsnuTGJazAtWUiS2ldbgrywJZ1P9DWaP/f44FHo41qb8XPhOOjJk78TKh5cGopgg9OjEcfVB1FqqvfNfVsKlWLt+TsdxvVB1Vjlkh9RPgd5KxrKt6Sch6cdU3FW3J2HhF9SGtuJpK5ed7v1pDmyCvw4Qv48MVKPnr+i4DronHu5uGMrnWupqmRe5aZ63LkWCv6eGa9is9EtEnurY2lDfKBfIzuG/mwH+tqPvas94E+ymP1sFI+qHcZPeL0rQ115tm7H+T0DQAAAAAdvn4NU7w=
+  </data>
+ </layer>
+ <layer name="overlay2" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt0TEKwCAMBVDvf4YutieovWB17SDUOCi8B39KPgSSEgAAAAAArOP4pDf7s8sY/1iLfwC7OWtyoN+616RbIkrNHei37jPpFgCg7wUHAiKP
+  </data>
+ </layer>
+ <layer name="overlay1" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt0jsOgCAMAFDvfwOPqaizDrIQJP7R5L2kA01LmkLTAAAAAADAd4wnanM9ww2zXBE+ds8T0h3Hc+kNj7xvLXHnU9Upykr/O93xkMlt1b6ttOP074dMbs89sKVboq89BL/RrlGrHwDYbwYGGRlI
   </data>
  </layer>
 </map>

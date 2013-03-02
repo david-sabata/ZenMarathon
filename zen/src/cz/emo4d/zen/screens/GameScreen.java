@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import cz.emo4d.zen.Zen;
-import cz.emo4d.zen.gameplay.Bullet;
+import cz.emo4d.zen.gameplay.BulletManager;
 import cz.emo4d.zen.gameplay.Enemy;
 import cz.emo4d.zen.gameplay.PlayerManager;
 import cz.emo4d.zen.remote.ClientMove;
@@ -33,7 +33,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	private OrthographicCamera camera;
 	Vector2 moveVec = new Vector2();
 
-	private Bullet bullet;
+	private BulletManager bulletManager;
 	private Enemy enemy;
 
 	private GameInputAdapter gameInputAdapter = new GameInputAdapter(this);
@@ -57,8 +57,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		playerManager = new PlayerManager(map, map.getCoord(7, 6));
 		playerManager.addPlayer(map.getCoord(7, 6));
 
-		bullet = new Bullet(new Texture(Gdx.files.internal("data/bullet.png")));
-		bullet.setMap(map);
+		bulletManager = new BulletManager(map, new Texture(Gdx.files.internal("data/bullet.png")));
 
 		enemy = new Enemy(map.getCoord(7, 8));
 		enemy.setMap(map);
@@ -73,10 +72,12 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 	public void onKeyPress(int keycode) {
 		if (keycode == Keys.CONTROL_LEFT) {
-			bullet.shoot(playerManager.getMainPlayer().position, playerManager.getMainPlayer().currentDir);
+			bulletManager.shoot(playerManager.getMainPlayer().position, playerManager.getMainPlayer().currentDir);
+		}
+		if (keycode == Keys.TAB) {
+			gui.doTeleportAnimation(playerManager, map.getCoord(14, 36));
 		}
 	}
-
 
 
 	@Override
@@ -103,11 +104,10 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		playerManager.update(deltaTime);
 
 
-		bullet.update(deltaTime);
-		if (bullet.collision() != null) {
+		bulletManager.update(deltaTime);
+		bulletManager.collision();
 
-			bullet.alive = false;
-		}
+
 		enemy.update(deltaTime);
 
 		// let the camera follow the player
@@ -123,7 +123,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		SpriteBatch batch = map.renderer.getSpriteBatch();
 		batch.begin();
 		playerManager.render(batch);
-		bullet.render(batch);
+		bulletManager.render(batch);
 		enemy.render(batch);
 		batch.end();
 

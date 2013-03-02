@@ -40,12 +40,20 @@ public class Effect {
 			//setAnimPlayMode(i, playMode); //Animation.LOOP_PINGPONG;
 		}
 
-		animStateTime = 0f;	
-		currentAnimFrame = animation[initialFrame % this.frameRows].getKeyFrame(animStateTime);
+		reset(initialFrame);
 	}
+    
+    public void reset(int initialFrame) {
+    	animStateTime = 0f;	
+		currentAnimFrame = animation[initialFrame % this.frameRows].getKeyFrame(animStateTime);
+    }
     
     public void setAnimPlayMode(int row, int playMode) {
     	animation[row % this.frameRows].setPlayMode(playMode);
+    }
+    
+    public boolean isAnimationFinished(int animRow) {
+    	return animation[animRow % this.frameRows].isAnimationFinished(animStateTime);
     }
     
     
