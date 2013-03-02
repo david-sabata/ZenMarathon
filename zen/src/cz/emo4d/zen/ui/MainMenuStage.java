@@ -43,7 +43,7 @@ public class MainMenuStage extends BaseStage {
 			}
 		});
 
-		TextButton btnTop = new TextButton("HIGH SCORES", skin);
+		TextButton btnTop = new TextButton(" HIGH SCORES ", skin);
 
 		TextButton btnCredits = new TextButton("CREDITS", skin);
 
@@ -59,22 +59,22 @@ public class MainMenuStage extends BaseStage {
 		root.row();
 
 		root.add();
-		root.add(btnPlay).center().width(150).height(50).fill().spaceBottom(50);
+		root.add(btnPlay).center().height(70).fill().spaceBottom(50);
 		root.add();
 		root.row();
 
 		root.add();
-		root.add(btnTop).center().width(150).height(50).fill().spaceBottom(50);
+		root.add(btnTop).center().height(70).fill().spaceBottom(50);
 		root.add();
 		root.row();
 
 		root.add();
-		root.add(btnCredits).center().width(150).height(50).fill().spaceBottom(50);
+		root.add(btnCredits).center().height(70).fill().spaceBottom(50);
 		root.add();
 		root.row();
 
 		root.add();
-		root.add(btnExit).center().height(50).fill();
+		root.add(btnExit).center().height(70).fill();
 		root.add();
 		root.row();
 

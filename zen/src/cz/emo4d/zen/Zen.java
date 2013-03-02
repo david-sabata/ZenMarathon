@@ -2,6 +2,7 @@ package cz.emo4d.zen;
 
 
 import com.badlogic.gdx.Game;
+
 import cz.emo4d.zen.screens.GameScreen;
 import cz.emo4d.zen.screens.MainMenuScreen;
 
@@ -15,7 +16,7 @@ public class Zen extends Game {
 		game = new GameScreen(this);
 		menu = new MainMenuScreen(this);
 
-		if (true) {
+		if (false) {
 			showMenuScreen();
 		} else {
 			showGameScreen();

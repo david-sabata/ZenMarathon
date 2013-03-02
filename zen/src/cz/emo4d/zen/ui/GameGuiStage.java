@@ -4,10 +4,12 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 import cz.emo4d.zen.Zen;
 import cz.emo4d.zen.screens.GameScreen;
@@ -20,24 +22,64 @@ public class GameGuiStage extends BaseStage {
 	 */
 	private final GameScreen screen;
 
-	private Table root;
+	private Table rootPlayer;
 
 
 	public GameGuiStage(GameScreen screen) {
 		super(screen);
 		this.screen = screen;
 
-		root = new Table(skin);
-		root.debug();
+		rootPlayer = new Table(skin);
+		rootPlayer.setFillParent(true);
+		//		rootPlayer.debug();
 
-		root.add();
-		root.add().expandX();
-		root.row();
-		root.add(new Label("test", skin));
-		root.add();
+		Table playerGui = createPlayerGui();
+		rootPlayer.add(playerGui).left();
 
-		addActor(root);
+		rootPlayer.row();
+		rootPlayer.add().expand();
+
+		addActor(rootPlayer);
 	}
+
+
+
+
+
+	private Table createPlayerGui() {
+		Table tbl = new Table(skin);
+		//		tbl.debug();
+		tbl.setBackground(skin.getDrawable("gray-transparent"));
+
+
+		tbl.add(new Image(skin.getDrawable("avatar-main"))).width(60).height(60).pad(10);
+
+		Table stats = new Table(skin);
+		tbl.add(stats).pad(0, 0, 0, 10);
+
+		stats.add(new Label("LIVES", skin)).left().spaceRight(20);
+		Drawable heart = skin.getDrawable("heart-0");
+		stats.add(new Image(heart)).spaceRight(5);
+		stats.add(new Image(heart)).spaceRight(5);
+		stats.add(new Image(heart)).spaceRight(5);
+		stats.add(new Image(heart)).spaceRight(5);
+		stats.add(new Image(heart)).spaceRight(5);
+
+		stats.row().spaceTop(5);
+		stats.add(new Label("RAGE", skin)).left().spaceRight(20);
+		Drawable rageOn = skin.getDrawable("rage-on");
+		Drawable rageOff = skin.getDrawable("rage");
+		stats.add(new Image(rageOn)).spaceRight(5);
+		stats.add(new Image(rageOn)).spaceRight(5);
+		stats.add(new Image(rageOff)).spaceRight(5);
+		stats.add(new Image(rageOff)).spaceRight(5);
+		stats.add(new Image(rageOff)).spaceRight(5);
+
+		return tbl;
+	}
+
+
+
 
 
 
@@ -68,7 +110,7 @@ public class GameGuiStage extends BaseStage {
 
 	private void showExitDialog() {
 		final Zen game = screen.getGame();
-		final Dialog dlg = new Dialog("Uz mas dost?", skin);
+		final Dialog dlg = new Dialog("", skin);
 
 		TextButton btn1 = new TextButton("NE", skin);
 		btn1.pad(10, 30, 10, 30);
@@ -89,13 +131,15 @@ public class GameGuiStage extends BaseStage {
 			}
 		});
 
+		dlg.text("uz mas dost?");
+
 		dlg.button(btn1);
 		dlg.button(btn2);
 
+		dlg.pad(30, 10, 10, 10);
+
 		dlg.show(this);
-
 	}
-
 
 	@Override
 	public void draw() {
