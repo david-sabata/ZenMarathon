@@ -1,4 +1,4 @@
-package cz.emo4d.zen;
+package cz.emo4d.zen.gameplay;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,8 +9,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Effect {
 	
 	private Animation[] animation;
-	private int frameCols = 8; 
-    private int frameRows = 1;
+	private int frameCols; 
+    private int frameRows;
 	
 	private Texture animSheet;	
 	
@@ -40,12 +40,20 @@ public class Effect {
 			//setAnimPlayMode(i, playMode); //Animation.LOOP_PINGPONG;
 		}
 
-		animStateTime = 0f;	
-		currentAnimFrame = animation[initialFrame % this.frameRows].getKeyFrame(animStateTime);
+		reset(initialFrame);
 	}
+    
+    public void reset(int initialFrame) {
+    	animStateTime = 0f;	
+		currentAnimFrame = animation[initialFrame % this.frameRows].getKeyFrame(animStateTime);
+    }
     
     public void setAnimPlayMode(int row, int playMode) {
     	animation[row % this.frameRows].setPlayMode(playMode);
+    }
+    
+    public boolean isAnimationFinished(int animRow) {
+    	return animation[animRow % this.frameRows].isAnimationFinished(animStateTime);
     }
     
     

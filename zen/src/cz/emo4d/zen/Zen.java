@@ -1,5 +1,6 @@
 package cz.emo4d.zen;
 
+
 import com.badlogic.gdx.Game;
 
 import cz.emo4d.zen.screens.GameScreen;
@@ -12,10 +13,15 @@ public class Zen extends Game {
 
 	@Override
 	public void create() {
+		game = new GameScreen(this);
 		menu = new MainMenuScreen(this);
-		setScreen(menu);
-	}
 
+		if (false) {
+			showMenuScreen();
+		} else {
+			showGameScreen();
+		}
+	}
 
 
 
@@ -23,15 +29,14 @@ public class Zen extends Game {
 
 
 	public void showGameScreen() {
-		if (game != null) {
-			game.dispose();
-		}
-
-		game = new GameScreen(this);
 		setScreen(game);
 	}
 
 
+
+	public void showMenuScreen() {
+		setScreen(menu);
+	}
 
 
 }

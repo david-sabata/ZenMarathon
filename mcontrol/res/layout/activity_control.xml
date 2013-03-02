@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0099cc"
+    android:background="#000000"
     tools:context=".ControlActivity" >
 
     <LinearLayout
@@ -13,31 +13,41 @@
         <ImageView
             android:id="@+id/imageView1"
             android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="40dp"
+            android:src="@drawable/move_center" />
+        
+        <ImageView
+            android:id="@+id/imageViewDivider"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:src="@drawable/controlwheel" />
+            android:src="@drawable/divider" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical" >
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="vertical"
+            android:showDividers="none" >
 
-            <ImageView
-                android:id="@+id/imageViewBtnA"
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="20dp"
-                android:src="@drawable/button_a" />
+                android:padding="40dp"
+                android:text="     A     " />
 
-            <ImageView
-                android:id="@+id/imageViewBtnB"
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="20dp"
-                android:src="@drawable/button_b" />
+                android:padding="40dp"
+                android:paddingTop="0dp"
+                android:text="     B     " />
 
         </LinearLayout>
+
+        
 
     </LinearLayout>
 

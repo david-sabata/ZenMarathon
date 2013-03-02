@@ -20,9 +20,6 @@ public abstract class BaseStage extends Stage {
 
 		this.screen = screen;
 
-		// activate input processing
-		Gdx.input.setInputProcessor(this);
-
 		skin = new Skin(Gdx.files.internal("data/ui.json"), new TextureAtlas("data/ui.atlas"));
 	}
 

@@ -15,11 +15,14 @@ public class MainMenuScreen extends BaseScreen {
 		super(game);
 
 		menu = new MainMenuStage(this);
+
+		Gdx.input.setInputProcessor(menu);
 	}
 
 
 	@Override
 	public void render(float delta) {
+		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		menu.act(delta);
