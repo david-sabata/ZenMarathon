@@ -20,7 +20,7 @@ public class Player extends Mob {
 			Color.YELLOW, Color.MAGENTA, Color.CYAN };
 
 	private final static Texture shadow = new Texture(Gdx.files.internal("data/shadow.png"));
-	private Color shadowColor;
+	public final Color shadowColor;
 	private static int nextShadowColor = 0;
 
 	private Map.Position collidingInPoint;

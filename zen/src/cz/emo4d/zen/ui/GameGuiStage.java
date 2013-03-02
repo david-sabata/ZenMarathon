@@ -127,6 +127,11 @@ public class GameGuiStage extends BaseStage {
 
 		player.setFaceAnimations(avatar, animation, koAnimation);
 
+		Table line = new Table(skin);
+		line.setColor(player.shadowColor);
+		line.setBackground("white");
+		tbl.add(line).width(10).height(52);
+
 		tbl.add(avatar).width(30).height(32).pad(10);
 
 		Table stats = new Table(skin);
