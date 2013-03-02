@@ -20,8 +20,10 @@ import cz.emo4d.zen.Zen;
 import cz.emo4d.zen.gameplay.BulletManager;
 import cz.emo4d.zen.gameplay.EffectManager;
 import cz.emo4d.zen.gameplay.Enemy;
+import cz.emo4d.zen.gameplay.EnemyManager;
 import cz.emo4d.zen.gameplay.PlayerManager;
 import cz.emo4d.zen.gameplay.RemotePlayer;
+import cz.emo4d.zen.gameplay.SoundManager;
 import cz.emo4d.zen.remote.ClientMove;
 import cz.emo4d.zen.remote.DeviceEvent;
 import cz.emo4d.zen.remote.DeviceEventHandler;
@@ -34,7 +36,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	//	private TiledMap map;
 	//	private OrthogonalTiledMapRenderer renderer;
 	private static final int PLAYER_DAMAGE = 20;
-	
+
 	private Map map;
 
 	private GameGuiStage gui;
@@ -45,7 +47,8 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 	private BulletManager bulletManager;
 	private EffectManager effectManager;
-	private Enemy enemy;
+	//private Enemy enemy;
+	private EnemyManager enemyManager;
 
 	private GameInputAdapter gameInputAdapter = new GameInputAdapter(this);
 	private InputMultiplexer inputMpx = new InputMultiplexer();
@@ -67,6 +70,8 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		map = new Map("floor1");
 
+		SoundManager.getSound("background.wav").loop();
+
 		// create an orthographic camera, shows us 30x20 units of the world
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 30, 20);
@@ -79,9 +84,14 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		effectManager = new EffectManager();
 		bulletManager = new BulletManager(map, new Texture(Gdx.files.internal("data/bullet.png")), effectManager);
+		enemyManager = new EnemyManager();
 
-		enemy = new Enemy(map.getCoord(56, 39));
-		enemy.setMap(map);
+		for (int i = 0; i < 100; i++) {
+			Enemy enemy = new Enemy(map.getCoord(56, 39));
+			enemy.setMap(map);
+
+			enemyManager.addEnemy(enemy);
+		}
 
 		remoteSlaves = new ArrayList<RemotePlayer>();
 		pendingSlaves = new ArrayList<RemotePlayer>();
@@ -95,8 +105,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 	public void onKeyPress(int keycode) {
 		if (keycode == Keys.CONTROL_LEFT) {
-			bulletManager.shoot(playerManager.getMainPlayer().position,
-					playerManager.getMainPlayer().currentDir, PLAYER_DAMAGE, playerManager.getMainPlayer());
+			bulletManager.shoot(playerManager.getMainPlayer().position, playerManager.getMainPlayer().currentDir, playerManager.getMainPlayer());
 		}
 		if (keycode == Keys.TAB) {
 			//			doTeleport(map.getCoord(14, 36));
@@ -135,7 +144,9 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		for (int i = 0; i < remoteSlaves.size(); i++) {
 			if ((cm = rc.getClientMove(remoteSlaves.get(i).remoteId)) != null) {
+
 				//Gdx.app.log("MOVE","SLAVE " + Integer.toString(remoteSlaves.get(i).localId));
+
 				moveVec.set(cm.X, -cm.Y);
 				playerManager.controllerInput(remoteSlaves.get(i).localId, moveVec);
 			}
@@ -168,9 +179,9 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		bulletManager.update(deltaTime);
 		bulletManager.collisionWithMap(rc);
-		bulletManager.collision(playerManager.getPlayers(), null);
-		
-		
+		bulletManager.collision(playerManager.getPlayers(), enemyManager.getEnemies());
+
+		enemyManager.update(deltaTime);
 		/*if (enemy.health > 0) {
 
 			int hits = bulletManager.collision(enemy);
@@ -197,8 +208,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		SpriteBatch batch = map.renderer.getSpriteBatch();
 		batch.begin();
 		playerManager.render(batch);
-		if (enemy.health > 0)
-			enemy.render(batch);
+		enemyManager.render(batch);
 		bulletManager.render(batch);
 		effectManager.render(batch);
 
@@ -220,6 +230,8 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		SequenceAction seq = new SequenceAction();
 
+		SoundManager.getSound("teleport.wav").play();
+
 		seq.addAction(Actions.fadeIn(0.2f, Interpolation.fade));
 
 		seq.addAction(new RunnableAction() {
@@ -227,9 +239,10 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 			public void run() {
 				map = new Map(newPos.mapName);
 				Map.Position targetPos = map.inPoints.get(newPos.identifier);
-				playerManager.teleportAllPlayers(targetPos.coordinates);
+				playerManager.teleportAllPlayers(map, targetPos.coordinates);
 
 				kickvector.set(targetPos.direction);
+				kickvector.y *= -1;
 				playerManager.applyKick(kickvector);
 			}
 		});
@@ -242,6 +255,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 				Map.Position targetPos = map.inPoints.get(newPos.identifier);
 
 				kickvector.set(targetPos.direction);
+				kickvector.y *= -1;
 				playerManager.applyKick(kickvector);
 			}
 		});
@@ -259,7 +273,6 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		background.addAction(seq);
 	}
-
 
 
 
@@ -288,19 +301,17 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		} else if (type == DeviceEvent.PRESS_A) {
 			// Master is shooting
 			if (device == remoteMaster)
-				bulletManager.shoot(playerManager.getMainPlayer().position,
-						playerManager.getMainPlayer().currentDir, PLAYER_DAMAGE, playerManager.getMainPlayer());
-			
+				bulletManager.shoot(playerManager.getMainPlayer().position, playerManager.getMainPlayer().currentDir, playerManager.getMainPlayer());
+
 			// Slave is shooting
 			for (int i = 0; i < remoteSlaves.size(); i++) {
 				if (remoteSlaves.get(i).remoteId == device) {
 					bulletManager.shoot(playerManager.getPlayer(remoteSlaves.get(i).localId).position,
-							playerManager.getPlayer(remoteSlaves.get(i).localId).currentDir, PLAYER_DAMAGE,
-							playerManager.getPlayer(remoteSlaves.get(i).localId));
+							playerManager.getPlayer(remoteSlaves.get(i).localId).currentDir, playerManager.getPlayer(remoteSlaves.get(i).localId));
 				}
 			}
-			
-			
+
+
 		}
 	}
 
