@@ -21,6 +21,7 @@ public class Entity {
 			return new Rectangle();
 		}
 	};
+
 	protected static Array<Rectangle> tiles = new Array<Rectangle>();
 
 	protected Map currentMap;
@@ -40,24 +41,40 @@ public class Entity {
 		this.currentMap = map;
 	}
 
+	public Map getMap() {
+		return currentMap;
+	}
+
+
+	public static int getDirectionNumber(Direction dir) {
+		switch (dir) {
+			case S:
+				return 0;
+			case SW:
+				return 1;
+			case W:
+				return 2;
+			case NW:
+				return 3;
+			case N:
+				return 4;
+			case NE:
+				return 5;
+			case E:
+				return 6;
+			case SE:
+				return 7;
+		}
+		return -1;
+	}
+
 	public Entity collision() {
-		// perform collision detection & response, on each axis, separately
-		// if the koala is moving right, check the tiles to the right of it's
-		// right bounding box edge, otherwise check the ones to the left
+		// perform basic collision detection
 
 		Rectangle playerRect = rectPool.obtain();
 		playerRect.set(this.position.x, this.position.y, this.WIDTH, this.HEIGHT);
 
-		/*int startX, startY, endX, endY;
-		if (this.velocity.x > 0) {
-			startX = endX = (int) (this.position.x + this.WIDTH + this.velocity.x);
-		} else {
-			startX = endX = (int) (this.position.x + this.velocity.x);
-		}
-		startY = (int) (this.position.y);
-		endY = (int) (this.position.y + this.HEIGHT);*/
 		getTiles((int) this.position.x, (int) this.position.y, (int) (this.position.x + this.WIDTH), (int) (this.position.y + this.HEIGHT), tiles);
-		//playerRect.x += this.velocity.x;
 
 		for (Rectangle tile : tiles) {
 			if (playerRect.overlaps(tile)) {
@@ -67,28 +84,7 @@ public class Entity {
 			}
 		}
 
-		/*	playerRect.x = this.position.x;
-
-			// if the koala is moving upwards, check the tiles to the top of it's
-			// top bounding box edge, otherwise check the ones to the bottom
-			if (this.velocity.y > 0) {
-				startY = endY = (int) (this.position.y + this.HEIGHT + this.velocity.y);
-			} else {
-				startY = endY = (int) (this.position.y + this.velocity.y);
-			}
-			startX = (int) (this.position.x);
-			endX = (int) (this.position.x + this.WIDTH);
-			getTiles(startX, startY, endX, endY, tiles, map);
-			playerRect.y += this.velocity.y;
-			for (Rectangle tile : tiles) {
-				if (playerRect.overlaps(tile)) {
-					this.velocity.y = 0;
-					rectPool.free(playerRect);
-					return new Entity();
-				}
-			}		*/
 		rectPool.free(playerRect);
-
 		return null;
 	}
 

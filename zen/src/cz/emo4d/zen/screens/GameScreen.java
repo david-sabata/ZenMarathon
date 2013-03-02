@@ -11,7 +11,8 @@ import com.badlogic.gdx.math.Vector2;
 
 import cz.emo4d.zen.Zen;
 import cz.emo4d.zen.gameplay.Bullet;
-import cz.emo4d.zen.gameplay.Player;
+import cz.emo4d.zen.gameplay.Enemy;
+import cz.emo4d.zen.gameplay.PlayerManager;
 import cz.emo4d.zen.remote.ClientMove;
 import cz.emo4d.zen.remote.DeviceEvent;
 import cz.emo4d.zen.remote.DeviceEventHandler;
@@ -28,10 +29,12 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 	private GameGuiStage gui;
 
-	private Player player;
+	private PlayerManager playerManager;
 	private OrthographicCamera camera;
 	Vector2 moveVec = new Vector2();
+
 	private Bullet bullet;
+	private Enemy enemy;
 
 	private GameInputAdapter gameInputAdapter = new GameInputAdapter(this);
 	private InputMultiplexer inputMpx = new InputMultiplexer();
@@ -49,12 +52,16 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		camera.setToOrtho(false, 30, 20);
 		camera.update();
 
-		// invertovat Y souradnici pro indexovani s nulou v levem HORNIM rohu		
-		player = new Player(new Vector2(7, map.height - 4), 0, 0);
-		player.setMap(map);
+
+		// invertovat Y souradnici pro indexovani s nulou v levem HORNIM rohu
+		playerManager = new PlayerManager(map, new Vector2(7, map.height - 6));
+		playerManager.addPlayer(new Vector2(7, map.height - 4));
 
 		bullet = new Bullet(new Texture(Gdx.files.internal("data/bullet.png")));
 		bullet.setMap(map);
+
+		enemy = new Enemy(new Vector2(7, map.height - 8));
+		enemy.setMap(map);
 
 		rc.RegisterEventHandler(this);
 
@@ -66,7 +73,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 	public void onKeyPress(int keycode) {
 		if (keycode == Keys.CONTROL_LEFT) {
-			bullet.shoot(player.position, player.currentDir);
+			bullet.shoot(playerManager.getMainPlayer().position, playerManager.getMainPlayer().currentDir);
 		}
 	}
 
@@ -78,49 +85,45 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
-		// process input 
+		// -- process input -- 
 		moveVec.set(0, 0);
 
+		// controller input
 		ClientMove cm = rc.getClientMove(1);
 		if (cm != null) {
 			moveVec.set(cm.X, -cm.Y); // * player.MAX_VELOCITY
-		}
 
-		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			moveVec.y = 1f; //player.MAX_VELOCITY
-		} else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-			moveVec.y = -1f;
+			playerManager.controllerInput(0, moveVec);
 		}
-		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-			moveVec.x = -1f;
-		} else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			moveVec.x = 1f;
-		}
+		// keyboard input
+		playerManager.keyboardInput();
 
-		if (moveVec.x != 0 || moveVec.y != 0) {
-			player.move(moveVec);
-		}
 
-		// update
-		player.update(deltaTime);
+		// -- update --
+		playerManager.update(deltaTime);
+
+
 		bullet.update(deltaTime);
 		if (bullet.collision() != null) {
 			bullet.alive = false;
 		}
+		enemy.update(deltaTime);
 
 		// let the camera follow the player
-		camera.position.x = player.position.x;
-		camera.position.y = player.position.y;
+		camera.position.x = playerManager.getMainPlayer().position.x;
+		camera.position.y = playerManager.getMainPlayer().position.y;
 		camera.update();
 
 		// render map
 		map.render(camera);
 
+
 		// render
 		SpriteBatch batch = map.renderer.getSpriteBatch();
 		batch.begin();
-		player.render(batch);
+		playerManager.render(batch);
 		bullet.render(batch);
+		enemy.render(batch);
 		batch.end();
 
 		// gui
@@ -128,18 +131,16 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		gui.draw();
 	}
 
-
 	@Override
 	public void acceptEvent(int type, int device, float X, float Y) {
 		if (type == DeviceEvent.MOVE) {
 			//player.move(new Vector2(X * player.MAX_VELOCITY,  -Y * player.MAX_VELOCITY));
+		} else if (type == DeviceEvent.CONNECT) {
+
+		} else if (type == DeviceEvent.DISCONNECT) {
+
 		}
-
 	}
-
-
-
-
 
 
 	@Override
