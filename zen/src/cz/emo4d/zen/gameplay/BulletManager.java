@@ -155,6 +155,7 @@ public class BulletManager {
 				
 				activeBullets.removeIndex(i);
 				
+				SoundManager.getSound("wall.wav").play();
 				//rc.emitEvent(0, DeviceEvent.VIBRATE);
 			}			
 		}
