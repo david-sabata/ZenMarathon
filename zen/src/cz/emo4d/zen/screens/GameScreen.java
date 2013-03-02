@@ -18,7 +18,7 @@ import cz.emo4d.zen.Zen;
 import cz.emo4d.zen.remote.DeviceEvent;
 import cz.emo4d.zen.remote.DeviceEventHandler;
 import cz.emo4d.zen.remote.RemoteControl;
-import cz.emo4d.zen.remote.RemoteControl.ClientMove;
+import cz.emo4d.zen.remote.ClientMove;
 
 public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
@@ -32,6 +32,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	private GameInputAdapter gameInputAdapter = new GameInputAdapter(this);
 
 	private RemoteControl rc = new RemoteControl();
+
 
 	public GameScreen(Zen game) {
 		super(game);
@@ -67,6 +68,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		// clear the screen
 		Gdx.gl.glClearColor(0.7f, 0.7f, 1.0f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glDisable(GL10.GL_DEPTH_TEST);
 
 		// process input 
 		moveVec.set(0, 0);
@@ -107,10 +109,9 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		// render
 		SpriteBatch batch = renderer.getSpriteBatch();
-		batch.begin();
+		batch.begin();		
 		player.render(batch);
 		bullet.render(batch);
-
 		batch.end();
 	}
 

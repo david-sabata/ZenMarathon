@@ -6,12 +6,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.net.DhcpInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
@@ -34,6 +39,8 @@ public class NetService extends Service {
 	private String mHost = null;
 
 	private final static int SERVERPORT = 5869;
+	private static final int DISCOVERYPORT = 10869;
+	private static final String discoveryData = "ZenDiscovery";	
 	private final static String SERIALIZER_DELIMITER = "&&&&";
 
 	@Override
@@ -41,10 +48,73 @@ public class NetService extends Service {
 
 		return mBinder;
 	}
+	
+	public void runAutoDiscovery() {
+		DiscoveryClass exe = new DiscoveryClass();
+		exe.execute();
+	}
 
-	public boolean openConnection(String host) {
+	
+	private class DiscoveryClass extends AsyncTask<Void, Void, Void> {
+		@Override
+		protected Void doInBackground(Void... arg0) {
+			WifiManager wifi = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+		    DhcpInfo dhcp = wifi.getDhcpInfo();
+		    // handle null somehow
 
-		mHost = host;
+		    int broadcast = (dhcp.ipAddress & dhcp.netmask) | ~dhcp.netmask;
+		    byte[] quads = new byte[4];
+		    for (int k = 0; k < 4; k++)
+		      quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
+		   
+		  
+		    try {
+		    DatagramSocket socket = new DatagramSocket();
+		    socket.setBroadcast(true);
+		    DatagramPacket packet = new DatagramPacket(discoveryData.getBytes(), discoveryData.length(),
+		        InetAddress.getByAddress(quads), DISCOVERYPORT);
+		    socket.send(packet);
+		    
+		    Log.i("Discovery","before recv");
+		    socket.close();
+		    
+		    
+		    DatagramSocket socket2 = new DatagramSocket(DISCOVERYPORT);
+		    byte[] buf = new byte[1024];
+		    packet = new DatagramPacket(buf, buf.length);
+		    socket2.receive(packet);
+		    
+		    socket2.close();		
+		    
+		    mHost = new String(packet.getData());
+		    
+		    int pos = mHost.indexOf(buf[400]);
+		    mHost = mHost.substring(0, pos);
+		    Log.i("Discovery", mHost);
+		    		    
+		    } catch (Exception e) {
+		    	e.printStackTrace();
+		    }
+		    
+		    
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void param) {
+			super.onPostExecute(param);
+
+		}
+
+		@Override
+		protected void onProgressUpdate(Void... values) {
+			super.onProgressUpdate(values);
+
+		}
+	}
+	
+	public boolean openConnection() {
+
 		OpenConnTask oc = new OpenConnTask();
 		oc.execute();
 

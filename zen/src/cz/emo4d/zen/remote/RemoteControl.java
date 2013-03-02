@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -28,23 +30,23 @@ public class RemoteControl {
 	public RemoteControl() {
 		clients = new ArrayList<Thread>();
 		events = new ArrayList<DeviceEvent>();
-		clientMoves = new ArrayList<RemoteControl.ClientMove>();
+		clientMoves = new ArrayList<ClientMove>();
 
 		startTCPServer();
 
+		AutoDiscoveryAsync exe = new AutoDiscoveryAsync();
+		exe.start();
+
 	}
-	
+
 	private void startTCPServer() {
+
 		RemoteControlAsync rca = new RemoteControlAsync();
 		rca.start();
 
 		MessageGetter mg = new MessageGetter();
 		mg.start();
-	}
 
-	public class ClientMove {
-		public Float X;
-		public Float Y;
 	}
 
 	public void RegisterEventHandler(DeviceEventHandler cb) {
@@ -81,6 +83,45 @@ public class RemoteControl {
 		de.player = 1;
 
 		return de;
+	}
+
+	class AutoDiscoveryAsync extends Thread {
+		@Override
+		public void run() {
+			while (true) {
+				try {
+					DatagramSocket socket = new DatagramSocket(discoveryPort);
+					// socket.setBroadcast(true);
+
+					byte[] buf = new byte[1024];
+					DatagramPacket packet = new DatagramPacket(buf, buf.length);
+					Gdx.app.log("", "Discovery waiting");
+					socket.receive(packet);
+
+					InetAddress clientAddr = packet.getAddress();
+
+					InetAddress thisIp = InetAddress.getLocalHost();
+					String ip = thisIp.getHostAddress();
+
+					Gdx.app.log("Discovery", clientAddr.getHostAddress());
+
+					socket.close();
+
+					DatagramSocket socket2 = new DatagramSocket();
+
+					packet = new DatagramPacket(ip.getBytes(), ip.length(),
+							clientAddr, discoveryPort);
+					socket2.send(packet);
+					socket2.close();
+
+					Gdx.app.log("", "Discovery sent");
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
 	}
 
 	class RemoteControlAsync extends Thread {
@@ -172,7 +213,7 @@ public class RemoteControl {
 			}
 		}
 	}
-	
+
 	public ClientMove getClientMove(int client) {
 		if (clientMoves.size() >= client) {
 			return clientMoves.get(client - 1);

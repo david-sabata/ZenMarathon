@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Pool;
 
 
 public class Player extends Entity {
-	
+
 	private Pool<Rectangle> rectPool = new Pool<Rectangle>() {
 		@Override
 		protected Rectangle newObject() {
@@ -22,14 +22,11 @@ public class Player extends Entity {
 	};
 	private Array<Rectangle> tiles = new Array<Rectangle>();
 	private TiledMap refMap;
-	
-	
+
 	public float WIDTH;
 	public float HEIGHT;
 	public float MAX_VELOCITY = 8f;
 	public float DAMPING = 0.87f;
-		
-
 	
 	enum State {
 		Standing, Walking, Shooting
@@ -44,60 +41,49 @@ public class Player extends Entity {
 	
 	public Player(Vector2 pos, float width, float height) {		
 		super();
-		
 		position = pos;
-		
+
 		this.effect = new Effect(new Texture(Gdx.files.internal("data/effects/player_sheet.png")), 6, 8, 0.1f, 1);
-		WIDTH = 1/32f * (effect.width-3);
-		HEIGHT = 1/32f * (effect.height-3);	
-		
+		WIDTH = 1 / 32f * (effect.width - 3);
+		HEIGHT = 1 / 32f * (effect.height - 15);
+
 		effect.update(0, true); // 0 = Direction.S 
 	}
 
 	public void move(Vector2 dir) {
 		float dirAngle = dir.angle();
-		
+
 		if (dirAngle > 337.5f) {
-			currentDir = Direction.E;						
-		}
-		else if (dirAngle > 292.5f) {
+			currentDir = Direction.E;
+		} else if (dirAngle > 292.5f) {
 			currentDir = Direction.SE;
-		}
-		else if (dirAngle > 247.5f) {
+		} else if (dirAngle > 247.5f) {
 			currentDir = Direction.S;
-		}
-		else if (dirAngle > 202.5f) {
+		} else if (dirAngle > 202.5f) {
 			currentDir = Direction.SW;
-		}
-		else if (dirAngle > 157.5f) {
+		} else if (dirAngle > 157.5f) {
 			currentDir = Direction.W;
-		}
-		else if (dirAngle > 112.5f) {
+		} else if (dirAngle > 112.5f) {
 			currentDir = Direction.NW;
-		}
-		else if (dirAngle > 67.5f) {
-			currentDir = Direction.N;			
-		}		
-		else if (dirAngle > 22.5f) {
-			currentDir = Direction.NE;			
-		}
-		else
-			currentDir = Direction.E;		
-				
+		} else if (dirAngle > 67.5f) {
+			currentDir = Direction.N;
+		} else if (dirAngle > 22.5f) {
+			currentDir = Direction.NE;
+		} else
+			currentDir = Direction.E;
+
 		velocity.add(dir);
 		state = Player.State.Walking;
 	}
-	
+
 	public void update(float deltaTime, TiledMap map) {
-		
+
 		// clamp the velocity to the maximum
 		if (Math.abs(velocity.x) > MAX_VELOCITY) {
-			velocity.x = Math.signum(velocity.x)
-					* MAX_VELOCITY;
+			velocity.x = Math.signum(velocity.x) * MAX_VELOCITY;
 		}
 		if (Math.abs(velocity.y) > MAX_VELOCITY) {
-			velocity.y = Math.signum(velocity.y)
-					* MAX_VELOCITY;
+			velocity.y = Math.signum(velocity.y) * MAX_VELOCITY;
 		}
 
 		// clamp the velocity to 0 if it's < 1, and set the state to standing
@@ -108,53 +94,53 @@ public class Player extends Entity {
 
 		// multiply by delta time so we know how far we go
 		// in this frame
-		velocity.mul(deltaTime);		
-		
+		velocity.mul(deltaTime);
+
 		switch (state) {
-		case Standing:
-			break;
-		case Walking: {			
-			switch (currentDir) {
-			case S:
-				effect.update(0, true);
-				break;				
-			case SW:
-				effect.update(1, true);
+			case Standing:
 				break;
-			case W:
-				effect.update(2, true);
-				break;
-			case NW:
-				effect.update(3, true);
-				break;
-			case N:
-				effect.update(4, true);
-				break;
-			case NE:
-				effect.update(5, true);
-				break;
-			case E:
-				effect.update(6, true);
-				break;
-			case SE:
-				effect.update(7, true);
+			case Walking: {
+				switch (currentDir) {
+					case S:
+						effect.update(0, true);
+						break;
+					case SW:
+						effect.update(1, true);
+						break;
+					case W:
+						effect.update(2, true);
+						break;
+					case NW:
+						effect.update(3, true);
+						break;
+					case N:
+						effect.update(4, true);
+						break;
+					case NE:
+						effect.update(5, true);
+						break;
+					case E:
+						effect.update(6, true);
+						break;
+					case SE:
+						effect.update(7, true);
+						break;
+				}
 				break;
 			}
-			break;
+			case Shooting:
+				//frame = jump.getKeyFrame(koala.stateTime);
+				//effect.update(2, true);
+				break;
 		}
-		case Shooting:
-			//frame = jump.getKeyFrame(koala.stateTime);
-			//effect.update(2, true);
-			break;
-		}		
-		
+
 		// perform collision detection & response, on each axis, separately
 		// if the koala is moving right, check the tiles to the right of it's
 		// right bounding box edge, otherwise check the ones to the left
 		refMap = map;
 		Rectangle playerRect = rectPool.obtain();
 		playerRect.set(this.position.x, this.position.y, this.WIDTH, this.HEIGHT);	
-		
+
 		int startX, startY, endX, endY;
 		if (this.velocity.x > 0) {
 			startX = endX = (int) (this.position.x + this.WIDTH + this.velocity.x);
@@ -191,7 +177,7 @@ public class Player extends Entity {
 			}
 		}
 		rectPool.free(playerRect);
-		
+
 		// unscale the velocity by the inverse delta time and set
 		// the latest position
 		this.position.add(this.velocity);
@@ -200,12 +186,12 @@ public class Player extends Entity {
 		// Apply damping to the velocity so we don't
 		// walk infinitely once a key was pressed
 		this.velocity.mul(this.DAMPING);
-	}	
-	
-	public void render(SpriteBatch spriteBatch) {
-		effect.render(spriteBatch, position.x, position.y, 1/32f * (effect.width), 1/32f * (effect.height));		
 	}
-	
+
+	public void render(SpriteBatch spriteBatch) {
+		effect.render(spriteBatch, position.x, position.y, 1 / 32f * (effect.width), 1 / 32f * (effect.height));
+	}
+
 	private void getTiles(int startX, int startY, int endX, int endY, Array<Rectangle> tiles) {
 		TiledMapTileLayer layer = (TiledMapTileLayer) refMap.getLayers().getLayer(1);
 		rectPool.freeAll(tiles);
