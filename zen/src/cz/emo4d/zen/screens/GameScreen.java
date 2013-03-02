@@ -50,10 +50,10 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	private InputMultiplexer inputMpx = new InputMultiplexer();
 
 	private RemoteControl rc = new RemoteControl();
-	
+
 	// Master player remote connection
 	private int remoteMaster = -1;
-	
+
 	// Slave players array
 	private ArrayList<RemotePlayer> remoteSlaves;
 	private ArrayList<RemotePlayer> pendingSlaves;
@@ -78,10 +78,10 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		effectManager = new EffectManager();
 		bulletManager = new BulletManager(map, new Texture(Gdx.files.internal("data/bullet.png")), effectManager);
-		
+
 		enemy = new Enemy(map.getCoord(7, 8));
 		enemy.setMap(map);
-		
+
 		remoteSlaves = new ArrayList<RemotePlayer>();
 		pendingSlaves = new ArrayList<RemotePlayer>();
 		rc.RegisterEventHandler(this);
@@ -112,12 +112,12 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		moveVec.set(0, 0);
 
 		// controller input
-		
+
 		ClientMove cm;
 		if (remoteMaster != -1) {
 			if ((cm = rc.getClientMove(remoteMaster)) != null) {
-				Gdx.app.log("MOVE","MASTER");
-				moveVec.set(cm.X,-cm.Y);
+				Gdx.app.log("MOVE", "MASTER");
+				moveVec.set(cm.X, -cm.Y);
 				playerManager.controllerInput(0, moveVec);
 			}
 		}
@@ -125,20 +125,20 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 			RemotePlayer rp = pendingSlaves.get(i);
 			rp.localId = playerManager.addPlayer(playerManager.getMainPlayer().position);
 			Gdx.app.log("SLAVE CREATE", Integer.toString(rp.localId));
-			playerManager.controllerInput(rp.localId, new Vector2(1.0f,1.0f));
+			playerManager.controllerInput(rp.localId, new Vector2(1.0f, 1.0f));
 			remoteSlaves.add(rp);
 			pendingSlaves.remove(i);
 			i--;
 		}
-		
+
 		for (int i = 0; i < remoteSlaves.size(); i++) {
 			if ((cm = rc.getClientMove(remoteSlaves.get(i).remoteId)) != null) {
 				//Gdx.app.log("MOVE","SLAVE " + Integer.toString(remoteSlaves.get(i).localId));
-				moveVec.set(cm.X,-cm.Y);
-				playerManager.controllerInput(remoteSlaves.get(i).localId ,moveVec);
+				moveVec.set(cm.X, -cm.Y);
+				playerManager.controllerInput(remoteSlaves.get(i).localId, moveVec);
 			}
 		}
-		
+
 		// keyboard input
 		playerManager.keyboardInput();
 
@@ -221,12 +221,21 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 				playerManager.teleportAllPlayers(targetPos.coordinates);
 
 				kickvector.set(targetPos.direction);
-				kickvector.mul(8);
 				playerManager.applyKick(kickvector);
 			}
 		});
 
 		seq.addAction(Actions.fadeOut(0.2f, Interpolation.fade));
+
+		seq.addAction(new RunnableAction() {
+			@Override
+			public void run() {
+				Map.Position targetPos = map.inPoints.get(newPos.identifier);
+
+				kickvector.set(targetPos.direction);
+				playerManager.applyKick(kickvector);
+			}
+		});
 
 		seq.addAction(Actions.delay(0.3f));
 
@@ -248,7 +257,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	@Override
 	public void acceptEvent(int type, int device, float X, float Y) {
 		if (type == DeviceEvent.MOVE) {
-			
+
 		} else if (type == DeviceEvent.CONNECT) {
 			Gdx.app.log("Player Connection", Float.toString(X));
 			if (X == 0.0) {
@@ -259,12 +268,12 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 				Gdx.app.log("Conn", "Slave");
 				RemotePlayer rp = new RemotePlayer();
 				rp.remoteId = device;
-				
-				
+
+
 				pendingSlaves.add(rp);
-				
+
 			}
-			
+
 		} else if (type == DeviceEvent.DISCONNECT) {
 
 		}
