@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="20" height="12" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="in-dvere" value="3x9"/>
+  <property name="out-floor1-arena1" value="3x11"/>
+ </properties>
  <tileset firstgid="1" name="FIT" tilewidth="32" tileheight="32">
   <image source="fit.png" width="512" height="512"/>
  </tileset>
  <layer name="background2" width="20" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYKAtqEDC5KqpoBIeaubJEYEHg3nU9u9gM28wAwCzDz3h
+   eJxjYKAtqEDC5KqpoBIeaubJEYEHg3nU9u9gMw8GlgDxUizi5IItQLyVQjMAy85Akw==
   </data>
  </layer>
  <layer name="background1" width="20" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYKAtWAWlV1CgZicSxiVOjJqBBr8Y8IcDOQDZvN1AvAeI91LJvNNAfAaIz5JpFrp/bwPxHSC+S6Z5MHAeiC9QaMZwAQA3xBiw
+   eJxjYKAtWAWlV1CgZicSxiVOjJqBBr8Y8IcDOQDZvN1AvAeI91LJvNNAfAaIz5JpFrp/bwPxHSC+S6Z5MHAeiC9QaMZgADOhmBIAAIaoGeI=
   </data>
  </layer>
  <layer name="walls" width="20" height="12">
   <data encoding="base64" compression="zlib">
-   eJxbyMDAsBAJlyPhhTgwPjUb0XA7EkaXI1YNtcBgMW8/EB8YNW/QxAch82B4CRAvxSJOLt4CxFspNAMAkwxFEw==
+   eJxbyMDAsBAJlyPhhTgwPjUb0XA7EkaXI1YNtcBgMW8/EB8YNW/QxAch89DNxZWOScXUMA8Aek1CYQ==
   </data>
  </layer>
  <layer name="overlay2" width="20" height="12">

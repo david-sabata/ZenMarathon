@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="28" height="15" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="in-ldvere" value="5x12"/>
+  <property name="in-rdvere" value="21x12"/>
+  <property name="indir-ldvere" value="0x-1"/>
+  <property name="indir-rdvere" value="0x-1"/>
+  <property name="out-floor1-e112l" value="5x14"/>
+  <property name="out-floor1-e112r" value="21x14"/>
+ </properties>
+ <tileset firstgid="1" name="fit" tilewidth="32" tileheight="32">
+  <image source="fit.png" trans="ff00ff" width="512" height="512"/>
+ </tileset>
+ <layer name="background2" width="28" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBj+oJJOeKTYV0UnPOq/Uf/RIj+sJBIPVvuGMwAAskaLPQ==
+  </data>
+ </layer>
+ <layer name="background1" width="28" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBj+YCed8ECBmXTCAwVG/Te0/TeYwAoS1K6ion37CGBq2TfUAQC88kn9
+  </data>
+ </layer>
+ <layer name="walls" width="28" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxTZ2BgUKcj1gJiDTphkF2aDPQDmgNs3xogXotEM+CRI0UtLvtoDUb9h1tuKPpvMNm3DojX48AbaGAfNcBA2IetXIUBcstlfPoBukI2EQ==
+  </data>
+ </layer>
+ <layer name="overlay2" width="28" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFtAJz0DA+OVLUDhYwGP33GYqpAQaj/0bBKNBEw4uAeCEWcWIxSO9iLOK4wCYg3kiB+0F6N+OQAwCbAyf7
+  </data>
+ </layer>
+ <layer name="overlay1" width="28" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFtAJfyVCLTc8XIs34TIJ9tDYH3c0wPr4wISW8CAGYH75RwSx84Y/u5i9YxHCpxQXwuRk9bj5jESPGnFGACT4C8aeBdsQQADOhmBb6AXplGUg=
+  </data>
+ </layer>
+</map>
