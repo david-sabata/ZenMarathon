@@ -15,7 +15,7 @@ public class Mob extends Entity {
 	public static float DAMPING = 0.87f;
 	public static int MAX_HEALTH = 100;
 	public int health = MAX_HEALTH;
-
+	public boolean alive = true;
 
 	// gui sem nastavuje obrazky se srdickama, ktere si pak hrac updatuje
 	public final Array<Image> hearts = new Array<Image>();
@@ -33,8 +33,8 @@ public class Mob extends Entity {
 	public Mob() {
 		super();
 
-		Random r = new Random();
-		health = Math.round(r.nextFloat() * 100);
+		//Random r = new Random();
+		//health = Math.round(r.nextFloat() * 100);
 	}
 
 

@@ -35,9 +35,9 @@ public class BulletManager {
 			Bullet b = activeBullets.get(i);
 			
 			for (int j = 0; j < players.size; j++) {
-				Player p = players.get(j);				
+				Mob p = players.get(j);				
 				
-				if (p.alive && p != b.player && b.collision(p)) {
+				if (p.alive && p != b.shooter && b.collision(p)) {
 					p.takeHit(b.strength);				
 					em.addEffect(EffectManager.AvailableEffects.BULLET_EXPLOSION,
 							b.position.x, b.position.y);

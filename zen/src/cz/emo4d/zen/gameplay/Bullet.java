@@ -18,7 +18,8 @@ public class Bullet extends Entity {
 	private Vector2 tmp = new Vector2();
 	
 	public int strength = 20;
-	public Player player;
+	public Mob shooter;
+	public Direction dir;
 		
 	public Bullet(Texture tex) {
 		super();
@@ -36,11 +37,12 @@ public class Bullet extends Entity {
 		}		
 	}	
 	
-	public void shoot(Vector2 origin, Direction dir, int strength, Player player) {
+	public void shoot(Vector2 origin, Direction dir, int strength, Mob shooter) {
 		alive = true;
 		this.position.set(origin);
 		this.strength = strength;
-		this.player = player;
+		this.shooter = shooter;
+		this.dir = dir;
 				
 		switch (dir) {
 		case S:
