@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import cz.emo4d.zen.Zen;
 import cz.emo4d.zen.gameplay.BulletManager;
+import cz.emo4d.zen.gameplay.EffectManager;
 import cz.emo4d.zen.gameplay.Enemy;
 import cz.emo4d.zen.gameplay.PlayerManager;
 import cz.emo4d.zen.gameplay.RemotePlayer;
@@ -42,6 +43,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	Vector2 moveVec = new Vector2();
 
 	private BulletManager bulletManager;
+	private EffectManager effectManager;
 	private Enemy enemy;
 
 	private GameInputAdapter gameInputAdapter = new GameInputAdapter(this);
@@ -74,8 +76,9 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		playerManager = new PlayerManager(map, map.getCoord(7, 6));
 		playerManager.addPlayer(map.getCoord(7, 6));
 
-		bulletManager = new BulletManager(map, new Texture(Gdx.files.internal("data/bullet.png")));
-
+		effectManager = new EffectManager();
+		bulletManager = new BulletManager(map, new Texture(Gdx.files.internal("data/bullet.png")), effectManager);
+		
 		enemy = new Enemy(map.getCoord(7, 8));
 		enemy.setMap(map);
 		
@@ -167,8 +170,11 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 			int hits = bulletManager.collision(enemy);
 			enemy.health -= 20 * hits;
 			enemy.update(deltaTime);
+			if (enemy.health <= 0)
+				effectManager.addEffect(EffectManager.AvailableEffects.DIE_EXPLOSION, enemy.position.x, enemy.position.y);
 		}
 
+		effectManager.update(deltaTime);
 
 		// let the camera follow the player
 		camera.position.x = playerManager.getMainPlayer().position.x;
@@ -185,6 +191,8 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		if (enemy.health > 0)
 			enemy.render(batch);
 		bulletManager.render(batch);
+		effectManager.render(batch);
+
 		batch.end();
 
 		// render overlay

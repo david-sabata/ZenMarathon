@@ -19,9 +19,10 @@ public class Effect {
     
     public int width;
     public int height;
+    public float posX, posY;
 	
     
-    public Effect(Texture animSheet, int frameCols, int frameRows, float speed, int initialFrame) {  // 0.025
+    public Effect(Texture animSheet, int frameCols, int frameRows, float speed, int initialFrame, float x, float y) {  // 0.025
 		this.frameCols = frameCols;
 		this.frameRows = frameRows;
 		this.animSheet = animSheet;
@@ -41,7 +42,13 @@ public class Effect {
 		}
 
 		reset(initialFrame);
+		setPos(x, y);
 	}
+    
+    public void setPos(float x, float y) {
+    	posX = x;
+    	posY = y;    	
+    }    	
     
     public void reset(int initialFrame) {
     	animStateTime = 0f;	
@@ -66,7 +73,13 @@ public class Effect {
     	spriteBatch.draw(currentAnimFrame, x, y, width, height);    	
     }
     
-    public void render(SpriteBatch spriteBatch, float x, float y) {
+    /*public void render(SpriteBatch spriteBatch, float x, float y) {
     	spriteBatch.draw(currentAnimFrame, x, y);    	
     } //batch.draw(frame, koala.position.x + Character.WIDTH, koala.position.y, -Character.WIDTH, Character.HEIGHT);
+    */
+    
+    public void render(SpriteBatch spriteBatch, float width, float height) {
+    	render(spriteBatch, posX, posY, width, height);    	
+    }
+    
 }
