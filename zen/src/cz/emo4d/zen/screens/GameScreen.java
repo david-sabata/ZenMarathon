@@ -86,7 +86,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		pendingSlaves = new ArrayList<RemotePlayer>();
 		rc.RegisterEventHandler(this);
 
-		gui = new GameGuiStage(this);
+		gui = new GameGuiStage(this, playerManager);
 
 		inputMpx.addProcessor(gui);
 		inputMpx.addProcessor(gameInputAdapter);
@@ -168,10 +168,13 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		bulletManager.collisionWithMap();
 		if (enemy.health > 0) {
 			int hits = bulletManager.collision(enemy);
-			enemy.health -= 20 * hits;
-			enemy.update(deltaTime);
-			if (enemy.health <= 0)
-				effectManager.addEffect(EffectManager.AvailableEffects.DIE_EXPLOSION, enemy.position.x, enemy.position.y);
+			if (hits > 0) {
+				enemy.takeHit(20 * hits);
+				enemy.update(deltaTime);
+				if (enemy.health <= 0) {
+					effectManager.addEffect(EffectManager.AvailableEffects.DIE_EXPLOSION, enemy.position.x, enemy.position.y);
+				}
+			}
 		}
 
 		effectManager.update(deltaTime);

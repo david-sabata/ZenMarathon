@@ -1,17 +1,26 @@
 package cz.emo4d.zen.gameplay;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.Array;
 
 public class Mob extends Entity {
 
-	public float MAX_VELOCITY = 8f;
-	public float DAMPING = 0.87f;
-	public int MAX_HEALTH = 100;
+	public static float MAX_VELOCITY = 8f;
+	public static float DAMPING = 0.87f;
+	public static int MAX_HEALTH = 100;
 	public int health = MAX_HEALTH;
+
+
+	// gui sem nastavuje obrazky se srdickama, ktere si pak hrac updatuje
+	public final Array<Image> hearts = new Array<Image>();
+
 
 	protected enum State {
 		Standing, Walking, Shooting
@@ -21,10 +30,46 @@ public class Mob extends Entity {
 	public Direction currentDir = Direction.S;
 
 	public Effect effect;
-	
+
 	public Mob() {
-		super();	
+		super();
+
+		Random r = new Random();
+		health = Math.round(r.nextFloat() * 100);
+		Gdx.app.log("x", "" + health);
 	}
+
+
+	public void takeHit(int amount) {
+		health -= amount;
+		if (health < 0) {
+			health = 0;
+		}
+
+		if (hearts.size > 0) {
+			updateHearts();
+		}
+	}
+
+	public void updateHearts() {
+		float hpPerHeart = Player.MAX_HEALTH / 5f;
+
+		for (int i = 1; i <= 5; i++) {
+			Image im = hearts.get(i - 1);
+			Color c = im.getColor();
+
+			if (health < i * hpPerHeart) {
+				float part = (health - ((i - 1) * hpPerHeart)) / (float) hpPerHeart;
+
+				if (part < 0) {
+					part = 0;
+				}
+
+				im.setColor(c.r, c.g, c.b, part);
+			}
+		}
+	}
+
 
 	public void move(Vector2 dir) {
 		float dirAngle = dir.angle();

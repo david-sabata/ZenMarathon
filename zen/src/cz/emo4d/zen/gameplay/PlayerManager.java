@@ -11,7 +11,7 @@ import cz.emo4d.zen.screens.Map;
 
 public class PlayerManager {
 
-	private Array<Player> players = new Array<Player>();
+	private final Array<Player> players = new Array<Player>();
 	private Vector2 moveVec = new Vector2();
 
 	public PlayerManager(Map map, Vector2 mainPlayerPos) {
@@ -24,9 +24,13 @@ public class PlayerManager {
 	public Player getMainPlayer() {
 		return players.get(0);
 	}
-	
+
 	public Player getPlayer(int id) {
 		return players.get(id);
+	}
+
+	public Array<Player> getPlayers() {
+		return players;
 	}
 
 	public int addPlayer(Vector2 playerPos) {

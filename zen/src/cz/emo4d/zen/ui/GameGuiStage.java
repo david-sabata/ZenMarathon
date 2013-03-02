@@ -13,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 import cz.emo4d.zen.Zen;
+import cz.emo4d.zen.gameplay.Player;
+import cz.emo4d.zen.gameplay.PlayerManager;
 import cz.emo4d.zen.screens.GameScreen;
 
 public class GameGuiStage extends BaseStage {
@@ -23,19 +25,33 @@ public class GameGuiStage extends BaseStage {
 	 */
 	private final GameScreen screen;
 
+	private final PlayerManager playerManager;
+
 	private Table rootPlayer;
 
 
-	public GameGuiStage(GameScreen screen) {
+	public GameGuiStage(GameScreen screen, PlayerManager manager) {
 		super(screen);
 		this.screen = screen;
+		this.playerManager = manager;
 
 		rootPlayer = new Table(skin);
 		rootPlayer.setFillParent(true);
 		//		rootPlayer.debug();
 
-		Table playerGui = createPlayerGui();
-		rootPlayer.add(playerGui).left();
+		boolean first = true;
+		for (Player p : playerManager.getPlayers()) {
+			if (first) {
+				Table playerGui = createMainPlayerGui(p);
+				rootPlayer.add(playerGui).left().spaceBottom(50);
+				first = false;
+				continue;
+			}
+
+			Table sub = createSubPlayerGui(p);
+			rootPlayer.row();
+			rootPlayer.add(sub).left().spaceBottom(10);
+		}
 
 		rootPlayer.row();
 		rootPlayer.add().expand();
@@ -47,7 +63,7 @@ public class GameGuiStage extends BaseStage {
 
 
 
-	private Table createPlayerGui() {
+	private Table createMainPlayerGui(Player p) {
 		Table tbl = new Table(skin);
 		//		tbl.debug();
 		tbl.setBackground(skin.getDrawable("gray-transparent"));
@@ -60,11 +76,13 @@ public class GameGuiStage extends BaseStage {
 
 		stats.add(new Label("LIVES", skin)).left().spaceRight(20);
 		Drawable heart = skin.getDrawable("heart-0");
-		stats.add(new Image(heart)).spaceRight(5);
-		stats.add(new Image(heart)).spaceRight(5);
-		stats.add(new Image(heart)).spaceRight(5);
-		stats.add(new Image(heart)).spaceRight(5);
-		stats.add(new Image(heart)).spaceRight(5);
+		for (int i = 0; i < 5; i++) {
+			Image im = new Image(heart);
+			stats.add(im).spaceRight(5);
+			p.hearts.add(im);
+		}
+
+		p.updateHearts();
 
 		stats.row().spaceTop(5);
 		stats.add(new Label("RAGE", skin)).left().spaceRight(20);
@@ -80,7 +98,37 @@ public class GameGuiStage extends BaseStage {
 	}
 
 
+	private Table createSubPlayerGui(Player player) {
+		Table tbl = new Table(skin);
+		//		tbl.debug();
+		tbl.setBackground(skin.getDrawable("gray-transparent"));
 
+
+		tbl.add(new Image(skin.getDrawable("avatar-main"))).width(30).height(30).pad(10);
+
+		Table stats = new Table(skin);
+		tbl.add(stats).pad(0, 0, 0, 10);
+
+		Drawable heart = skin.getDrawable("heart-0");
+		for (int i = 1; i <= 5; i++) {
+			Image im = new Image(heart);
+			stats.add(im).width(10).height(10).spaceRight(5);
+			player.hearts.add(im);
+		}
+
+		player.updateHearts();
+
+		stats.row().spaceTop(5);
+		Drawable rageOn = skin.getDrawable("rage-on");
+		Drawable rageOff = skin.getDrawable("rage");
+		stats.add(new Image(rageOn)).width(10).height(10).spaceRight(5);
+		stats.add(new Image(rageOn)).width(10).height(10).spaceRight(5);
+		stats.add(new Image(rageOff)).width(10).height(10).spaceRight(5);
+		stats.add(new Image(rageOff)).width(10).height(10).spaceRight(5);
+		stats.add(new Image(rageOff)).width(10).height(10).spaceRight(5);
+
+		return tbl;
+	}
 
 	public Table createBackground() {
 		Table background = new Table();
