@@ -10,6 +10,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import android.app.Service;
@@ -67,40 +68,46 @@ public class NetService extends Service {
 			for (int k = 0; k < 4; k++)
 				quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
 
-			
 			DatagramSocket socket1 = null;
 			DatagramSocket socket2 = null;
-			
-			try {
-				socket1 = new DatagramSocket();
-				socket1.setBroadcast(true);
-				DatagramPacket packet = new DatagramPacket(
-						discoveryData.getBytes(), discoveryData.length(),
-						InetAddress.getByAddress(quads), DISCOVERYPORT);
-				socket1.send(packet);
 
-				Log.i("Discovery", "before recv");
-				
+			boolean discovering = true;
 
-				socket2 = new DatagramSocket(DISCOVERYPORT);
-				byte[] buf = new byte[1024];
-				packet = new DatagramPacket(buf, buf.length);
-				socket2.receive(packet);
+			while (discovering) {
 
-				
+				try {
+					socket1 = new DatagramSocket();
+					socket1.setBroadcast(true);
+					DatagramPacket packet = new DatagramPacket(
+							discoveryData.getBytes(), discoveryData.length(),
+							InetAddress.getByAddress(quads), DISCOVERYPORT);
+					socket1.send(packet);
 
-				mHost = new String(packet.getData());
+					Log.i("Discovery", "before recv");
 
-				int pos = mHost.indexOf(buf[400]);
-				mHost = mHost.substring(0, pos);
-				Log.i("Discovery", mHost);
+					socket2 = new DatagramSocket(DISCOVERYPORT);
+					byte[] buf = new byte[1024];
+					packet = new DatagramPacket(buf, buf.length);
+					socket2.setSoTimeout(2000);
+					socket2.receive(packet);
 
-			} catch (Exception e) {
-				e.printStackTrace();
-				
-			} finally {
-				socket1.close();
-				socket2.close();
+					mHost = new String(packet.getData());
+
+					int pos = mHost.indexOf(buf[400]);
+					mHost = mHost.substring(0, pos);
+					Log.i("Discovery", mHost);
+					
+					discovering = false;
+				} catch (SocketTimeoutException e) {
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+
+				} finally {
+					socket1.close();
+					socket2.close();
+				}
+
 			}
 
 			return null;
@@ -243,8 +250,8 @@ public class NetService extends Service {
 		float X = (float) valueX / (float) 250;
 		float Y = (float) valueY / (float) 250;
 
-		//X = X * X * Math.signum(X);
-		//Y = Y * Y * Math.signum(Y);
+		// X = X * X * Math.signum(X);
+		// Y = Y * Y * Math.signum(Y);
 
 		serialized = Integer.toString(type) + SERIALIZER_DELIMITER
 				+ Float.toString(X) + SERIALIZER_DELIMITER + Float.toString(Y);
