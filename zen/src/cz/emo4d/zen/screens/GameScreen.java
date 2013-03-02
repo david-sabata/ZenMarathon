@@ -33,6 +33,7 @@ import cz.emo4d.zen.ui.GameGuiStage;
 
 public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
+	private static final float SHOOT_INTERVAL = 0.14f;
 
 	private Map map;
 
@@ -85,7 +86,6 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		for (int i = 0; i < 100; i++) {
 			Enemy enemy = new Enemy(map.getCoord(56, 39));
 			enemy.setMap(map);
-
 			enemyManager.addEnemy(enemy);
 		}
 
@@ -100,13 +100,16 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	}
 
 	public void onKeyPress(int keycode) {
-		if (keycode == Keys.CONTROL_LEFT) {
-			bulletManager.shoot(playerManager.getMainPlayer().position, playerManager.getMainPlayer().currentDir, playerManager.getMainPlayer());
-		}
-		if (keycode == Keys.TAB) {
-			//			doTeleport(map.getCoord(14, 36));
-		}
+		//if (keycode == Keys.CONTROL_LEFT) {
+		//bulletManager.shoot(playerManager.getMainPlayer().position,
+		//		playerManager.getMainPlayer().currentDir, PLAYER_DAMAGE, playerManager.getMainPlayer());
+		//}
+		//if (keycode == Keys.TAB) {
+		//			doTeleport(map.getCoord(14, 36));
+		//}
 	}
+
+	float lastTime = 0;
 
 
 	@Override
@@ -142,7 +145,9 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		for (int i = 0; i < remoteSlaves.size(); i++) {
 			if ((cm = rc.getClientMove(remoteSlaves.get(i).remoteId)) != null) {
-				Gdx.app.log("MOVE", "SLAVE " + Integer.toString(remoteSlaves.get(i).localId));
+
+				//Gdx.app.log("MOVE","SLAVE " + Integer.toString(remoteSlaves.get(i).localId));
+
 				moveVec.set(cm.X, -cm.Y);
 				playerManager.controllerInput(remoteSlaves.get(i).localId, moveVec);
 			}
@@ -150,6 +155,16 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		// keyboard input
 		playerManager.keyboardInput();
+
+
+		lastTime += deltaTime;
+		if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
+			if (lastTime > SHOOT_INTERVAL) {
+
+				bulletManager.shoot(playerManager.getMainPlayer().position, playerManager.getMainPlayer().currentDir, playerManager.getMainPlayer());
+				lastTime = 0;
+			}
+		}
 
 
 		// -- update --
