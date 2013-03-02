@@ -4,27 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pool;
 
 
 public class Player extends Entity {
 
-	private Pool<Rectangle> rectPool = new Pool<Rectangle>() {
-		@Override
-		protected Rectangle newObject() {
-			return new Rectangle();
-		}
-	};
-	private Array<Rectangle> tiles = new Array<Rectangle>();
-	private TiledMap refMap;
-
-	public float WIDTH;
-	public float HEIGHT;
 	public float MAX_VELOCITY = 8f;
 	public float DAMPING = 0.87f;
 	
@@ -72,7 +57,7 @@ public class Player extends Entity {
 		} else
 			currentDir = Direction.E;
 
-		velocity.add(dir);
+		velocity.set(dir.nor().mul(MAX_VELOCITY));
 		state = Player.State.Walking;
 	}
 
@@ -137,7 +122,6 @@ public class Player extends Entity {
 		// perform collision detection & response, on each axis, separately
 		// if the koala is moving right, check the tiles to the right of it's
 		// right bounding box edge, otherwise check the ones to the left
-		refMap = map;
 		Rectangle playerRect = rectPool.obtain();
 		playerRect.set(this.position.x, this.position.y, this.WIDTH, this.HEIGHT);	
 
@@ -149,7 +133,7 @@ public class Player extends Entity {
 		}
 		startY = (int) (this.position.y);
 		endY = (int) (this.position.y + this.HEIGHT);
-		getTiles(startX, startY, endX, endY, tiles);
+		getTiles(startX, startY, endX, endY, tiles, map);
 		playerRect.x += this.velocity.x;
 		for (Rectangle tile : tiles) {
 			if (playerRect.overlaps(tile)) {
@@ -168,7 +152,7 @@ public class Player extends Entity {
 		}
 		startX = (int) (this.position.x);
 		endX = (int) (this.position.x + this.WIDTH);
-		getTiles(startX, startY, endX, endY, tiles);
+		getTiles(startX, startY, endX, endY, tiles, map);
 		playerRect.y += this.velocity.y;
 		for (Rectangle tile : tiles) {
 			if (playerRect.overlaps(tile)) {
@@ -191,21 +175,4 @@ public class Player extends Entity {
 	public void render(SpriteBatch spriteBatch) {
 		effect.render(spriteBatch, position.x, position.y, 1 / 32f * (effect.width), 1 / 32f * (effect.height));
 	}
-
-	private void getTiles(int startX, int startY, int endX, int endY, Array<Rectangle> tiles) {
-		TiledMapTileLayer layer = (TiledMapTileLayer) refMap.getLayers().getLayer(1);
-		rectPool.freeAll(tiles);
-		tiles.clear();
-		for (int y = startY; y <= endY; y++) {
-			for (int x = startX; x <= endX; x++) {
-				Cell cell = layer.getCell(x, y);
-				if (cell != null) {
-					Rectangle rect = rectPool.obtain();
-					rect.set(x, y, 1, 1);
-					tiles.add(rect);
-				}
-			}
-		}
-	}
-
 }

@@ -8,9 +8,9 @@ import com.badlogic.gdx.math.Vector2;
 public class Bullet extends Entity {
 	
 	
-	boolean alive = false;
+	public boolean alive = false;
 	TextureRegion activeRegion;
-	public static final float MAX_VELOCITY = 10.f;
+	public static final float MAX_VELOCITY = 15.f;
 	public static final int COLS = 8;
 	public static final int ROWS = 1;
 	
@@ -21,6 +21,8 @@ public class Bullet extends Entity {
 		super();
 		
 		tr = TextureRegion.split(tex, tex.getWidth() / COLS, tex.getHeight() / ROWS);
+		WIDTH = 1/32f * (tr[0][0].getRegionWidth()-5);
+		HEIGHT = 1/32f * (tr[0][0].getRegionHeight()-5);
 	}
 
 	public void update(float deltaTime) {
@@ -37,38 +39,40 @@ public class Bullet extends Entity {
 				
 		switch (dir) {
 		case S:
-			this.velocity.set(0.f, -MAX_VELOCITY);
+			this.velocity.set(0f, -1f);
 			activeRegion = tr[0][0];			
 			break;
 		case SW:
-			this.velocity.set(-MAX_VELOCITY / 2f, -MAX_VELOCITY / 2f);
+			this.velocity.set(-1f, -1f);
 			activeRegion = tr[0][1];
 			break;				
 		case W:
-			this.velocity.set(-MAX_VELOCITY, 0.f);
+			this.velocity.set(-1f, 0f);
 			activeRegion = tr[0][2];
 			break;
 		case NW:
-			this.velocity.set(-MAX_VELOCITY / 2f, MAX_VELOCITY / 2f);
+			this.velocity.set(-1f, 1f);
 			activeRegion = tr[0][3];
 			break;
 		case N:
-			this.velocity.set(0.f, MAX_VELOCITY);
+			this.velocity.set(0f, 1f);
 			activeRegion = tr[0][4];
 			break;
 		case NE:
-			this.velocity.set(MAX_VELOCITY / 2f, MAX_VELOCITY / 2f);
+			this.velocity.set(1f, 1f);
 			activeRegion = tr[0][5];
 			break;
 		case E:
-			this.velocity.set(MAX_VELOCITY, 0.f);
+			this.velocity.set(1f, 0f);
 			activeRegion = tr[0][6];
 			break;
 		case SE:
-			this.velocity.set(MAX_VELOCITY / 2f, -MAX_VELOCITY / 2f);
+			this.velocity.set(1f, -1f);
 			activeRegion = tr[0][7];
 			break;		
-		}		
+		}	
+		
+		this.velocity.nor().mul(MAX_VELOCITY);
 	}
 	
 	public void render(SpriteBatch spriteBatch) {
