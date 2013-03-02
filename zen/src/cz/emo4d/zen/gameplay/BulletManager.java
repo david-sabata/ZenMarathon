@@ -77,7 +77,7 @@ public class BulletManager {
 				
 				activeBullets.removeIndex(i);
 				
-				rc.emitEvent(0, DeviceEvent.VIBRATE);
+				//rc.emitEvent(0, DeviceEvent.VIBRATE);
 			}			
 		}
 	}
