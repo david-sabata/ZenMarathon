@@ -54,13 +54,13 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 
 		// invertovat Y souradnici pro indexovani s nulou v levem HORNIM rohu
-		playerManager = new PlayerManager(map, new Vector2(7, map.height - 6));
-		playerManager.addPlayer(new Vector2(7, map.height - 4));
+		playerManager = new PlayerManager(map, map.getCoord(7, 6));
+		playerManager.addPlayer(map.getCoord(7, 6));
 
 		bullet = new Bullet(new Texture(Gdx.files.internal("data/bullet.png")));
 		bullet.setMap(map);
 
-		enemy = new Enemy(new Vector2(7, map.height - 8));
+		enemy = new Enemy(map.getCoord(7, 8));
 		enemy.setMap(map);
 
 		rc.RegisterEventHandler(this);

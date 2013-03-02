@@ -32,6 +32,15 @@ public class Map {
 	}
 
 
+	/**
+	 * Vraci pozicovy vektor v mape na policku X|Y
+	 * kde 0|0 je v level hornim rohu
+	 * 
+	 * (metoda zajistuje predevsim prevraceni Y smeru)
+	 */
+	public Vector2 getCoord(int x, int y) {
+		return new Vector2(x, height - y);
+	}
 
 
 	public void render(OrthographicCamera camera) {
