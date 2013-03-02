@@ -20,23 +20,23 @@ public class GameGuiStage extends BaseStage {
 	 */
 	private final GameScreen screen;
 
-	private Table root;
+	private Table rootPlayer;
 
 
 	public GameGuiStage(GameScreen screen) {
 		super(screen);
 		this.screen = screen;
 
-		root = new Table(skin);
-		root.debug();
+		rootPlayer = new Table(skin);
+		rootPlayer.setFillParent(true);
+		rootPlayer.debug();
 
-		root.add();
-		root.add().expandX();
-		root.row();
-		root.add(new Label("test", skin));
-		root.add();
+		rootPlayer.add(new Label("test", skin)).left();
 
-		addActor(root);
+		rootPlayer.row();
+		rootPlayer.add().expand();
+
+		addActor(rootPlayer);
 	}
 
 
@@ -68,7 +68,7 @@ public class GameGuiStage extends BaseStage {
 
 	private void showExitDialog() {
 		final Zen game = screen.getGame();
-		final Dialog dlg = new Dialog("Uz mas dost?", skin);
+		final Dialog dlg = new Dialog("", skin);
 
 		TextButton btn1 = new TextButton("NE", skin);
 		btn1.pad(10, 30, 10, 30);
@@ -89,13 +89,15 @@ public class GameGuiStage extends BaseStage {
 			}
 		});
 
+		dlg.text("uz mas dost?");
+
 		dlg.button(btn1);
 		dlg.button(btn2);
 
+		dlg.pad(30, 10, 10, 10);
+
 		dlg.show(this);
-
 	}
-
 
 	@Override
 	public void draw() {

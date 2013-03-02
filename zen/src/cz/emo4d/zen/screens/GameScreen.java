@@ -79,7 +79,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	@Override
 	public void render(float deltaTime) {
 		// clear the screen
-		Gdx.gl.glClearColor(0.7f, 0.7f, 1.0f, 1);
+		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 		// process input 
