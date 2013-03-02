@@ -43,7 +43,33 @@ public class BulletManager {
 					p.takeHit(b.strength);				
 					em.addEffect(EffectManager.AvailableEffects.BULLET_EXPLOSION,
 							b.position.x, b.position.y);
-					em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD, p.position.x, p.position.y);
+					
+					switch (b.dir) {
+					case N:
+						em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_N, p.position.x, p.position.y);
+						break;
+					case E:
+						em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_E, p.position.x, p.position.y);
+						break;
+					case NE:
+						em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_NE, p.position.x, p.position.y);
+						break;
+					case NW:
+						em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_NW, p.position.x, p.position.y);
+						break;
+					case S:
+						em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_S, p.position.x, p.position.y);
+						break;
+					case SE:
+						em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_SE, p.position.x, p.position.y);
+						break;
+					case SW:
+						em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_SW, p.position.x, p.position.y);
+						break;
+					case W:
+						em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_W, p.position.x, p.position.y);
+						break;					
+					}
 					
 					if (p.health <= 0)
 					{
@@ -65,12 +91,9 @@ public class BulletManager {
 							break;
 						case E:
 							em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_E, p.position.x, p.position.y);
-							break;
-							
+							break;							
 						}
 						
-						
-						em.addEffect(EffectManager.AvailableEffects.DIE_EXPLOSION, p.position.x, p.position.y);
 						p.alive = false;
 					}
 					
