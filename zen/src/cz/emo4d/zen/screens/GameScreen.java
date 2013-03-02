@@ -75,7 +75,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 			bulletManager.shoot(playerManager.getMainPlayer().position, playerManager.getMainPlayer().currentDir);
 		}
 		if (keycode == Keys.TAB) {
-			gui.doTeleportAnimation(playerManager, map.getCoord(17, 6));
+			gui.doTeleportAnimation(playerManager, map.getCoord(14, 36));
 		}
 	}
 
@@ -106,7 +106,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		bulletManager.update(deltaTime);
 		bulletManager.collision();
-		
+
 		enemy.update(deltaTime);
 
 		// let the camera follow the player

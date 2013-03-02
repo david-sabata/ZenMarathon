@@ -89,7 +89,7 @@ public class Entity {
 	}
 
 	protected void getTiles(int startX, int startY, int endX, int endY, Array<Rectangle> tiles) {
-		TiledMapTileLayer layer = (TiledMapTileLayer) currentMap.map.getLayers().getLayer(1);
+		TiledMapTileLayer layer = (TiledMapTileLayer) currentMap.map.getLayers().getLayer("walls");
 		rectPool.freeAll(tiles);
 		tiles.clear();
 		for (int y = startY; y <= endY; y++) {
