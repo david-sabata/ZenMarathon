@@ -12,9 +12,9 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 
-import cz.emo4d.zen.Bullet;
-import cz.emo4d.zen.Player;
 import cz.emo4d.zen.Zen;
+import cz.emo4d.zen.gameplay.Bullet;
+import cz.emo4d.zen.gameplay.Player;
 import cz.emo4d.zen.remote.DeviceEvent;
 import cz.emo4d.zen.remote.DeviceEventHandler;
 import cz.emo4d.zen.remote.RemoteControl;
