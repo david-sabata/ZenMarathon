@@ -9,8 +9,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Effect {
 	
 	private Animation[] animation;
-	private int frameCols = 8; 
-    private int frameRows = 1;
+	private int frameCols; 
+    private int frameRows;
 	
 	private Texture animSheet;	
 	

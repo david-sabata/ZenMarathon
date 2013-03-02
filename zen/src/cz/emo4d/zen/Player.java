@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 
 
-public class Player {
+public class Player extends Entity {
 	
 	private Pool<Rectangle> rectPool = new Pool<Rectangle>() {
 		@Override
@@ -29,22 +29,22 @@ public class Player {
 	public float MAX_VELOCITY = 8f;
 	public float DAMPING = 0.87f;
 		
-	enum Direction {
-		S, SW, W, NW, N, NE, E, SE
-	}
+
 	
 	enum State {
 		Standing, Walking, Shooting
 	}	
 	
-	public Vector2 position = new Vector2();
-	public Vector2 velocity = new Vector2();
+	//public Vector2 position = new Vector2();
+	//public Vector2 velocity = new Vector2();
 	public State state = State.Walking;	
-	private Direction currentDir = Direction.S;
+	public Direction currentDir = Direction.S;
 	
-	private Effect effect;
+	public Effect effect;
 	
 	public Player(Vector2 pos, float width, float height) {		
+		super();
+		
 		position = pos;
 		
 		this.effect = new Effect(new Texture(Gdx.files.internal("data/effects/player_sheet.png")), 6, 8, 0.1f, 1);
@@ -153,7 +153,7 @@ public class Player {
 		// right bounding box edge, otherwise check the ones to the left
 		refMap = map;
 		Rectangle playerRect = rectPool.obtain();
-		playerRect.set(this.position.x, this.position.y, this.WIDTH, this.HEIGHT);		
+		playerRect.set(this.position.x, this.position.y, this.WIDTH, this.HEIGHT);	
 		
 		int startX, startY, endX, endY;
 		if (this.velocity.x > 0) {
