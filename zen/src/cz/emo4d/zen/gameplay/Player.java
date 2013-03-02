@@ -63,6 +63,16 @@ public class Player extends Mob {
 	}
 
 
+
+
+	@Override
+	public int getMaxHealth() {
+		return 200;
+	}
+
+
+
+
 	/**
 	 * utok je zavisly na zenu
 	 */
