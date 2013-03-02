@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import cz.emo4d.zen.gameplay.SoundManager;
 import cz.emo4d.zen.screens.BaseScreen;
 
 public class MainMenuStage extends BaseStage {
@@ -39,6 +40,8 @@ public class MainMenuStage extends BaseStage {
 		TextButton btnPlay = new TextButton("PLAY", skin);
 		btnPlay.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y) {
+				SoundManager.getSound("intro.wav").play();
+				
 				screen.getGame().showGameScreen();
 			}
 		});
