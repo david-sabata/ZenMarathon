@@ -2,7 +2,6 @@ package cz.emo4d.zen.gameplay;
 
 import java.util.Random;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -36,7 +35,6 @@ public class Mob extends Entity {
 
 		Random r = new Random();
 		health = Math.round(r.nextFloat() * 100);
-		Gdx.app.log("x", "" + health);
 	}
 
 
