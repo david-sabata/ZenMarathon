@@ -30,7 +30,7 @@ public class EffectManager {
 				activeEffects.add(new Effect(dieTexture, 8, 1, 0.075f, 0, posX - (1 / 32f * 15), posY - (1 / 32f * 12)));
 				break;
 			case HIT_BLOOD:
-				activeEffects.add(new Effect(dieTexture, 10, 1, 0.075f, 0, posX - (1 / 32f * 15), posY - (1 / 32f * 12)));
+				activeEffects.add(new Effect(hitBloodTexture, 10, 1, 0.075f, 0, posX - (1 / 32f * 15), posY - (1 / 32f * 12)));
 				break;
 		}
 	}

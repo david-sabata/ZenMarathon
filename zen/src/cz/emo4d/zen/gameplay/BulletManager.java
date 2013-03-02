@@ -40,7 +40,8 @@ public class BulletManager {
 				if (p.alive && p != b.player && b.collision(p)) {
 					p.takeHit(b.strength);				
 					em.addEffect(EffectManager.AvailableEffects.BULLET_EXPLOSION,
-							b.position.x, b.position.y);					
+							b.position.x, b.position.y);
+					em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD, p.position.x, p.position.y);
 					
 					if (p.health <= 0)
 					{
