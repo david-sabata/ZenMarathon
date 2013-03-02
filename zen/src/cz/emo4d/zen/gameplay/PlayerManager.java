@@ -45,9 +45,25 @@ public class PlayerManager {
 		}
 	}
 
+	public void setSwitchingRooms(boolean v) {
+		for (Player p : players) {
+			p.isSwitchingRooms = v;
+		}
+	}
+
+
+	public void applyKick(Vector2 force) {
+		for (Player p : players) {
+			p.move(force);
+		}
+	}
+
 
 
 	public void keyboardInput() {
+		if (players.get(0).isSwitchingRooms)
+			return;
+
 		// process input 
 		moveVec.set(0, 0);
 
@@ -68,6 +84,9 @@ public class PlayerManager {
 	}
 
 	public void controllerInput(int playerID, Vector2 moveVec) {
+		if (players.get(playerID).isSwitchingRooms)
+			return;
+
 		if (moveVec.x != 0 || moveVec.y != 0) {
 			Gdx.app.log("INTER MOVE", Integer.toString(playerID));
 			players.get(playerID).move(moveVec);

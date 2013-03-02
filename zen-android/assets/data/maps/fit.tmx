@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="in-horni1" value="17x6"/>
+  <property name="in-horni2" value="14x3"/>
+  <property name="in-vlevo" value="7x39"/>
+  <property name="in-vpravo" value="23x39"/>
+  <property name="indir-horni1" value="-1x0"/>
+  <property name="indir-horni2" value="1x0"/>
+  <property name="indir-vlevo" value="0x1"/>
+  <property name="indir-vpravo" value="0x1"/>
+  <property name="out-fit-horni1" value="7x39"/>
+  <property name="out-fit-horni2" value="23x39"/>
+  <property name="out-fit-vlevo" value="17x6"/>
+  <property name="out-fit-vpravo" value="14x3"/>
+ </properties>
  <tileset firstgid="1" name="fit" tilewidth="32" tileheight="32">
   <image source="fit.png" trans="ff00ff" width="512" height="512"/>
  </tileset>
@@ -14,6 +28,10 @@
   </data>
  </layer>
  <layer name="walls" width="50" height="50">
+  <properties>
+   <property name="key1" value="val1"/>
+   <property name="key2" value="val2"/>
+  </properties>
   <data encoding="base64" compression="zlib">
    eJztmdEOwiAMRfkbdd+u008UH0x4YKVlhbbsnuTGJazAtWUiS2ldbgrywJZ1P9DWaP/f44FHo41qb8XPhOOjJk78TKh5cGopgg9OjEcfVB1FqqvfNfVsKlWLt+TsdxvVB1Vjlkh9RPgd5KxrKt6Sch6cdU3FW3J2HhF9SGtuJpK5ed7v1pDmyCvw4Qv48MVKPnr+i4DronHu5uGMrnWupqmRe5aZ63LkWCv6eGa9is9EtEnurY2lDfKBfIzuG/mwH+tqPvas94E+ymP1sFI+qHcZPeL0rQ115tm7H+T0DQAAAAAdvn4NU7w=
   </data>
