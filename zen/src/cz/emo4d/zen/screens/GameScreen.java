@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -11,8 +12,9 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 
-import cz.emo4d.zen.Player;
 import cz.emo4d.zen.Zen;
+import cz.emo4d.zen.gameplay.Bullet;
+import cz.emo4d.zen.gameplay.Player;
 import cz.emo4d.zen.remote.DeviceEvent;
 import cz.emo4d.zen.remote.DeviceEventHandler;
 import cz.emo4d.zen.remote.RemoteControl;
@@ -26,6 +28,8 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	private Player player;
 	private OrthographicCamera camera;
 	Vector2 moveVec = new Vector2();
+	private Bullet bullet;
+	private GameInputAdapter gameInputAdapter = new GameInputAdapter(this);
 
 	private RemoteControl rc = new RemoteControl();
 
@@ -47,10 +51,17 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		int height = (Integer) map.getProperties().get("height");
 		player = new Player(new Vector2(7, height - 4), 0, 0);
 
+		bullet = new Bullet(new Texture(Gdx.files.internal("data/bullet.png")));
+
 		rc.RegisterEventHandler(this);
+		
+		Gdx.input.setInputProcessor(gameInputAdapter);
 	}
 
-
+	public void onKeyPress(int keycode) {		
+		if (keycode == Keys.CONTROL_LEFT)
+			bullet.shoot(player.position, player.currentDir);
+	}
 
 	@Override
 	public void render(float deltaTime) {
@@ -77,13 +88,14 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		} else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
 			moveVec.x = player.MAX_VELOCITY;
 		}
-
+		
 		if (moveVec.x != 0 || moveVec.y != 0) {
 			player.move(moveVec);
 		}
 
 		// update
 		player.update(deltaTime, map);
+		bullet.update(deltaTime);
 
 		// let the camera follow the player
 		camera.position.x = player.position.x;
@@ -97,8 +109,9 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		// render
 		SpriteBatch batch = renderer.getSpriteBatch();
-		batch.begin();
+		batch.begin();		
 		player.render(batch);
+		bullet.render(batch);
 		batch.end();
 	}
 
