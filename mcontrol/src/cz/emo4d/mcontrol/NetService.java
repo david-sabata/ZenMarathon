@@ -25,6 +25,17 @@ import android.util.Log;
 
 public class NetService extends Service {
 
+	@Override
+	public void onDestroy() {
+		try {
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		close();
+		super.onDestroy();
+	}
+
 	public class ServiceBinder extends Binder {
 		public NetService getService() {
 			return NetService.this;
@@ -34,6 +45,8 @@ public class NetService extends Service {
 	private final IBinder mBinder = new ServiceBinder();
 
 	private Socket socket = null;
+	private DatagramSocket socket1 = null;
+	private DatagramSocket socket2 = null;
 	private BufferedReader in;
 	private PrintWriter out;
 
@@ -68,9 +81,6 @@ public class NetService extends Service {
 			for (int k = 0; k < 4; k++)
 				quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
 
-			DatagramSocket socket1 = null;
-			DatagramSocket socket2 = null;
-
 			boolean discovering = true;
 
 			while (discovering) {
@@ -96,10 +106,10 @@ public class NetService extends Service {
 					int pos = mHost.indexOf(buf[400]);
 					mHost = mHost.substring(0, pos);
 					Log.i("Discovery", mHost);
-					
+
 					discovering = false;
 				} catch (SocketTimeoutException e) {
-					
+
 				} catch (Exception e) {
 					e.printStackTrace();
 
@@ -194,8 +204,8 @@ public class NetService extends Service {
 				e.printStackTrace();
 			}
 
-			//InputListener il = new InputListener();
-			//il.execute();
+			InputListener il = new InputListener();
+			il.executeOnExecutor(THREAD_POOL_EXECUTOR);
 			return null;
 		}
 
@@ -219,9 +229,19 @@ public class NetService extends Service {
 		protected Void doInBackground(Void... arg0) {
 			while (socket != null) {
 				try {
-					String serverMessage = in.readLine();
-					if (serverMessage != null)
-						proceedIncomingData(serverMessage);
+					if (in.ready()) {
+						String serverMessage = in.readLine();
+						if (serverMessage != null)
+							proceedIncomingData(serverMessage);
+					} else {
+						Log.i("ConnIn", "Sleeping");
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 					break;
@@ -267,13 +287,17 @@ public class NetService extends Service {
 		private String message;
 
 		public SendAsync(String s) {
+			Log.i("SEN","CONSTRUCTOR");
 			message = s;
 		}
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
+			Log.i("SEN", "1");
 			if (socket != null) {
+				Log.i("SEN", "2");
 				out.println(message);
+				Log.i("SEN", "3");
 				out.flush();
 			}
 			return null;

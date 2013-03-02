@@ -107,6 +107,8 @@ public class RemoteControl {
 					Gdx.app.log("Discovery", clientAddr.getHostAddress());
 
 					socket.close();
+					
+					Thread.sleep(300);
 
 					DatagramSocket socket2 = new DatagramSocket();
 
