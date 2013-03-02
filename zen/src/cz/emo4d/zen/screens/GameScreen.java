@@ -17,11 +17,14 @@ import cz.emo4d.zen.remote.DeviceEvent;
 import cz.emo4d.zen.remote.DeviceEventHandler;
 import cz.emo4d.zen.remote.RemoteControl;
 import cz.emo4d.zen.remote.RemoteControl.ClientMove;
+import cz.emo4d.zen.ui.GameGuiStage;
 
 public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 	private TiledMap map;
 	private OrthogonalTiledMapRenderer renderer;
+
+	private GameGuiStage gui;
 
 	private Player player;
 	private OrthographicCamera camera;
@@ -48,16 +51,16 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		player = new Player(new Vector2(7, height - 4), 0, 0);
 
 		rc.RegisterEventHandler(this);
+
+		gui = new GameGuiStage(this);
+		Gdx.input.setInputProcessor(gui);
 	}
-
-
 
 	@Override
 	public void render(float deltaTime) {
 		// clear the screen
 		Gdx.gl.glClearColor(0.7f, 0.7f, 1.0f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		Gdx.gl.glDisable(GL10.GL_DEPTH_TEST);
 
 		// process input 
 		moveVec.set(0, 0);
@@ -100,6 +103,10 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		batch.begin();
 		player.render(batch);
 		batch.end();
+
+		// gui
+		gui.act(deltaTime);
+		gui.draw();
 	}
 
 
@@ -109,6 +116,15 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 			//player.move(new Vector2(X * player.MAX_VELOCITY,  -Y * player.MAX_VELOCITY));
 		}
 
+	}
+
+
+
+
+
+	@Override
+	public void resize(int width, int height) {
+		gui.setViewport(width, height, true);
 	}
 
 }
