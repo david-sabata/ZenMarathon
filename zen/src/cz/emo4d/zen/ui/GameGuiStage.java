@@ -4,7 +4,6 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -114,25 +113,6 @@ public class GameGuiStage extends BaseStage {
 		background.addAction(seq);
 	}
 
-
-
-	private static class MovePlayersAction extends Action {
-
-		private PlayerManager manager;
-		private Vector2 pos;
-
-		public MovePlayersAction(PlayerManager manager, Vector2 newPos) {
-			this.manager = manager;
-			this.pos = newPos;
-		}
-
-		@Override
-		public boolean act(float delta) {
-			manager.teleportAllPlayers(pos);
-			return true;
-		}
-
-	}
 
 
 
