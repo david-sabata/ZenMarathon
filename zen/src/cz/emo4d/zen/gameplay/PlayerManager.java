@@ -88,7 +88,7 @@ public class PlayerManager {
 			return;
 
 		if (moveVec.x != 0 || moveVec.y != 0) {
-			Gdx.app.log("INTER MOVE", Integer.toString(playerID));
+			//Gdx.app.log("INTER MOVE", Integer.toString(playerID));
 			players.get(playerID).move(moveVec);
 		}
 	}
