@@ -1,7 +1,11 @@
 package cz.emo4d.zen.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -68,8 +72,13 @@ public class GameGuiStage extends BaseStage {
 		//		tbl.debug();
 		tbl.setBackground(skin.getDrawable("gray-transparent"));
 
+		Texture animSheet = new Texture(Gdx.files.internal("data/effects/avatar.png"));
+		TextureRegion[][] tmp = TextureRegion.split(animSheet, animSheet.getWidth() / 3, animSheet.getHeight());
+		Animation animation = new Animation(0.7f, tmp[0]);
+		AnimatedImage avatar = new AnimatedImage(animation);
+		avatar.setPlayMode(Animation.LOOP_PINGPONG);
 
-		tbl.add(new Image(skin.getDrawable("avatar-main"))).width(60).height(60).pad(10);
+		tbl.add(avatar).width(60).height(60).pad(10);
 
 		Table stats = new Table(skin);
 		tbl.add(stats).pad(0, 0, 0, 10);
@@ -105,8 +114,13 @@ public class GameGuiStage extends BaseStage {
 		//		tbl.debug();
 		tbl.setBackground(skin.getDrawable("gray-transparent"));
 
+		Texture animSheet = new Texture(Gdx.files.internal("data/effects/avatar.png"));
+		TextureRegion[][] tmp = TextureRegion.split(animSheet, animSheet.getWidth() / 3, animSheet.getHeight());
+		Animation animation = new Animation(10, tmp[0]);
+		AnimatedImage avatar = new AnimatedImage(animation);
+		avatar.setPlayMode(Animation.LOOP_PINGPONG);
 
-		tbl.add(new Image(skin.getDrawable("avatar-main"))).width(30).height(30).pad(10);
+		tbl.add(avatar).width(30).height(32).pad(10);
 
 		Table stats = new Table(skin);
 		tbl.add(stats).pad(0, 0, 0, 10);

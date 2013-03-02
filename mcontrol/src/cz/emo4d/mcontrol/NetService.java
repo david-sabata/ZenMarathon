@@ -175,12 +175,7 @@ public class NetService extends Service {
 	private boolean proceedIncomingData(String incoming) {
 		Log.i("INCOMING:", incoming);
 		
-		int pos = incoming.indexOf(SERIALIZER_DELIMITER);
-		String second = incoming.substring(0, pos);
-		String third = incoming.substring(pos
-				+ SERIALIZER_DELIMITER.length());
-		
-		if (Integer.parseInt(third) == EventTypes.VIBRATE) {
+		if (Integer.parseInt(incoming) == EventTypes.VIBRATE) {
 			
 			Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 			v.vibrate(300);
