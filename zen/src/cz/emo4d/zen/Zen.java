@@ -12,10 +12,15 @@ public class Zen extends Game {
 
 	@Override
 	public void create() {
+		game = new GameScreen(this);
 		menu = new MainMenuScreen(this);
-		setScreen(menu);
-	}
 
+		if (true) {
+			showMenuScreen();
+		} else {
+			showGameScreen();
+		}
+	}
 
 
 
@@ -23,15 +28,14 @@ public class Zen extends Game {
 
 
 	public void showGameScreen() {
-		if (game != null) {
-			game.dispose();
-		}
-
-		game = new GameScreen(this);
 		setScreen(game);
 	}
 
 
+
+	public void showMenuScreen() {
+		setScreen(menu);
+	}
 
 
 }

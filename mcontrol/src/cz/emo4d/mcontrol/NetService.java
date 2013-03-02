@@ -40,7 +40,7 @@ public class NetService extends Service {
 
 	private final static int SERVERPORT = 5869;
 	private static final int DISCOVERYPORT = 10869;
-	private static final String discoveryData = "ZenDiscovery";	
+	private static final String discoveryData = "ZenDiscovery";
 	private final static String SERIALIZER_DELIMITER = "&&&&";
 
 	@Override
@@ -48,55 +48,61 @@ public class NetService extends Service {
 
 		return mBinder;
 	}
-	
+
 	public void runAutoDiscovery() {
 		DiscoveryClass exe = new DiscoveryClass();
 		exe.execute();
 	}
 
-	
 	private class DiscoveryClass extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			WifiManager wifi = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-		    DhcpInfo dhcp = wifi.getDhcpInfo();
-		    // handle null somehow
+			WifiManager wifi = (WifiManager) getApplicationContext()
+					.getSystemService(Context.WIFI_SERVICE);
+			DhcpInfo dhcp = wifi.getDhcpInfo();
+			// handle null somehow
 
-		    int broadcast = (dhcp.ipAddress & dhcp.netmask) | ~dhcp.netmask;
-		    byte[] quads = new byte[4];
-		    for (int k = 0; k < 4; k++)
-		      quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
-		   
-		  
-		    try {
-		    DatagramSocket socket = new DatagramSocket();
-		    socket.setBroadcast(true);
-		    DatagramPacket packet = new DatagramPacket(discoveryData.getBytes(), discoveryData.length(),
-		        InetAddress.getByAddress(quads), DISCOVERYPORT);
-		    socket.send(packet);
-		    
-		    Log.i("Discovery","before recv");
-		    socket.close();
-		    
-		    
-		    DatagramSocket socket2 = new DatagramSocket(DISCOVERYPORT);
-		    byte[] buf = new byte[1024];
-		    packet = new DatagramPacket(buf, buf.length);
-		    socket2.receive(packet);
-		    
-		    socket2.close();		
-		    
-		    mHost = new String(packet.getData());
-		    
-		    int pos = mHost.indexOf(buf[400]);
-		    mHost = mHost.substring(0, pos);
-		    Log.i("Discovery", mHost);
-		    		    
-		    } catch (Exception e) {
-		    	e.printStackTrace();
-		    }
-		    
-		    
+			int broadcast = (dhcp.ipAddress & dhcp.netmask) | ~dhcp.netmask;
+			byte[] quads = new byte[4];
+			for (int k = 0; k < 4; k++)
+				quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
+
+			
+			DatagramSocket socket1 = null;
+			DatagramSocket socket2 = null;
+			
+			try {
+				socket1 = new DatagramSocket();
+				socket1.setBroadcast(true);
+				DatagramPacket packet = new DatagramPacket(
+						discoveryData.getBytes(), discoveryData.length(),
+						InetAddress.getByAddress(quads), DISCOVERYPORT);
+				socket1.send(packet);
+
+				Log.i("Discovery", "before recv");
+				
+
+				socket2 = new DatagramSocket(DISCOVERYPORT);
+				byte[] buf = new byte[1024];
+				packet = new DatagramPacket(buf, buf.length);
+				socket2.receive(packet);
+
+				
+
+				mHost = new String(packet.getData());
+
+				int pos = mHost.indexOf(buf[400]);
+				mHost = mHost.substring(0, pos);
+				Log.i("Discovery", mHost);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+			} finally {
+				socket1.close();
+				socket2.close();
+			}
+
 			return null;
 		}
 
@@ -112,7 +118,7 @@ public class NetService extends Service {
 
 		}
 	}
-	
+
 	public boolean openConnection() {
 
 		OpenConnTask oc = new OpenConnTask();
@@ -234,8 +240,11 @@ public class NetService extends Service {
 	public boolean sendControlEvent(int type, int valueX, int valueY) {
 		String serialized = new String();
 
-		float X = (float)valueX / (float)100;
-		float Y = (float)valueY / (float)100;
+		float X = (float) valueX / (float) 250;
+		float Y = (float) valueY / (float) 250;
+
+		//X = X * X * Math.signum(X);
+		//Y = Y * Y * Math.signum(Y);
 
 		serialized = Integer.toString(type) + SERIALIZER_DELIMITER
 				+ Float.toString(X) + SERIALIZER_DELIMITER + Float.toString(Y);
