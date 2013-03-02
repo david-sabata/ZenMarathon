@@ -76,9 +76,13 @@ public class ControlActivity extends Activity {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if (mServiceBound) {
-					mService.sendControlEvent(EventTypes.PRESS_A, 0, 0);
-				}
+				
+				final int action = event.getAction();
+				if (action == MotionEvent.ACTION_DOWN) {
+					if (mServiceBound) {
+						mService.sendControlEvent(EventTypes.PRESS_A, 0, 0);
+					}
+				}				
 				return true;
 			}
 		});
