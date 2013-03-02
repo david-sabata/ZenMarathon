@@ -1,7 +1,5 @@
 package cz.emo4d.zen.gameplay;
 
-import java.util.Random;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -27,7 +25,7 @@ public class Player extends Mob {
 	public boolean alive = true;
 
 	public static int MAX_ZEN = 100;
-	private int zen = MAX_ZEN;
+	private int zen = MAX_ZEN / 10;
 
 	// gui sem nastavuje obrazky s listkama, ktere si pak hrac updatuje
 	public final Array<Image> leaves = new Array<Image>();
@@ -41,9 +39,6 @@ public class Player extends Mob {
 		HEIGHT = 1 / 32f * (effect.height - 15);
 
 		effect.update(0, true); // 0 = Direction.S 
-
-		Random r = new Random();
-		zen = Math.round(r.nextFloat() * 100);
 	}
 
 
