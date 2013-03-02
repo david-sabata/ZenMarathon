@@ -3,7 +3,6 @@ package cz.emo4d.zen.gameplay;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -12,19 +11,19 @@ public class Player extends Entity {
 
 	public float MAX_VELOCITY = 8f;
 	public float DAMPING = 0.87f;
-	
+
 	enum State {
 		Standing, Walking, Shooting
-	}	
-	
+	}
+
 	//public Vector2 position = new Vector2();
 	//public Vector2 velocity = new Vector2();
-	public State state = State.Walking;	
+	public State state = State.Walking;
 	public Direction currentDir = Direction.S;
-	
+
 	public Effect effect;
-	
-	public Player(Vector2 pos, float width, float height) {		
+
+	public Player(Vector2 pos, float width, float height) {
 		super();
 		position = pos;
 
@@ -61,7 +60,7 @@ public class Player extends Entity {
 		state = Player.State.Walking;
 	}
 
-	public void update(float deltaTime, TiledMap map) {
+	public void update(float deltaTime) {
 
 		// clamp the velocity to the maximum
 		if (Math.abs(velocity.x) > MAX_VELOCITY) {
@@ -123,7 +122,7 @@ public class Player extends Entity {
 		// if the koala is moving right, check the tiles to the right of it's
 		// right bounding box edge, otherwise check the ones to the left
 		Rectangle playerRect = rectPool.obtain();
-		playerRect.set(this.position.x, this.position.y, this.WIDTH, this.HEIGHT);	
+		playerRect.set(this.position.x, this.position.y, this.WIDTH, this.HEIGHT);
 
 		int startX, startY, endX, endY;
 		if (this.velocity.x > 0) {
@@ -133,7 +132,7 @@ public class Player extends Entity {
 		}
 		startY = (int) (this.position.y);
 		endY = (int) (this.position.y + this.HEIGHT);
-		getTiles(startX, startY, endX, endY, tiles, map);
+		getTiles(startX, startY, endX, endY, tiles);
 		playerRect.x += this.velocity.x;
 		for (Rectangle tile : tiles) {
 			if (playerRect.overlaps(tile)) {
@@ -152,7 +151,7 @@ public class Player extends Entity {
 		}
 		startX = (int) (this.position.x);
 		endX = (int) (this.position.x + this.WIDTH);
-		getTiles(startX, startY, endX, endY, tiles, map);
+		getTiles(startX, startY, endX, endY, tiles);
 		playerRect.y += this.velocity.y;
 		for (Rectangle tile : tiles) {
 			if (playerRect.overlaps(tile)) {

@@ -6,11 +6,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 import cz.emo4d.zen.Zen;
@@ -25,8 +21,10 @@ import cz.emo4d.zen.ui.GameGuiStage;
 
 public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
-	private TiledMap map;
-	private OrthogonalTiledMapRenderer renderer;
+	//	private TiledMap map;
+	//	private OrthogonalTiledMapRenderer renderer;
+
+	private Map map;
 
 	private GameGuiStage gui;
 
@@ -44,21 +42,19 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	public GameScreen(Zen game) {
 		super(game);
 
-		// load the map, set the unit scale to 1/32 (1 unit == 32 pixels)
-		map = new TmxMapLoader().load("data/maps/fit.tmx");
-		renderer = new OrthogonalTiledMapRenderer(map, 1 / 32f);
-		map.getTileSets().getTile(1).getTextureRegion().getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		map = new Map("fit");
 
 		// create an orthographic camera, shows us 30x20 units of the world
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 30, 20);
 		camera.update();
 
-		// create player we want to move around the world
-		int height = (Integer) map.getProperties().get("height");
-		player = new Player(new Vector2(7, height - 4), 0, 0);
+		// invertovat Y souradnici pro indexovani s nulou v levem HORNIM rohu		
+		player = new Player(new Vector2(7, map.height - 4), 0, 0);
+		player.setMap(map);
 
 		bullet = new Bullet(new Texture(Gdx.files.internal("data/bullet.png")));
+		bullet.setMap(map);
 
 		rc.RegisterEventHandler(this);
 
@@ -91,7 +87,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		}
 
 		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			moveVec.y = 1f;  //player.MAX_VELOCITY
+			moveVec.y = 1f; //player.MAX_VELOCITY
 		} else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
 			moveVec.y = -1f;
 		}
@@ -106,9 +102,9 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		}
 
 		// update
-		player.update(deltaTime, map);
+		player.update(deltaTime);
 		bullet.update(deltaTime);
-		if (bullet.collision(map) != null) {
+		if (bullet.collision() != null) {
 			bullet.alive = false;
 		}
 
@@ -117,13 +113,11 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		camera.position.y = player.position.y;
 		camera.update();
 
-		// set the tile map renderer view based on what the
-		// camera sees and render the map
-		renderer.setView(camera);
-		renderer.render();
+		// render map
+		map.render(camera);
 
 		// render
-		SpriteBatch batch = renderer.getSpriteBatch();
+		SpriteBatch batch = map.renderer.getSpriteBatch();
 		batch.begin();
 		player.render(batch);
 		bullet.render(batch);
