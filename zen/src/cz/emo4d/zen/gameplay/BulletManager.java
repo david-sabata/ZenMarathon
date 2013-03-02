@@ -90,9 +90,9 @@ public class BulletManager {
 		
 		Random rnd = new Random();
 		if (rnd.nextBoolean())		
-			SoundManager.getSound("squish1.waw").play();
+			SoundManager.getSound("squish1.wav").play();
 		else
-			SoundManager.getSound("squish2.waw").play();
+			SoundManager.getSound("squish2.wav").play();
 	}
 
 	public void collision(Array<Player> players, Array<Enemy> enemies) {
