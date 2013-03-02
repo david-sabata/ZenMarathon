@@ -24,6 +24,10 @@ public class PlayerManager {
 	public Player getMainPlayer() {
 		return players.get(0);
 	}
+	
+	public Player getPlayer(int id) {
+		return players.get(id);
+	}
 
 	public int addPlayer(Vector2 playerPos) {
 		Player p = new Player(playerPos, 0, 0);
@@ -31,7 +35,7 @@ public class PlayerManager {
 
 		players.add(p);
 
-		return 0;
+		return players.indexOf(p, true);
 	}
 
 	public void teleportAllPlayers(Vector2 newPos) {
@@ -65,6 +69,7 @@ public class PlayerManager {
 
 	public void controllerInput(int playerID, Vector2 moveVec) {
 		if (moveVec.x != 0 || moveVec.y != 0) {
+			Gdx.app.log("INTER MOVE", Integer.toString(playerID));
 			players.get(playerID).move(moveVec);
 		}
 	}
