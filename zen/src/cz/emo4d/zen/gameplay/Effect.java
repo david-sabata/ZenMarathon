@@ -1,4 +1,4 @@
-package cz.emo4d.zen;
+package cz.emo4d.zen.gameplay;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;

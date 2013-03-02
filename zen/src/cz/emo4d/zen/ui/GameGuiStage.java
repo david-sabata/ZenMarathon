@@ -1,7 +1,7 @@
 package cz.emo4d.zen.ui;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -20,10 +20,7 @@ public class GameGuiStage extends BaseStage {
 	 */
 	private final GameScreen screen;
 
-
 	private Table root;
-
-	private Dialog exitDialog;
 
 
 	public GameGuiStage(GameScreen screen) {
@@ -40,19 +37,26 @@ public class GameGuiStage extends BaseStage {
 		root.add();
 
 		addActor(root);
-
-		exitDialog = createExitDialog();
-		exitDialog.show(this);
 	}
+
+
 
 
 	@Override
 	public boolean keyDown(int keyCode) {
-		Gdx.app.log("KEY", keyCode + "");
 
 		if (keyCode == Keys.ESCAPE) {
-			exitDialog.show(this);
-			Gdx.app.log("X", "SHOW DLG");
+
+			// zavrit jakykoliv otevreny dialog
+			for (Actor a : this.getActors()) {
+				if (a instanceof Dialog) {
+					Dialog dlg = (Dialog) a;
+					dlg.remove();
+					return true;
+				}
+			}
+
+			showExitDialog();
 			return true;
 		}
 
@@ -62,7 +66,7 @@ public class GameGuiStage extends BaseStage {
 
 
 
-	private Dialog createExitDialog() {
+	private void showExitDialog() {
 		final Zen game = screen.getGame();
 		final Dialog dlg = new Dialog("Uz mas dost?", skin);
 
@@ -71,7 +75,7 @@ public class GameGuiStage extends BaseStage {
 		btn1.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				dlg.cancel();
+				dlg.remove();
 			}
 		});
 
@@ -80,6 +84,7 @@ public class GameGuiStage extends BaseStage {
 		btn2.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
+				dlg.remove();
 				game.showMenuScreen();
 			}
 		});
@@ -87,7 +92,8 @@ public class GameGuiStage extends BaseStage {
 		dlg.button(btn1);
 		dlg.button(btn2);
 
-		return dlg;
+		dlg.show(this);
+
 	}
 
 

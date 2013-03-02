@@ -1,7 +1,7 @@
 package cz.emo4d.zen;
 
-import com.badlogic.gdx.Game;
 
+import com.badlogic.gdx.Game;
 import cz.emo4d.zen.screens.GameScreen;
 import cz.emo4d.zen.screens.MainMenuScreen;
 

@@ -15,6 +15,8 @@ public class MainMenuScreen extends BaseScreen {
 		super(game);
 
 		menu = new MainMenuStage(this);
+
+		Gdx.input.setInputProcessor(menu);
 	}
 
 
