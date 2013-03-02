@@ -24,17 +24,19 @@ public class RemoteControl {
 
 	private ArrayList<Thread> clients;
 	private ArrayList<DeviceEvent> events;
+	private ArrayList<PrintStream> outputs;
 	private HashMap<Integer,ClientMove> clientMoves;
 	
 	private int clientId = 0;
 
 	private DeviceEventHandler callback = null;
-	private PrintStream output;
+	//private PrintStream output;
 
 	public RemoteControl() {
 		clients = new ArrayList<Thread>();
 		events = new ArrayList<DeviceEvent>();
 		clientMoves = new HashMap<Integer,ClientMove>();
+		outputs = new ArrayList<PrintStream>();
 
 		startTCPServer();
 
@@ -173,7 +175,7 @@ public class RemoteControl {
 			clientId = clients.size() - 1;
 			
 			try {
-				output = new PrintStream(client.getOutputStream());
+				outputs.add(new PrintStream(client.getOutputStream()));
 				BufferedReader in = new BufferedReader(new InputStreamReader(
 						client.getInputStream()));
 
@@ -243,24 +245,26 @@ public class RemoteControl {
 				
 		//Gdx.app.log("EMIT", "EVENT");
 		
-		SendAsync exe = new SendAsync(Integer.toString(client) + SERIALIZER_DELIMITER + Integer.toString(event));
+		SendAsync exe = new SendAsync(client,Integer.toString(event));
 		exe.start();
 		
 	}
 	
 	private class SendAsync extends Thread {
 
+		int client;
 		private String message;
 		
-		public SendAsync (String m) {
+		public SendAsync (int c,String m) {
 			message = m;
+			client = c;
 		}
 		
 		@Override
 		public void run() {
-			if (output != null) {
-				output.println(message);
-				output.flush();
+			if (outputs.get(client) != null) {
+				outputs.get(client).println(message);
+				outputs.get(client).flush();
 			}
 		}
 

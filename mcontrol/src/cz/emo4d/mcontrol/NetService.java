@@ -12,6 +12,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.sql.ClientInfoStatus;
 
 import android.app.Service;
 import android.content.Context;
@@ -180,6 +181,7 @@ public class NetService extends Service {
 				+ SERIALIZER_DELIMITER.length());
 		
 		if (Integer.parseInt(third) == EventTypes.VIBRATE) {
+			
 			Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 			v.vibrate(300);
 		}
