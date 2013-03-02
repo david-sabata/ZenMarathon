@@ -19,6 +19,7 @@ public class Player extends Mob {
 	private Rectangle tmpRect = new Rectangle();
 	private Rectangle tmpPlayerRect = new Rectangle();
 
+	public boolean alive = true;
 
 	public Player(Vector2 pos, float width, float height) {
 		super();

@@ -13,9 +13,12 @@ public class Bullet extends Entity {
 	public static final float MAX_VELOCITY = 15.f;
 	public static final int COLS = 8;
 	public static final int ROWS = 1;
-	
+		
 	private TextureRegion tr[][];
 	private Vector2 tmp = new Vector2();
+	
+	public int strength = 20;
+	public Player player;
 		
 	public Bullet(Texture tex) {
 		super();
@@ -33,9 +36,11 @@ public class Bullet extends Entity {
 		}		
 	}	
 	
-	public void shoot(Vector2 origin, Direction dir) {
+	public void shoot(Vector2 origin, Direction dir, int strength, Player player) {
 		alive = true;
-		this.position.set(origin);		
+		this.position.set(origin);
+		this.strength = strength;
+		this.player = player;
 				
 		switch (dir) {
 		case S:
