@@ -75,8 +75,10 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		if (keycode == Keys.CONTROL_LEFT) {
 			bullet.shoot(playerManager.getMainPlayer().position, playerManager.getMainPlayer().currentDir);
 		}
+		if (keycode == Keys.TAB) {
+			gui.doTeleportAnimation(playerManager, map.getCoord(17, 6));
+		}
 	}
-
 
 
 	@Override

@@ -1,8 +1,15 @@
 package cz.emo4d.zen.ui;
 
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -12,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 import cz.emo4d.zen.Zen;
+import cz.emo4d.zen.gameplay.PlayerManager;
 import cz.emo4d.zen.screens.GameScreen;
 
 public class GameGuiStage extends BaseStage {
@@ -79,6 +87,52 @@ public class GameGuiStage extends BaseStage {
 	}
 
 
+
+
+	public void doTeleportAnimation(final PlayerManager manager, final Vector2 newPos) {
+		Table background = new Table();
+		background.setFillParent(true);
+		background.setBackground(skin.getDrawable("gray"));
+		Color c = background.getColor();
+		background.setColor(c.r, c.g, c.b, 0);
+		addActor(background);
+
+		SequenceAction seq = new SequenceAction();
+
+		seq.addAction(Actions.fadeIn(0.2f, Interpolation.fade));
+
+		seq.addAction(new RunnableAction() {
+			@Override
+			public void run() {
+				manager.teleportAllPlayers(newPos);
+			}
+		});
+
+		seq.addAction(Actions.fadeOut(0.2f, Interpolation.fade));
+		seq.addAction(Actions.removeActor());
+
+		background.addAction(seq);
+	}
+
+
+
+	private static class MovePlayersAction extends Action {
+
+		private PlayerManager manager;
+		private Vector2 pos;
+
+		public MovePlayersAction(PlayerManager manager, Vector2 newPos) {
+			this.manager = manager;
+			this.pos = newPos;
+		}
+
+		@Override
+		public boolean act(float delta) {
+			manager.teleportAllPlayers(pos);
+			return true;
+		}
+
+	}
 
 
 

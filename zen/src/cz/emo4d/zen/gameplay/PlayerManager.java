@@ -34,6 +34,15 @@ public class PlayerManager {
 		return 0;
 	}
 
+	public void teleportAllPlayers(Vector2 newPos) {
+		for (Player p : players) {
+			// -1 kompenzuje to ze hrac pozicuje svuj levy dolni roh
+			p.position.set(newPos.x, newPos.y - 1);
+		}
+	}
+
+
+
 	public void keyboardInput() {
 		// process input 
 		moveVec.set(0, 0);
