@@ -135,7 +135,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		for (int i = 0; i < remoteSlaves.size(); i++) {
 			if ((cm = rc.getClientMove(remoteSlaves.get(i).remoteId)) != null) {
-				Gdx.app.log("MOVE","SLAVE " + Integer.toString(remoteSlaves.get(i).localId));
+				//Gdx.app.log("MOVE","SLAVE " + Integer.toString(remoteSlaves.get(i).localId));
 				moveVec.set(cm.X, -cm.Y);
 				playerManager.controllerInput(remoteSlaves.get(i).localId, moveVec);
 			}

@@ -118,10 +118,11 @@ public class RemoteControl {
 					Thread.sleep(300);
 
 					DatagramSocket socket2 = new DatagramSocket();
+					//socket2.setBroadcast(true);
 
-					packet = new DatagramPacket(ip.getBytes(), ip.length(),
+					DatagramPacket packet2 = new DatagramPacket(ip.getBytes(), ip.length(),
 							clientAddr, discoveryPort);
-					socket2.send(packet);
+					socket2.send(packet2);
 					socket2.close();
 
 					Gdx.app.log("", "Discovery sent");
