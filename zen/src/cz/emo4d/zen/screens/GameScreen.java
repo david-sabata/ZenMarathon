@@ -22,6 +22,7 @@ import cz.emo4d.zen.gameplay.EffectManager;
 import cz.emo4d.zen.gameplay.Enemy;
 import cz.emo4d.zen.gameplay.PlayerManager;
 import cz.emo4d.zen.gameplay.RemotePlayer;
+import cz.emo4d.zen.gameplay.SoundManager;
 import cz.emo4d.zen.remote.ClientMove;
 import cz.emo4d.zen.remote.DeviceEvent;
 import cz.emo4d.zen.remote.DeviceEventHandler;
@@ -66,6 +67,8 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		super(game);
 
 		map = new Map("floor1");
+		
+		SoundManager.getSound("background.wav").loop();
 
 		// create an orthographic camera, shows us 30x20 units of the world
 		camera = new OrthographicCamera();
