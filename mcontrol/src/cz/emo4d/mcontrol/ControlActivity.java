@@ -61,11 +61,11 @@ public class ControlActivity extends Activity {
 			public boolean onTouch(View v, MotionEvent event) {
 				
 				final int action = event.getAction();
-				if (action == MotionEvent.ACTION_DOWN) {
+				//if (action == MotionEvent.ACTION_DOWN) {
 					if (mServiceBound) {
 						mService.sendControlEvent(EventTypes.PRESS_A, 0, 0);
 					}
-				}				
+				//}				
 				return true;
 			}
 		});
@@ -82,29 +82,6 @@ public class ControlActivity extends Activity {
 			}
 		});
 		
-		
-
-	}
-
-	@Override
-	public void onStop() {
-		//if (mServiceBound) mService.close();
-		
-		super.onStop();
-
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
-	}
-
-	@Override
-	public void onWindowFocusChanged(boolean hasFocus) {
-		super.onWindowFocusChanged(hasFocus);
-
 		ImageView arrowController = (ImageView) findViewById(R.id.imageView1);
 		//arrowImgXY = new int[2];
 		//arrowController.getLocationOnScreen(arrowImgXY);
@@ -147,6 +124,31 @@ public class ControlActivity extends Activity {
 				return false;
 			}
 		});
+		
+		
+
+	}
+
+	@Override
+	public void onStop() {
+		//if (mServiceBound) mService.close();
+		
+		super.onStop();
+
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.activity_main, menu);
+		return true;
+	}
+
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+
+		
 
 	}
 
