@@ -7,7 +7,12 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import cz.emo4d.zen.Zen;
 import cz.emo4d.zen.gameplay.BulletManager;
@@ -30,7 +35,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 	private GameGuiStage gui;
 
-	private PlayerManager playerManager;
+	private final PlayerManager playerManager;
 	private OrthographicCamera camera;
 	Vector2 moveVec = new Vector2();
 
@@ -42,6 +47,8 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	private InputMultiplexer inputMpx = new InputMultiplexer();
 
 	private RemoteControl rc = new RemoteControl();
+
+	private Vector2 kickvector = new Vector2();
 
 
 	public GameScreen(Zen game) {
@@ -78,7 +85,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 			bulletManager.shoot(playerManager.getMainPlayer().position, playerManager.getMainPlayer().currentDir);
 		}
 		if (keycode == Keys.TAB) {
-			gui.doTeleportAnimation(playerManager, map.getCoord(14, 36));
+			//			doTeleport(map.getCoord(14, 36));
 		}
 	}
 
@@ -106,6 +113,22 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		// -- update --
 		playerManager.update(deltaTime);
 
+		// teleport ven
+		if (playerManager.getMainPlayer().getCollidingOutPoint() != null) {
+			Map.Position outPt = playerManager.getMainPlayer().getCollidingOutPoint();
+
+			playerManager.setSwitchingRooms(true);
+			doTeleport(outPt);
+
+			Gdx.app.log("OUT", "--> " + outPt.identifier + " (" + outPt.mapName + ") @ " + outPt.coordinates.toString());
+		}
+
+		// teleport dovnitr
+		if (playerManager.getMainPlayer().getCollidingInPoint() != null) {
+			Gdx.app.log("IN", "<-- " + playerManager.getMainPlayer().getCollidingInPoint().identifier);
+		}
+
+
 		bulletManager.update(deltaTime);
 		bulletManager.collisionWithMap();
 		if (enemy.health > 0) {
@@ -115,8 +138,9 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 			if (enemy.health <= 0)
 				effectManager.addEffect(EffectManager.AvailableEffects.DIE_EXPLOSION, enemy.position.x, enemy.position.y);
 		}
+
 		effectManager.update(deltaTime);
-		
+
 		// let the camera follow the player
 		camera.position.x = playerManager.getMainPlayer().position.x;
 		camera.position.y = playerManager.getMainPlayer().position.y;
@@ -133,6 +157,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 			enemy.render(batch);
 		bulletManager.render(batch);
 		effectManager.render(batch);
+
 		batch.end();
 
 		// render overlay
@@ -142,6 +167,48 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		gui.act(deltaTime);
 		gui.draw();
 	}
+
+
+
+
+	public void doTeleport(final Map.Position newPos) {
+		final Table background = gui.createBackground();
+
+		SequenceAction seq = new SequenceAction();
+
+		seq.addAction(Actions.fadeIn(0.2f, Interpolation.fade));
+
+		seq.addAction(new RunnableAction() {
+			@Override
+			public void run() {
+				map = new Map(newPos.mapName);
+				Map.Position targetPos = map.inPoints.get(newPos.identifier);
+				playerManager.teleportAllPlayers(targetPos.coordinates);
+
+				kickvector.set(targetPos.direction);
+				kickvector.mul(8);
+				playerManager.applyKick(kickvector);
+			}
+		});
+
+		seq.addAction(Actions.fadeOut(0.2f, Interpolation.fade));
+
+		seq.addAction(Actions.delay(0.3f));
+
+		seq.addAction(new RunnableAction() {
+			@Override
+			public void run() {
+				playerManager.setSwitchingRooms(false);
+			}
+		});
+
+		seq.addAction(Actions.removeActor());
+
+		background.addAction(seq);
+	}
+
+
+
 
 	@Override
 	public void acceptEvent(int type, int device, float X, float Y) {
