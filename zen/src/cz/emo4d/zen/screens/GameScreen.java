@@ -20,6 +20,7 @@ import cz.emo4d.zen.Zen;
 import cz.emo4d.zen.gameplay.BulletManager;
 import cz.emo4d.zen.gameplay.EffectManager;
 import cz.emo4d.zen.gameplay.Enemy;
+import cz.emo4d.zen.gameplay.EnemyManager;
 import cz.emo4d.zen.gameplay.PlayerManager;
 import cz.emo4d.zen.gameplay.RemotePlayer;
 import cz.emo4d.zen.remote.ClientMove;
@@ -45,7 +46,8 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 	private BulletManager bulletManager;
 	private EffectManager effectManager;
-	private Enemy enemy;
+	//private Enemy enemy;
+	private EnemyManager enemyManager;
 
 	private GameInputAdapter gameInputAdapter = new GameInputAdapter(this);
 	private InputMultiplexer inputMpx = new InputMultiplexer();
@@ -79,9 +81,11 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		effectManager = new EffectManager();
 		bulletManager = new BulletManager(map, new Texture(Gdx.files.internal("data/bullet.png")), effectManager);
-
-		enemy = new Enemy(map.getCoord(56, 39));
+		enemyManager = new EnemyManager();
+		
+		Enemy enemy = new Enemy(map.getCoord(56, 39));
 		enemy.setMap(map);
+		enemyManager.addEnemy(enemy);		
 
 		remoteSlaves = new ArrayList<RemotePlayer>();
 		pendingSlaves = new ArrayList<RemotePlayer>();
@@ -125,7 +129,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		for (int i = 0; i < pendingSlaves.size(); i++) {
 			RemotePlayer rp = pendingSlaves.get(i);
 			rp.localId = playerManager.addPlayer(playerManager.getMainPlayer().position);
-
+			Gdx.app.log("SLAVE CONN", Integer.toString(rp.localId));
 			playerManager.controllerInput(rp.localId, new Vector2(1.0f, 1.0f));
 
 			remoteSlaves.add(rp);
@@ -135,7 +139,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		for (int i = 0; i < remoteSlaves.size(); i++) {
 			if ((cm = rc.getClientMove(remoteSlaves.get(i).remoteId)) != null) {
-				//Gdx.app.log("MOVE","SLAVE " + Integer.toString(remoteSlaves.get(i).localId));
+				Gdx.app.log("MOVE","SLAVE " + Integer.toString(remoteSlaves.get(i).localId));
 				moveVec.set(cm.X, -cm.Y);
 				playerManager.controllerInput(remoteSlaves.get(i).localId, moveVec);
 			}
@@ -168,9 +172,9 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		bulletManager.update(deltaTime);
 		bulletManager.collisionWithMap(rc);
-		bulletManager.collision(playerManager.getPlayers(), null);
+		bulletManager.collision(playerManager.getPlayers(), enemyManager.getEnemies());
 		
-		
+		enemyManager.update(deltaTime);
 		/*if (enemy.health > 0) {
 
 			int hits = bulletManager.collision(enemy);
@@ -197,8 +201,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		SpriteBatch batch = map.renderer.getSpriteBatch();
 		batch.begin();
 		playerManager.render(batch);
-		if (enemy.health > 0)
-			enemy.render(batch);
+		enemyManager.render(batch);
 		bulletManager.render(batch);
 		effectManager.render(batch);
 

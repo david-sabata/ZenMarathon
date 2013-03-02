@@ -50,23 +50,6 @@ public class ControlActivity extends Activity {
 		getApplicationContext().bindService(new Intent(this, NetService.class),
 				netServiceConnection, Context.BIND_AUTO_CREATE);
 
-//		final Button button = (Button) findViewById(R.id.button1);
-//		button.setOnClickListener(new View.OnClickListener() {
-//			public void onClick(View v) {
-//				if (mServiceBound) {
-//					mService.sendControlEvent(EventTypes.PRESS_A, 0, 0);
-//				}
-//			}
-//		});
-//		
-//		final Button button2 = (Button) findViewById(R.id.button2);
-//		button2.setOnClickListener(new View.OnClickListener() {
-//			public void onClick(View v) {
-//				if (mServiceBound) {
-//					mService.sendControlEvent(EventTypes.PRESS_B, 0, 0);
-//				}
-//			}
-//		});
 		
 				
 		final Button button = (Button) findViewById(R.id.button1);
@@ -137,16 +120,13 @@ public class ControlActivity extends Activity {
 				if ((action == MotionEvent.ACTION_DOWN) ||
 						(action == MotionEvent.ACTION_MOVE)) {
 					
-					int xOnField = eventX - 250; 
+					float xOnField = ((float) eventX / (float) v.getWidth()) - 0.5f; 
 																
-					int yOnField = eventY  - 250;
+					float yOnField = ((float) eventY / (float) v.getHeight()) - 0.5f;
 
 					if ((xOnField < 250) && (yOnField < 250)
 							&& (xOnField > -250) && (yOnField > -250)) {
-						// arrows
-						// Log.i(LOG_TAG,
-						// "on arrows (x, y) = " + Integer.toString(xOnField)
-						// + "   " + Integer.toString(yOnField));
+						
 						if (mServiceBound) {
 							mService.sendControlEvent(EventTypes.MOVE,
 									xOnField, yOnField);

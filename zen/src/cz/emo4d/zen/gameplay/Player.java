@@ -32,8 +32,6 @@ public class Player extends Mob {
 	private Rectangle tmpRect = new Rectangle();
 	private Rectangle tmpPlayerRect = new Rectangle();
 
-	public boolean alive = true;
-
 	public static int MAX_ZEN = 100;
 	private int zen = MAX_ZEN / 10;
 

@@ -106,7 +106,8 @@ public class PlayerManager {
 
 	public void render(SpriteBatch spriteBatch) {
 		for (Player p : players) {
-			p.render(spriteBatch);
+			if (p.alive)
+				p.render(spriteBatch);
 		}
 
 	}
