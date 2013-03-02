@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -14,6 +15,13 @@ import cz.emo4d.zen.ui.AnimatedImage;
 
 
 public class Player extends Mob {
+
+	private static Color[] shadowColors = { Color.CLEAR, Color.WHITE, Color.BLACK, Color.RED, Color.GREEN, Color.BLUE, Color.GRAY, Color.PINK, Color.ORANGE,
+			Color.YELLOW, Color.MAGENTA, Color.CYAN };
+
+	private final static Texture shadow = new Texture(Gdx.files.internal("data/shadow.png"));
+	private Color shadowColor;
+	private static int nextShadowColor = 0;
 
 	private Map.Position collidingInPoint;
 	private Map.Position collidingOutPoint;
@@ -47,9 +55,11 @@ public class Player extends Mob {
 		WIDTH = 1 / 32f * (effect.width - 3);
 		HEIGHT = 1 / 32f * (effect.height - 15);
 
-		effect.update(0, true); // 0 = Direction.S 
-	}
+		effect.update(0, true); // 0 = Direction.S
 
+		shadowColor = shadowColors[nextShadowColor % shadowColors.length];
+		nextShadowColor++;
+	}
 
 
 	public void addZen(int diff) {
@@ -143,5 +153,18 @@ public class Player extends Mob {
 	public Map.Position getCollidingOutPoint() {
 		return collidingOutPoint;
 	}
+
+
+
+	@Override
+	public void render(SpriteBatch spriteBatch) {
+		spriteBatch.setColor(shadowColor);
+		spriteBatch.draw(shadow, position.x + 0.05f, position.y - 0.2f, WIDTH, HEIGHT);
+		spriteBatch.setColor(Color.WHITE);
+		super.render(spriteBatch);
+	}
+
+
+
 
 }
