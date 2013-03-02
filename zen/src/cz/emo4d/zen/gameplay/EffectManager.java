@@ -60,10 +60,10 @@ public class EffectManager {
 				activeEffects.add(new Effect(deathTexS, 8, 1, 0.075f, 0, posX - (1 / 32f * 15), posY - (1 / 32f * 12)));
 				break;
 			case DEATH_BLOOD_W:
-				activeEffects.add(new Effect(deathTexN, 8, 1, 0.075f, 0, posX - (1 / 32f * 15), posY - (1 / 32f * 12)));
+				activeEffects.add(new Effect(deathTexW, 8, 1, 0.075f, 0, posX - (1 / 32f * 15), posY - (1 / 32f * 12)));
 				break;
 			case DEATH_BLOOD_E:
-				activeEffects.add(new Effect(deathTexS, 8, 1, 0.075f, 0, posX - (1 / 32f * 15), posY - (1 / 32f * 12)));
+				activeEffects.add(new Effect(deathTexE, 8, 1, 0.075f, 0, posX - (1 / 32f * 15), posY - (1 / 32f * 12)));
 				break;
 			
 			case HIT_BLOOD_E:

@@ -11,7 +11,7 @@ public class Mob extends Entity {
 
 	public static float MAX_VELOCITY = 8f;
 	public static float DAMPING = 0.87f;
-	public static int MAX_HEALTH = 100;
+	public static int MAX_HEALTH = 200;
 	public int health = MAX_HEALTH;
 	public boolean alive = true;
 
