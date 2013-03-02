@@ -27,7 +27,7 @@ public class RemoteControl {
 	private ArrayList<PrintStream> outputs;
 	private HashMap<Integer,ClientMove> clientMoves;
 	
-	private int clientId = 0;
+	private ThreadLocal<Integer> clientIdHolder;
 
 	private DeviceEventHandler callback = null;
 	//private PrintStream output;
@@ -38,6 +38,8 @@ public class RemoteControl {
 		clientMoves = new HashMap<Integer,ClientMove>();
 		outputs = new ArrayList<PrintStream>();
 
+		clientIdHolder = new ThreadLocal<Integer>();
+		
 		startTCPServer();
 
 		AutoDiscoveryAsync exe = new AutoDiscoveryAsync();
@@ -86,7 +88,7 @@ public class RemoteControl {
 		de.eventType = Integer.parseInt(first);
 		de.valueX = Float.parseFloat(second);
 		de.valueY = Float.parseFloat(third);
-		de.player = clientId;
+		de.player = clientIdHolder.get();
 
 		return de;
 	}
@@ -171,8 +173,10 @@ public class RemoteControl {
 
 		@Override
 		public void run() {
-						
+			
+			Integer clientId = clientIdHolder.get();
 			clientId = clients.size() - 1;
+			clientIdHolder.set(clientId);
 			
 			try {
 				outputs.add(new PrintStream(client.getOutputStream()));
@@ -209,12 +213,13 @@ public class RemoteControl {
 //									+ ", valY:" + Float.toString(de.valueY));
 
 					if (de.eventType == DeviceEvent.MOVE) {
-						//Gdx.app.log("UPDATE SLAVE POSITION", Integer.toString(clientId));
-						ClientMove cm = clientMoves.get(clientId);
+						//Integer clientId = clientIdHolder.get();
+						//Gdx.app.log("UPDATE POSITION", Integer.toString(de.player));
+						ClientMove cm = clientMoves.get(de.player);
 						if (cm == null) cm = new ClientMove();
 						cm.X = de.valueX;
 						cm.Y = de.valueY;
-						clientMoves.put(clientId, cm);
+						clientMoves.put(de.player, cm);
 					}
 					
 					if (callback != null) {
