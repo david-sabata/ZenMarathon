@@ -1,9 +1,14 @@
 package cz.emo4d.zen.gameplay;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.Array;
 
 import cz.emo4d.zen.screens.Map;
 
@@ -19,6 +24,13 @@ public class Player extends Mob {
 	private Rectangle tmpRect = new Rectangle();
 	private Rectangle tmpPlayerRect = new Rectangle();
 
+	public boolean alive = true;
+
+	public static int MAX_ZEN = 100;
+	private int zen = MAX_ZEN;
+
+	// gui sem nastavuje obrazky s listkama, ktere si pak hrac updatuje
+	public final Array<Image> leaves = new Array<Image>();
 
 	public Player(Vector2 pos, float width, float height) {
 		super();
@@ -29,6 +41,38 @@ public class Player extends Mob {
 		HEIGHT = 1 / 32f * (effect.height - 15);
 
 		effect.update(0, true); // 0 = Direction.S 
+
+		Random r = new Random();
+		zen = Math.round(r.nextFloat() * 100);
+	}
+
+
+
+	public void addZen(int diff) {
+		zen += diff;
+
+		if (leaves.size > 0) {
+			updateLeaves();
+		}
+	}
+
+	public void updateLeaves() {
+		float zenPerHeart = Player.MAX_ZEN / (float) leaves.size;
+
+		for (int i = 1; i <= 5; i++) {
+			Image im = leaves.get(i - 1);
+			Color c = im.getColor();
+
+			if (zen < i * zenPerHeart) {
+				float part = (zen - ((i - 1) * zenPerHeart)) / (float) zenPerHeart;
+
+				if (part < 0) {
+					part = 0;
+				}
+
+				im.setColor(c.r, c.g, c.b, part);
+			}
+		}
 	}
 
 

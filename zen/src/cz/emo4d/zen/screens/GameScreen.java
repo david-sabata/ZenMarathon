@@ -33,7 +33,8 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 	//	private TiledMap map;
 	//	private OrthogonalTiledMapRenderer renderer;
-
+	private static final int PLAYER_DAMAGE = 20;
+	
 	private Map map;
 
 	private GameGuiStage gui;
@@ -94,7 +95,8 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 	public void onKeyPress(int keycode) {
 		if (keycode == Keys.CONTROL_LEFT) {
-			bulletManager.shoot(playerManager.getMainPlayer().position, playerManager.getMainPlayer().currentDir);
+			bulletManager.shoot(playerManager.getMainPlayer().position,
+					playerManager.getMainPlayer().currentDir, PLAYER_DAMAGE, playerManager.getMainPlayer());
 		}
 		if (keycode == Keys.TAB) {
 			//			doTeleport(map.getCoord(14, 36));
@@ -166,7 +168,11 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		bulletManager.update(deltaTime);
 		bulletManager.collisionWithMap(rc);
-		if (enemy.health > 0) {
+		bulletManager.collision(playerManager.getPlayers(), null);
+		
+		
+		/*if (enemy.health > 0) {
+
 			int hits = bulletManager.collision(enemy);
 			if (hits > 0) {
 				enemy.takeHit(20 * hits);
@@ -175,7 +181,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 					effectManager.addEffect(EffectManager.AvailableEffects.DIE_EXPLOSION, enemy.position.x, enemy.position.y);
 				}
 			}
-		}
+		}*/
 
 		effectManager.update(deltaTime);
 
@@ -282,13 +288,15 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		} else if (type == DeviceEvent.PRESS_A) {
 			// Master is shooting
 			if (device == remoteMaster)
-				bulletManager.shoot(playerManager.getMainPlayer().position, playerManager.getMainPlayer().currentDir);
+				bulletManager.shoot(playerManager.getMainPlayer().position,
+						playerManager.getMainPlayer().currentDir, PLAYER_DAMAGE, playerManager.getMainPlayer());
 			
 			// Slave is shooting
 			for (int i = 0; i < remoteSlaves.size(); i++) {
 				if (remoteSlaves.get(i).remoteId == device) {
 					bulletManager.shoot(playerManager.getPlayer(remoteSlaves.get(i).localId).position,
-							playerManager.getPlayer(remoteSlaves.get(i).localId).currentDir);
+							playerManager.getPlayer(remoteSlaves.get(i).localId).currentDir, PLAYER_DAMAGE,
+							playerManager.getPlayer(remoteSlaves.get(i).localId));
 				}
 			}
 			
