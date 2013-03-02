@@ -83,9 +83,12 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		bulletManager = new BulletManager(map, new Texture(Gdx.files.internal("data/bullet.png")), effectManager);
 		enemyManager = new EnemyManager();
 		
-		Enemy enemy = new Enemy(map.getCoord(56, 39));
-		enemy.setMap(map);
-		enemyManager.addEnemy(enemy);		
+		for (int i = 0; i < 100; i++) {
+			Enemy enemy = new Enemy(map.getCoord(56, 39));
+			enemy.setMap(map);
+		
+			enemyManager.addEnemy(enemy);
+		}
 
 		remoteSlaves = new ArrayList<RemotePlayer>();
 		pendingSlaves = new ArrayList<RemotePlayer>();
