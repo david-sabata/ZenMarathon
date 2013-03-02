@@ -86,6 +86,9 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		for (int i = 0; i < 100; i++) {
 			Enemy enemy = new Enemy(map.getCoord(56, 39));
 			enemy.setMap(map);
+			//enemy.MAX_HEALTH = 40;
+			enemy.health = 40;
+			
 		
 			enemyManager.addEnemy(enemy);
 		}
