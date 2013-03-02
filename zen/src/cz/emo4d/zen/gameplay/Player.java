@@ -23,6 +23,8 @@ public class Player extends Mob {
 	public final Color shadowColor;
 	private static int nextShadowColor = 0;
 
+	private static int MAX_DAMAGE = 20;
+
 	private Map.Position collidingInPoint;
 	private Map.Position collidingOutPoint;
 
@@ -60,6 +62,29 @@ public class Player extends Mob {
 	}
 
 
+	/**
+	 * utok je zavisly na zenu
+	 */
+	public int getDamage() {
+		float percent = zen / (float) MAX_ZEN;
+		return (int) (MAX_DAMAGE * percent);
+	}
+
+
+	public void killedEnemy() {
+		float part = MAX_ZEN * 0.05f; // 5%
+		zen += part;
+		zen = Math.min(zen, MAX_ZEN);
+
+		updateLeaves();
+	}
+
+	public void killedPlayer() {
+
+	}
+
+
+
 	public void addZen(int diff) {
 		zen += diff;
 
@@ -86,7 +111,6 @@ public class Player extends Mob {
 			}
 		}
 	}
-
 
 	@Override
 	public void updateHearts() {

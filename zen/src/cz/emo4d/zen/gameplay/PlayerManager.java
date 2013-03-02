@@ -42,8 +42,10 @@ public class PlayerManager {
 		return players.indexOf(p, true);
 	}
 
-	public void teleportAllPlayers(Vector2 newPos) {
+	public void teleportAllPlayers(Map map, Vector2 newPos) {
 		for (Player p : players) {
+			p.setMap(map);
+
 			// -1 kompenzuje to ze hrac pozicuje svuj levy dolni roh
 			p.position.set(newPos.x, newPos.y - 1);
 		}
