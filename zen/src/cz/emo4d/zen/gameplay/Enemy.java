@@ -14,7 +14,7 @@ public class Enemy extends Mob {
 		super();
 		this.position = position;
 
-		this.effect = new Effect(new Texture(Gdx.files.internal("data/effects/player_sheet.png")), 6, 8, 0.1f, 1);
+		this.effect = new Effect(new Texture(Gdx.files.internal("data/effects/player_sheet.png")), 6, 8, 0.1f, 1, 0, 0);
 		WIDTH = 1 / 32f * (effect.width - 3);
 		HEIGHT = 1 / 32f * (effect.height - 15);
 
@@ -25,7 +25,7 @@ public class Enemy extends Mob {
 
 	public void update(float deltaTime) {
 
-		move((new Vector2(random.nextFloat() - 0.5f, random.nextFloat() - 0.5f)));
+		//move((new Vector2(random.nextFloat() - 0.5f, random.nextFloat() - 0.5f)));
 
 		super.update(deltaTime);
 	}

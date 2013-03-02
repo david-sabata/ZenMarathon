@@ -1,5 +1,7 @@
 package cz.emo4d.zen.gameplay;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -19,6 +21,10 @@ public class Mob extends Entity {
 	public Direction currentDir = Direction.S;
 
 	public Effect effect;
+	
+	public Mob() {
+		super();	
+	}
 
 	public void move(Vector2 dir) {
 		float dirAngle = dir.angle();
