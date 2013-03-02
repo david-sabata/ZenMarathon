@@ -47,6 +47,29 @@ public class BulletManager {
 					
 					if (p.health <= 0)
 					{
+						switch (b.dir) {
+						case N:
+						case NW:
+						case NE:
+							em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_N, p.position.x, p.position.y);							
+							break;
+							
+						case S:
+						case SW:
+						case SE:
+							em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_S, p.position.x, p.position.y);
+							break;
+							
+						case W:
+							em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_W, p.position.x, p.position.y);
+							break;
+						case E:
+							em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_E, p.position.x, p.position.y);
+							break;
+							
+						}
+						
+						
 						em.addEffect(EffectManager.AvailableEffects.DIE_EXPLOSION, p.position.x, p.position.y);
 						p.alive = false;
 					}
