@@ -181,7 +181,7 @@ public class RemoteControl {
 					String message = in.readLine();
 					if (message == null)
 						break;
-					Gdx.app.log("INC", message);
+					//Gdx.app.log("INC", message);
 					putMessage(expandEvent(message));
 				}
 
@@ -201,13 +201,13 @@ public class RemoteControl {
 			while (true) {
 				try {
 					DeviceEvent de = getMessage();
-					Gdx.app.log("Incoming",
-							"Incoming type: " + Integer.toString(de.eventType)
-									+ ", valX:" + Float.toString(de.valueX)
-									+ ", valY:" + Float.toString(de.valueY));
+//					Gdx.app.log("Incoming",
+//							"Incoming type: " + Integer.toString(de.eventType)
+//									+ ", valX:" + Float.toString(de.valueX)
+//									+ ", valY:" + Float.toString(de.valueY));
 
 					if (de.eventType == DeviceEvent.MOVE) {
-						Gdx.app.log("UPDATE SLAVE POSITION", Integer.toString(clientId));
+						//Gdx.app.log("UPDATE SLAVE POSITION", Integer.toString(clientId));
 						ClientMove cm = clientMoves.get(clientId);
 						if (cm == null) cm = new ClientMove();
 						cm.X = de.valueX;

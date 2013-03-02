@@ -116,7 +116,6 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		ClientMove cm;
 		if (remoteMaster != -1) {
 			if ((cm = rc.getClientMove(remoteMaster)) != null) {
-				Gdx.app.log("MOVE", "MASTER");
 				moveVec.set(cm.X, -cm.Y);
 				playerManager.controllerInput(0, moveVec);
 			}
@@ -124,8 +123,9 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		for (int i = 0; i < pendingSlaves.size(); i++) {
 			RemotePlayer rp = pendingSlaves.get(i);
 			rp.localId = playerManager.addPlayer(playerManager.getMainPlayer().position);
-			Gdx.app.log("SLAVE CREATE", Integer.toString(rp.localId));
+
 			playerManager.controllerInput(rp.localId, new Vector2(1.0f, 1.0f));
+
 			remoteSlaves.add(rp);
 			pendingSlaves.remove(i);
 			i--;
