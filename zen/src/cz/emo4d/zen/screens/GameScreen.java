@@ -20,6 +20,7 @@ import cz.emo4d.zen.Zen;
 import cz.emo4d.zen.gameplay.BulletManager;
 import cz.emo4d.zen.gameplay.EffectManager;
 import cz.emo4d.zen.gameplay.Enemy;
+import cz.emo4d.zen.gameplay.EnemyManager;
 import cz.emo4d.zen.gameplay.PlayerManager;
 import cz.emo4d.zen.gameplay.RemotePlayer;
 import cz.emo4d.zen.remote.ClientMove;
@@ -45,7 +46,8 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 	private BulletManager bulletManager;
 	private EffectManager effectManager;
-	private Enemy enemy;
+	//private Enemy enemy;
+	private EnemyManager enemyManager;
 
 	private GameInputAdapter gameInputAdapter = new GameInputAdapter(this);
 	private InputMultiplexer inputMpx = new InputMultiplexer();
@@ -79,9 +81,12 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		effectManager = new EffectManager();
 		bulletManager = new BulletManager(map, new Texture(Gdx.files.internal("data/bullet.png")), effectManager);
-
-		enemy = new Enemy(map.getCoord(7, 8));
+		enemyManager = new EnemyManager();
+		
+		Enemy enemy = new Enemy(map.getCoord(7, 8));
 		enemy.setMap(map);
+		enemyManager.addEnemy(enemy);
+		
 
 		remoteSlaves = new ArrayList<RemotePlayer>();
 		pendingSlaves = new ArrayList<RemotePlayer>();
@@ -168,9 +173,9 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		bulletManager.update(deltaTime);
 		bulletManager.collisionWithMap(rc);
-		bulletManager.collision(playerManager.getPlayers(), null);
+		bulletManager.collision(playerManager.getPlayers(), enemyManager.getEnemies());
 		
-		
+		enemyManager.update(deltaTime);
 		/*if (enemy.health > 0) {
 
 			int hits = bulletManager.collision(enemy);
@@ -197,8 +202,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		SpriteBatch batch = map.renderer.getSpriteBatch();
 		batch.begin();
 		playerManager.render(batch);
-		if (enemy.health > 0)
-			enemy.render(batch);
+		enemyManager.render(batch);
 		bulletManager.render(batch);
 		effectManager.render(batch);
 

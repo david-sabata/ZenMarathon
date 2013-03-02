@@ -31,7 +31,59 @@ public class BulletManager {
 		activeBullets.add(bullet);
 	}
 	
-	public void collision(Array<Player> players, Array<Mob> enemies) {
+	private void addHitEffect(Direction dir, float posX, float posY) {
+		switch (dir) {
+		case N:
+			em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_N, posX, posY);
+			break;
+		case E:
+			em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_E, posX, posY);
+			break;
+		case NE:
+			em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_NE, posX, posY);
+			break;
+		case NW:
+			em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_NW, posX, posY);
+			break;
+		case S:
+			em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_S, posX, posY);
+			break;
+		case SE:
+			em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_SE, posX, posY);
+			break;
+		case SW:
+			em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_SW, posX, posY);
+			break;
+		case W:
+			em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_W, posX, posY);
+			break;					
+		}		
+	}
+	
+	private void addDeathEffect(Direction dir, float posX, float posY) {
+		switch (dir) {
+		case N:
+		case NW:
+		case NE:
+			em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_N, posX, posY);							
+			break;
+			
+		case S:
+		case SW:
+		case SE:
+			em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_S, posX, posY);
+			break;
+			
+		case W:
+			em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_W, posX, posY);
+			break;
+		case E:
+			em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_E, posX, posY);
+			break;							
+		}
+	}
+	
+	public void collision(Array<Player> players, Array<Enemy> enemies) {
 		//boolean collision = false;
 		for (int i = 0; i < activeBullets.size; i++) {					
 			Bullet b = activeBullets.get(i);
@@ -44,56 +96,36 @@ public class BulletManager {
 					em.addEffect(EffectManager.AvailableEffects.BULLET_EXPLOSION,
 							b.position.x, b.position.y);
 					
-					switch (b.dir) {
-					case N:
-						em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_N, p.position.x, p.position.y);
-						break;
-					case E:
-						em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_E, p.position.x, p.position.y);
-						break;
-					case NE:
-						em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_NE, p.position.x, p.position.y);
-						break;
-					case NW:
-						em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_NW, p.position.x, p.position.y);
-						break;
-					case S:
-						em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_S, p.position.x, p.position.y);
-						break;
-					case SE:
-						em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_SE, p.position.x, p.position.y);
-						break;
-					case SW:
-						em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_SW, p.position.x, p.position.y);
-						break;
-					case W:
-						em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_W, p.position.x, p.position.y);
-						break;					
-					}
+					addHitEffect(b.dir, p.position.x, p.position.y);
 					
 					if (p.health <= 0)
 					{
-						switch (b.dir) {
-						case N:
-						case NW:
-						case NE:
-							em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_N, p.position.x, p.position.y);							
-							break;
-							
-						case S:
-						case SW:
-						case SE:
-							em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_S, p.position.x, p.position.y);
-							break;
-							
-						case W:
-							em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_W, p.position.x, p.position.y);
-							break;
-						case E:
-							em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_E, p.position.x, p.position.y);
-							break;							
-						}
-						
+						addDeathEffect(b.dir, p.position.x, p.position.y);						
+						p.alive = false;
+					}
+					
+					activeBullets.removeIndex(i);
+					break;
+				}
+			}
+		}
+		
+		for (int i = 0; i < activeBullets.size; i++) {					
+			Bullet b = activeBullets.get(i);
+			
+			for (int j = 0; j < enemies.size; j++) {
+				Mob p = enemies.get(j);				
+				
+				if (p.alive && p != b.shooter && b.collision(p)) {
+					p.takeHit(b.strength);				
+					em.addEffect(EffectManager.AvailableEffects.BULLET_EXPLOSION,
+							b.position.x, b.position.y);
+					
+					addHitEffect(b.dir, p.position.x, p.position.y);
+					
+					if (p.health <= 0)
+					{
+						addDeathEffect(b.dir, p.position.x, p.position.y);						
 						p.alive = false;
 					}
 					
