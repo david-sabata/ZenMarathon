@@ -187,7 +187,7 @@ public class RemoteControl {
 					String message = in.readLine();
 					if (message == null)
 						break;
-					Gdx.app.log("INC", message);
+					//Gdx.app.log("INC", message);
 					putMessage(expandEvent(message));
 				}
 
@@ -214,7 +214,7 @@ public class RemoteControl {
 
 					if (de.eventType == DeviceEvent.MOVE) {
 						//Integer clientId = clientIdHolder.get();
-						Gdx.app.log("UPDATE POSITION", Integer.toString(de.player));
+						//Gdx.app.log("UPDATE POSITION", Integer.toString(de.player));
 						ClientMove cm = clientMoves.get(de.player);
 						if (cm == null) cm = new ClientMove();
 						cm.X = de.valueX;

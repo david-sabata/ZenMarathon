@@ -286,14 +286,8 @@ public class NetService extends Service {
 
 	}
 
-	public boolean sendControlEvent(int type, int valueX, int valueY) {
+	public boolean sendControlEvent(int type, float X, float Y) {
 		String serialized = new String();
-
-		float X = (float) valueX / (float) 250;
-		float Y = (float) valueY / (float) 250;
-
-		// X = X * X * Math.signum(X);
-		// Y = Y * Y * Math.signum(Y);
 
 		serialized = Integer.toString(type) + SERIALIZER_DELIMITER
 				+ Float.toString(X) + SERIALIZER_DELIMITER + Float.toString(Y);
