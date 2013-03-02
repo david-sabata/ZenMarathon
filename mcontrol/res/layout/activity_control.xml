@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="40dp"
-                android:text="     A     " />
+                android:text="    FIRE    " />
 
             <Button
                 android:id="@+id/button2"
