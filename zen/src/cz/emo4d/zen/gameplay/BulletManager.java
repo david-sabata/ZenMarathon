@@ -1,5 +1,7 @@
 package cz.emo4d.zen.gameplay;
 
+import java.util.Random;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -80,6 +82,12 @@ public class BulletManager {
 				em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_E, posX, posY);
 				break;
 		}
+		
+		Random rnd = new Random();
+		if (rnd.nextBoolean())		
+			SoundManager.getSound("squish1.waw").play();
+		else
+			SoundManager.getSound("squish2.waw").play();
 	}
 
 	public void collision(Array<Player> players, Array<Enemy> enemies) {
