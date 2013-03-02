@@ -3,12 +3,14 @@ package cz.emo4d.zen.gameplay;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 
 import cz.emo4d.zen.screens.Map;
+import cz.emo4d.zen.ui.AnimatedImage;
 
 
 public class Player extends Mob {
@@ -27,6 +29,13 @@ public class Player extends Mob {
 
 	// gui sem nastavuje obrazky s listkama, ktere si pak hrac updatuje
 	public final Array<Image> leaves = new Array<Image>();
+
+
+	// gui hracovy tabulky
+	private AnimatedImage faceAnimation;
+	private Animation okFaceAnimation;
+	private Animation koFaceAnimation;
+
 
 	public Player(Vector2 pos, float width, float height) {
 		super();
@@ -67,6 +76,25 @@ public class Player extends Mob {
 			}
 		}
 	}
+
+
+	@Override
+	public void updateHearts() {
+		super.updateHearts();
+
+		if (faceAnimation != null) {
+			faceAnimation.setAnimation(health == 0 ? koFaceAnimation : okFaceAnimation);
+		}
+	}
+
+
+
+	public void setFaceAnimations(AnimatedImage image, Animation ok, Animation ko) {
+		faceAnimation = image;
+		okFaceAnimation = ok;
+		koFaceAnimation = ko;
+	}
+
 
 
 

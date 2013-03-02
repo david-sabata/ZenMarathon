@@ -28,7 +28,7 @@
  </layer>
  <layer name="overlay2" width="28" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFtAJz0DA+OVLUDhYwGP33GYqpAQaj/0bBKNBEw4uAeCEWcWIxSO9iLOK4wCYg3kiB+0F6N+OQAwCbAyf7
+   eJxjYBgFtAJz0DA+OVLUDhYwGP33GYqpAQaj/0bB0AVzCNDEAk00vAiIF2IRJxaD9C7GIo4LbALijSS6GRmA9G7GIQcARbAqaw==
   </data>
  </layer>
  <layer name="overlay1" width="28" height="15">

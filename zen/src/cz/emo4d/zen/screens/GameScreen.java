@@ -67,7 +67,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	public GameScreen(Zen game) {
 		super(game);
 
-		map = new Map("fit");
+		map = new Map("floor1");
 
 		// create an orthographic camera, shows us 30x20 units of the world
 		camera = new OrthographicCamera();
@@ -76,17 +76,16 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 
 		// invertovat Y souradnici pro indexovani s nulou v levem HORNIM rohu
-		playerManager = new PlayerManager(map, map.getCoord(7, 6));
-		playerManager.addPlayer(map.getCoord(7, 6));
+		playerManager = new PlayerManager(map, map.getCoord(61, 32));
+		playerManager.addPlayer(map.getCoord(54, 31));
 
 		effectManager = new EffectManager();
 		bulletManager = new BulletManager(map, new Texture(Gdx.files.internal("data/bullet.png")), effectManager);
 		enemyManager = new EnemyManager();
 		
-		Enemy enemy = new Enemy(map.getCoord(7, 8));
+		Enemy enemy = new Enemy(map.getCoord(56, 39));
 		enemy.setMap(map);
-		enemyManager.addEnemy(enemy);
-		
+		enemyManager.addEnemy(enemy);		
 
 		remoteSlaves = new ArrayList<RemotePlayer>();
 		pendingSlaves = new ArrayList<RemotePlayer>();
