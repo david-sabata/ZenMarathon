@@ -20,7 +20,7 @@ public class Enemy extends Mob {
 
 		effect.update(0, true); // 0 = Direction.S
 
-		MAX_VELOCITY = 20f;
+		MAX_VELOCITY = 8f;
 	}
 
 	public void update(float deltaTime) {

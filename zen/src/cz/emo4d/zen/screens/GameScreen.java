@@ -104,10 +104,13 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		playerManager.update(deltaTime);
 
 		bulletManager.update(deltaTime);
-		bulletManager.collision();
-
-		enemy.update(deltaTime);
-
+		bulletManager.collisionWithMap();
+		if (enemy.health > 0) {
+			int hits = bulletManager.collision(enemy);
+			enemy.health -= 20 * hits;
+			enemy.update(deltaTime);
+		}
+		
 		// let the camera follow the player
 		camera.position.x = playerManager.getMainPlayer().position.x;
 		camera.position.y = playerManager.getMainPlayer().position.y;
@@ -120,8 +123,9 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		SpriteBatch batch = map.renderer.getSpriteBatch();
 		batch.begin();
 		playerManager.render(batch);
-		bulletManager.render(batch);
-		enemy.render(batch);
+		if (enemy.health > 0)
+			enemy.render(batch);
+		bulletManager.render(batch);		
 		batch.end();
 
 		// render overlay

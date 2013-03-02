@@ -8,6 +8,8 @@ public class Mob extends Entity {
 
 	public float MAX_VELOCITY = 8f;
 	public float DAMPING = 0.87f;
+	public int MAX_HEALTH = 100;
+	public int health = MAX_HEALTH;
 
 	protected enum State {
 		Standing, Walking, Shooting
