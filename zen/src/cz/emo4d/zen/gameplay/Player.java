@@ -24,13 +24,13 @@ public class Player extends Mob {
 	private Rectangle tmpRect = new Rectangle();
 	private Rectangle tmpPlayerRect = new Rectangle();
 
+	public boolean alive = true;
+
 	public static int MAX_ZEN = 100;
 	private int zen = MAX_ZEN;
 
 	// gui sem nastavuje obrazky s listkama, ktere si pak hrac updatuje
 	public final Array<Image> leaves = new Array<Image>();
-
-
 
 	public Player(Vector2 pos, float width, float height) {
 		super();

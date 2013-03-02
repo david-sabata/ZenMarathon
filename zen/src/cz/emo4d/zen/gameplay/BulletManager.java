@@ -22,24 +22,49 @@ public class BulletManager {
 	private Texture tex;
 	private EffectManager em;
 	
-	public void shoot(Vector2 origin, Direction dir) {
+	public void shoot(Vector2 origin, Direction dir, int strength, Player player) {
 		Bullet bullet = new Bullet(tex);
 		bullet.setMap(map);
-		bullet.shoot(origin, dir);
+		bullet.shoot(origin, dir, strength, player);
 		activeBullets.add(bullet);
 	}
 	
-	public int collision(Entity enemy) {
-		int hits = 0;
+	public void collision(Array<Player> players, Array<Mob> enemies) {
+		//boolean collision = false;
 		for (int i = 0; i < activeBullets.size; i++) {					
-			if (activeBullets.get(i).collision(enemy)) {
-				hits++;
+			Bullet b = activeBullets.get(i);
+			
+			for (int j = 0; j < players.size; j++) {
+				Player p = players.get(j);				
+				
+				if (p.alive && p != b.player && b.collision(p)) {
+					p.takeHit(b.strength);				
+					em.addEffect(EffectManager.AvailableEffects.BULLET_EXPLOSION,
+							b.position.x, b.position.y);
+					em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD, p.position.x, p.position.y);
+					
+					if (p.health <= 0)
+					{
+						em.addEffect(EffectManager.AvailableEffects.DIE_EXPLOSION, p.position.x, p.position.y);
+						p.alive = false;
+					}
+					
+					activeBullets.removeIndex(i);
+					break;
+				}
+			}
+		}
+			
+			
+			/*if (activeBullets.get(i).collision(enemy)) {
+				enemy.takeHit(activeBullets.get(i).strength);				
 				em.addEffect(EffectManager.AvailableEffects.BULLET_EXPLOSION,
 						activeBullets.get(i).position.x, activeBullets.get(i).position.y);
 				activeBullets.removeIndex(i);
+				collision = true;
 			}			
-		}	
-		return hits;
+		}
+		return collision;*/
 	}
 	
 	public void collisionWithMap() {
