@@ -32,6 +32,7 @@ public class GameGuiStage extends BaseStage {
 	private final PlayerManager playerManager;
 
 	private Table rootPlayer;
+	private Table subplayers;
 
 
 	public GameGuiStage(GameScreen screen, PlayerManager manager) {
@@ -43,26 +44,38 @@ public class GameGuiStage extends BaseStage {
 		rootPlayer.setFillParent(true);
 		//		rootPlayer.debug();
 
-		boolean first = true;
-		for (Player p : playerManager.getPlayers()) {
-			if (first) {
-				Table playerGui = createMainPlayerGui(p);
-				rootPlayer.add(playerGui).left().spaceBottom(50);
-				first = false;
-				continue;
-			}
+		Table playerGui = createMainPlayerGui(playerManager.getMainPlayer());
+		rootPlayer.add(playerGui).left().spaceBottom(50);
 
-			Table sub = createSubPlayerGui(p);
-			rootPlayer.row();
-			rootPlayer.add(sub).left().spaceBottom(10);
-		}
+		subplayers = new Table(skin);
+		//		subplayers.debug();
+		rootPlayer.row();
+		rootPlayer.add(subplayers).left();
 
 		rootPlayer.row();
 		rootPlayer.add().expand();
 
 		addActor(rootPlayer);
+
+		regenerateSubplayersGui();
 	}
 
+
+	public void regenerateSubplayersGui() {
+		subplayers.clear();
+
+		boolean first = true;
+		for (Player p : playerManager.getPlayers()) {
+			if (first) {
+				first = false;
+				continue;
+			}
+
+			Table sub = createSubPlayerGui(p);
+			subplayers.add(sub).left().spaceBottom(10);
+			subplayers.row();
+		}
+	}
 
 
 
