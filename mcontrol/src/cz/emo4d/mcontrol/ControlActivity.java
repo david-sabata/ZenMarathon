@@ -141,7 +141,7 @@ public class ControlActivity extends Activity {
 			Log.i(LOG_TAG, "Service bound");
 
 			mService.runAutoDiscovery();
-			mService.openConnection();
+			//mService.openConnection();
 
 		}
 

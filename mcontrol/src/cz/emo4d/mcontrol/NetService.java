@@ -52,6 +52,9 @@ public class NetService extends Service {
 	private PrintWriter out;
 
 	private String mHost = null;
+	public final static int MODE_MASTER = 1;
+	public final static int MODE_SLAVE = 2;
+	private int mMode = 0;
 
 	private final static int SERVERPORT = 5869;
 	private static final int DISCOVERYPORT = 10869;
@@ -62,6 +65,10 @@ public class NetService extends Service {
 	public IBinder onBind(Intent arg0) {
 
 		return mBinder;
+	}
+	
+	public void setMode (int m) {
+		mMode = m;
 	}
 
 	public void runAutoDiscovery() {
@@ -126,6 +133,7 @@ public class NetService extends Service {
 
 		@Override
 		protected void onPostExecute(Void param) {
+			openConnection();
 			super.onPostExecute(param);
 
 		}
