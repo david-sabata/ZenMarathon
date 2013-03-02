@@ -167,11 +167,12 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 
 		bulletManager.update(deltaTime);
-		bulletManager.collisionWithMap();
+		bulletManager.collisionWithMap(rc);
 		bulletManager.collision(playerManager.getPlayers(), null);
 		
 		
 		/*if (enemy.health > 0) {
+
 			int hits = bulletManager.collision(enemy);
 			if (hits > 0) {
 				enemy.takeHit(20 * hits);

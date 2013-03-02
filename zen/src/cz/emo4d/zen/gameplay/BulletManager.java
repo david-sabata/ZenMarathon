@@ -6,6 +6,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 import cz.emo4d.zen.gameplay.Entity.Direction;
+import cz.emo4d.zen.remote.DeviceEvent;
+import cz.emo4d.zen.remote.RemoteControl;
 import cz.emo4d.zen.screens.Map;
 
 public class BulletManager {
@@ -67,13 +69,15 @@ public class BulletManager {
 		return collision;*/
 	}
 	
-	public void collisionWithMap() {
+	public void collisionWithMap(RemoteControl rc) {
 		for (int i = 0; i < activeBullets.size; i++) {
 			if (activeBullets.get(i).collisionWithMap()) {
 				em.addEffect(EffectManager.AvailableEffects.BULLET_EXPLOSION,
 						activeBullets.get(i).position.x, activeBullets.get(i).position.y);
 				
 				activeBullets.removeIndex(i);
+				
+				rc.emitEvent(-1, DeviceEvent.VIBRATE);
 			}			
 		}
 	}
