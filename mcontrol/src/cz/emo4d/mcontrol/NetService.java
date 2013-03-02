@@ -21,6 +21,7 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.util.Log;
 
 public class NetService extends Service {
@@ -164,6 +165,10 @@ public class NetService extends Service {
 
 	private boolean proceedIncomingData(String incoming) {
 		Log.i("INCOMING:", incoming);
+		if (Integer.parseInt(incoming) == EventTypes.VIBRATE) {
+			Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+			v.vibrate(300);
+		}
 		return true;
 	}
 
@@ -234,9 +239,9 @@ public class NetService extends Service {
 						if (serverMessage != null)
 							proceedIncomingData(serverMessage);
 					} else {
-						Log.i("ConnIn", "Sleeping");
+						//Log.i("ConnIn", "Sleeping");
 						try {
-							Thread.sleep(500);
+							Thread.sleep(100);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -287,17 +292,17 @@ public class NetService extends Service {
 		private String message;
 
 		public SendAsync(String s) {
-			Log.i("SEN","CONSTRUCTOR");
+			//Log.i("SEN","CONSTRUCTOR");
 			message = s;
 		}
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			Log.i("SEN", "1");
+			//Log.i("SEN", "1");
 			if (socket != null) {
-				Log.i("SEN", "2");
+				//Log.i("SEN", "2");
 				out.println(message);
-				Log.i("SEN", "3");
+				//Log.i("SEN", "3");
 				out.flush();
 			}
 			return null;

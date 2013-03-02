@@ -227,6 +227,9 @@ public class RemoteControl {
 	
 	public void emitEvent(int client, int event) {
 		// TODO: More clients
+		
+		Gdx.app.log("EMIT", "EVENT");
+		
 		SendAsync exe = new SendAsync(Integer.toString(event));
 		exe.start();
 		
