@@ -36,6 +36,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	//	private TiledMap map;
 	//	private OrthogonalTiledMapRenderer renderer;
 	private static final int PLAYER_DAMAGE = 20;
+	private static final float SHOOT_INTERVAL = 0.14f;
 	
 	private Map map;
 
@@ -108,13 +109,15 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 	public void onKeyPress(int keycode) {
 		if (keycode == Keys.CONTROL_LEFT) {
-			bulletManager.shoot(playerManager.getMainPlayer().position,
-					playerManager.getMainPlayer().currentDir, PLAYER_DAMAGE, playerManager.getMainPlayer());
+			//bulletManager.shoot(playerManager.getMainPlayer().position,
+			//		playerManager.getMainPlayer().currentDir, PLAYER_DAMAGE, playerManager.getMainPlayer());
 		}
 		if (keycode == Keys.TAB) {
 			//			doTeleport(map.getCoord(14, 36));
 		}
 	}
+	
+	float lastTime = 0;
 
 
 	@Override
@@ -156,6 +159,17 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		// keyboard input
 		playerManager.keyboardInput();
+		
+		
+		lastTime += deltaTime;
+		if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {		
+			if (lastTime > SHOOT_INTERVAL) {
+			
+			bulletManager.shoot(playerManager.getMainPlayer().position,
+						playerManager.getMainPlayer().currentDir, PLAYER_DAMAGE, playerManager.getMainPlayer());
+			lastTime = 0;
+			}
+		}
 
 
 		// -- update --
