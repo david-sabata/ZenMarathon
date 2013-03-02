@@ -17,7 +17,7 @@ public class EffectManager {
 	
 	public EffectManager() {			
 		explosionTexture = new Texture(Gdx.files.internal("data/effects/fx_bombsplosion_big_32.png"));
-		dieTexture = new Texture(Gdx.files.internal("data/effects/fx_enemydie_64.png"));
+		dieTexture = new Texture(Gdx.files.internal("data/effects/fx_enemydie_64r.png"));
 	}	
 	
 	public void addEffect(AvailableEffects effect, float posX, float posY) {
