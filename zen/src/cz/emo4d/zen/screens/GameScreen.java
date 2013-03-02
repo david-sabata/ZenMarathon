@@ -75,18 +75,18 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		ClientMove cm = rc.getClientMove(1);
 		if (cm != null) {
-			moveVec.set(cm.X * player.MAX_VELOCITY, -cm.Y * player.MAX_VELOCITY);
+			moveVec.set(cm.X, -cm.Y); // * player.MAX_VELOCITY
 		}
 
 		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			moveVec.y = player.MAX_VELOCITY;
+			moveVec.y = 1f;  //player.MAX_VELOCITY
 		} else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-			moveVec.y = -player.MAX_VELOCITY;
+			moveVec.y = -1f;
 		}
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-			moveVec.x = -player.MAX_VELOCITY;
+			moveVec.x = -1f;
 		} else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			moveVec.x = player.MAX_VELOCITY;
+			moveVec.x = 1f;
 		}
 		
 		if (moveVec.x != 0 || moveVec.y != 0) {
@@ -96,6 +96,9 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		// update
 		player.update(deltaTime, map);
 		bullet.update(deltaTime);
+		if (bullet.collision(map) != null) {
+			bullet.alive = false;
+		}
 
 		// let the camera follow the player
 		camera.position.x = player.position.x;
