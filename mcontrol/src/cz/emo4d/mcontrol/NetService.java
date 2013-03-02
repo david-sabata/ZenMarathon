@@ -10,6 +10,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import android.app.Service;
@@ -20,9 +21,21 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.util.Log;
 
 public class NetService extends Service {
+
+	@Override
+	public void onDestroy() {
+		try {
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		close();
+		super.onDestroy();
+	}
 
 	public class ServiceBinder extends Binder {
 		public NetService getService() {
@@ -33,10 +46,15 @@ public class NetService extends Service {
 	private final IBinder mBinder = new ServiceBinder();
 
 	private Socket socket = null;
+	private DatagramSocket socket1 = null;
+	private DatagramSocket socket2 = null;
 	private BufferedReader in;
 	private PrintWriter out;
 
 	private String mHost = null;
+	public final static int MODE_MASTER = 1;
+	public final static int MODE_SLAVE = 2;
+	private int mMode = 0;
 
 	private final static int SERVERPORT = 5869;
 	private static final int DISCOVERYPORT = 10869;
@@ -47,6 +65,10 @@ public class NetService extends Service {
 	public IBinder onBind(Intent arg0) {
 
 		return mBinder;
+	}
+	
+	public void setMode (int m) {
+		mMode = m;
 	}
 
 	public void runAutoDiscovery() {
@@ -67,40 +89,43 @@ public class NetService extends Service {
 			for (int k = 0; k < 4; k++)
 				quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
 
-			
-			DatagramSocket socket1 = null;
-			DatagramSocket socket2 = null;
-			
-			try {
-				socket1 = new DatagramSocket();
-				socket1.setBroadcast(true);
-				DatagramPacket packet = new DatagramPacket(
-						discoveryData.getBytes(), discoveryData.length(),
-						InetAddress.getByAddress(quads), DISCOVERYPORT);
-				socket1.send(packet);
+			boolean discovering = true;
 
-				Log.i("Discovery", "before recv");
-				
+			while (discovering) {
 
-				socket2 = new DatagramSocket(DISCOVERYPORT);
-				byte[] buf = new byte[1024];
-				packet = new DatagramPacket(buf, buf.length);
-				socket2.receive(packet);
+				try {
+					socket1 = new DatagramSocket();
+					socket1.setBroadcast(true);
+					DatagramPacket packet = new DatagramPacket(
+							discoveryData.getBytes(), discoveryData.length(),
+							InetAddress.getByAddress(quads), DISCOVERYPORT);
+					socket1.send(packet);
 
-				
+					Log.i("Discovery", "before recv");
 
-				mHost = new String(packet.getData());
+					socket2 = new DatagramSocket(DISCOVERYPORT);
+					byte[] buf = new byte[1024];
+					packet = new DatagramPacket(buf, buf.length);
+					socket2.setSoTimeout(2000);
+					socket2.receive(packet);
 
-				int pos = mHost.indexOf(buf[400]);
-				mHost = mHost.substring(0, pos);
-				Log.i("Discovery", mHost);
+					mHost = new String(packet.getData());
 
-			} catch (Exception e) {
-				e.printStackTrace();
-				
-			} finally {
-				socket1.close();
-				socket2.close();
+					int pos = mHost.indexOf(buf[400]);
+					mHost = mHost.substring(0, pos);
+					Log.i("Discovery", mHost);
+
+					discovering = false;
+				} catch (SocketTimeoutException e) {
+
+				} catch (Exception e) {
+					e.printStackTrace();
+
+				} finally {
+					socket1.close();
+					socket2.close();
+				}
+
 			}
 
 			return null;
@@ -108,6 +133,7 @@ public class NetService extends Service {
 
 		@Override
 		protected void onPostExecute(Void param) {
+			openConnection();
 			super.onPostExecute(param);
 
 		}
@@ -147,6 +173,10 @@ public class NetService extends Service {
 
 	private boolean proceedIncomingData(String incoming) {
 		Log.i("INCOMING:", incoming);
+		if (Integer.parseInt(incoming) == EventTypes.VIBRATE) {
+			Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+			v.vibrate(300);
+		}
 		return true;
 	}
 
@@ -186,9 +216,15 @@ public class NetService extends Service {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
+			//send message about connection
+			if (mMode == MODE_MASTER)
+				sendControlEvent(EventTypes.CONNECT, 0, 0);
+			else
+				sendControlEvent(EventTypes.CONNECT, 1, 1);
 
-			// InputListener il = new InputListener();
-			// il.execute();
+			InputListener il = new InputListener();
+			il.executeOnExecutor(THREAD_POOL_EXECUTOR);
 			return null;
 		}
 
@@ -212,9 +248,19 @@ public class NetService extends Service {
 		protected Void doInBackground(Void... arg0) {
 			while (socket != null) {
 				try {
-					String serverMessage = in.readLine();
-					if (serverMessage != null)
-						proceedIncomingData(serverMessage);
+					if (in.ready()) {
+						String serverMessage = in.readLine();
+						if (serverMessage != null)
+							proceedIncomingData(serverMessage);
+					} else {
+						//Log.i("ConnIn", "Sleeping");
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 					break;
@@ -243,8 +289,8 @@ public class NetService extends Service {
 		float X = (float) valueX / (float) 250;
 		float Y = (float) valueY / (float) 250;
 
-		//X = X * X * Math.signum(X);
-		//Y = Y * Y * Math.signum(Y);
+		// X = X * X * Math.signum(X);
+		// Y = Y * Y * Math.signum(Y);
 
 		serialized = Integer.toString(type) + SERIALIZER_DELIMITER
 				+ Float.toString(X) + SERIALIZER_DELIMITER + Float.toString(Y);
@@ -260,13 +306,17 @@ public class NetService extends Service {
 		private String message;
 
 		public SendAsync(String s) {
+			//Log.i("SEN","CONSTRUCTOR");
 			message = s;
 		}
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
+			//Log.i("SEN", "1");
 			if (socket != null) {
+				//Log.i("SEN", "2");
 				out.println(message);
+				//Log.i("SEN", "3");
 				out.flush();
 			}
 			return null;
