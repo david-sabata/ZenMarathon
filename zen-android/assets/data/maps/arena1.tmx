@@ -2,7 +2,7 @@
 <map version="1.0" orientation="orthogonal" width="20" height="12" tilewidth="32" tileheight="32">
  <properties>
   <property name="in-dvere" value="3x9"/>
-  <property name="indir-dvere" value="0x-1"/>
+  <property name="indir-dvere" value="0x1"/>
   <property name="out-floor1-arena1" value="3x11"/>
  </properties>
  <tileset firstgid="1" name="FIT" tilewidth="32" tileheight="32">
@@ -10,22 +10,22 @@
  </tileset>
  <layer name="background2" width="20" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYKAtqEDC5KqpoBIeaubJEYEHg3nU9u9gMw8GlgDxUizi5IItQLyVQjMAy85Akw==
+   eJxjYEAFC0nE+EAFGkYWx6WOGHPIxUPNPDki8GAwj9r+HWzmwcASIF6KRZxcsAWIt1JoBgAeV0kP
   </data>
  </layer>
  <layer name="background1" width="20" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYKAtWAWlV1CgZicSxiVOjJqBBr8Y8IcDOQDZvN1AvAeI91LJvNNAfAaIz5JpFrp/bwPxHSC+S6Z5MHAeiC9QaMZgADOhmBIAAIaoGeI=
+   eJxjYKAtqMCCcYlXYDMACHZCMTlgJwNl+qkNVtDQvN1AvAeI91LJvNNAfAaIz1LJvNtAfAeI71JgHgicB+ILFJoxGMBMKKYEAAAIGhVj
   </data>
  </layer>
  <layer name="walls" width="20" height="12">
   <data encoding="base64" compression="zlib">
-   eJxbyMDAsBAJlyPhhTgwPjUb0XA7EkaXI1YNtcBgMW8/EB8YNW/QxAch89DNxZWOScXUMA8Aek1CYQ==
+   eJxbyMDAsBAJKwGxMgMEwNgL8bDR8UYk/BOIjYDYmAT2RixYkYE6AGaeIZXNcyRR334gPoDHPFIBIfNIDT9C5pEafoTMIzX8cAFyw4+QeejmYkuj5GBqmAcAtV0+Xg==
   </data>
  </layer>
  <layer name="overlay2" width="20" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYKA+WI2EfyLh1TgwLjXDFWwH4h1UNO84EJ+gonkg8J2KZs2E4lGAmr5h4YIrXxCDAVFPIDo=
+   eJxjYKA+WA3FlOglV/9gBr+g9HYg3gHE14H4BhXMPQ7EJ4D4ORC/oMCcX0js7xS5CBXMhOJRgJq+YeGymgIMAO1DGyk=
   </data>
  </layer>
  <layer name="overlay1" width="20" height="12">
