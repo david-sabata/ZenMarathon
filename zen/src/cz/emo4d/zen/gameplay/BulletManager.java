@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 
 import cz.emo4d.zen.Zen;
 import cz.emo4d.zen.Zen.BossPerson;
+import cz.emo4d.zen.Zen.Modes;
 import cz.emo4d.zen.gameplay.Entity.Direction;
 import cz.emo4d.zen.remote.DeviceEvent;
 import cz.emo4d.zen.remote.RemoteControl;
@@ -58,6 +59,9 @@ public class BulletManager {
 	}
 
 	private void addHitEffect(Direction dir, float posX, float posY) {
+		if (screen.getGame().getMode() == Modes.KID)
+			return;
+
 		switch (dir) {
 			case N:
 				em.addEffect(EffectManager.AvailableEffects.HIT_BLOOD_N, posX, posY);
@@ -87,32 +91,37 @@ public class BulletManager {
 	}
 
 	private void addDeathEffect(Direction dir, float posX, float posY) {
-		switch (dir) {
-			case N:
-			case NW:
-			case NE:
-				em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_N, posX, posY);
-				break;
+		if (screen.getGame().getMode() == Modes.KID) {
+			em.addEffect(EffectManager.AvailableEffects.SMOKE, posX, posY);
+		} else {
+			switch (dir) {
+				case N:
+				case NW:
+				case NE:
+					em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_N, posX, posY);
+					break;
 
-			case S:
-			case SW:
-			case SE:
-				em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_S, posX, posY);
-				break;
+				case S:
+				case SW:
+				case SE:
+					em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_S, posX, posY);
+					break;
 
-			case W:
-				em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_W, posX, posY);
-				break;
-			case E:
-				em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_E, posX, posY);
-				break;
+				case W:
+					em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_W, posX, posY);
+					break;
+				case E:
+					em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_E, posX, posY);
+					break;
+			}
+
+			Random rnd = new Random();
+			if (rnd.nextBoolean()) {
+				SoundManager.getSound("squish1.wav").play();
+			} else {
+				SoundManager.getSound("squish2.wav").play();
+			}
 		}
-
-		Random rnd = new Random();
-		if (rnd.nextBoolean())
-			SoundManager.getSound("squish1.wav").play();
-		else
-			SoundManager.getSound("squish2.wav").play();
 	}
 
 	public void collision(Array<Player> players, Array<Enemy> enemies, RemoteControl rc, ArrayList<RemotePlayer> remoteSlaves, int remoteMaster) {
@@ -125,7 +134,10 @@ public class BulletManager {
 
 				if (p.alive && p != b.shooter && b.collision(p)) {
 					p.takeHit(b.strength);
-					em.addEffect(EffectManager.AvailableEffects.BULLET_EXPLOSION, b.position.x, b.position.y);
+
+					if (screen.getGame().getMode() != Modes.KID) {
+						em.addEffect(EffectManager.AvailableEffects.BULLET_EXPLOSION, b.position.x, b.position.y);
+					}
 
 					//vibration
 
@@ -164,7 +176,9 @@ public class BulletManager {
 
 				if (p.alive && p != b.shooter && b.collision(p)) {
 					p.takeHit(b.strength);
-					em.addEffect(EffectManager.AvailableEffects.BULLET_EXPLOSION, b.position.x, b.position.y);
+					if (screen.getGame().getMode() != Modes.KID) {
+						em.addEffect(EffectManager.AvailableEffects.BULLET_EXPLOSION, b.position.x, b.position.y);
+					}
 
 					addHitEffect(b.dir, p.position.x, p.position.y);
 
@@ -212,7 +226,9 @@ public class BulletManager {
 	public void collisionWithMap(RemoteControl rc) {
 		for (int i = 0; i < activeBullets.size; i++) {
 			if (activeBullets.get(i).collisionWithMap()) {
-				em.addEffect(EffectManager.AvailableEffects.BULLET_EXPLOSION, activeBullets.get(i).position.x, activeBullets.get(i).position.y);
+				if (screen.getGame().getMode() != Modes.KID) {
+					em.addEffect(EffectManager.AvailableEffects.BULLET_EXPLOSION, activeBullets.get(i).position.x, activeBullets.get(i).position.y);
+				}
 
 				activeBullets.removeIndex(i);
 
