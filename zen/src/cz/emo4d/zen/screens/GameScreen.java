@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import cz.emo4d.zen.Zen;
 import cz.emo4d.zen.Zen.BossPerson;
+import cz.emo4d.zen.Zen.Modes;
 import cz.emo4d.zen.gameplay.Boss;
 import cz.emo4d.zen.gameplay.BulletManager;
 import cz.emo4d.zen.gameplay.EffectManager;
@@ -83,7 +84,13 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		// create an orthographic camera, shows us 30x20 units of the world
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 30, 20);
+
+		if (game.getMode() == Modes.SENIOR) {
+			camera.setToOrtho(false, 8, 5);
+		} else {
+			camera.setToOrtho(false, 30, 20);
+		}
+
 		camera.update();
 
 
@@ -91,8 +98,10 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		playerManager = new PlayerManager(map, map.getCoord(34, 66));
 		//		playerManager.addPlayer(map.getCoord(54, 31));
 
+		Texture bulletTex = (game.getMode() == Modes.KID) ? new Texture(Gdx.files.internal("data/ball.png")) : new Texture(
+				Gdx.files.internal("data/bullet.png"));
 		effectManager = new EffectManager();
-		bulletManager = new BulletManager(map, new Texture(Gdx.files.internal("data/bullet.png")), effectManager, this);
+		bulletManager = new BulletManager(map, bulletTex, effectManager, this);
 		enemyManager = new EnemyManager();
 		powerupManager = new PowerupManager(effectManager, this);
 

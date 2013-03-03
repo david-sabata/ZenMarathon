@@ -17,12 +17,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import cz.emo4d.zen.WisImport;
 import cz.emo4d.zen.Zen;
+import cz.emo4d.zen.Zen.Modes;
 import cz.emo4d.zen.gameplay.SoundManager;
 import cz.emo4d.zen.screens.BaseScreen;
 
 public class MainMenuStage extends BaseStage {
 
 
+	public TextButton btnMode;
 
 
 	public MainMenuStage(BaseScreen screen) {
@@ -58,7 +60,24 @@ public class MainMenuStage extends BaseStage {
 			}
 		});
 
-		//		TextButton btnTop = new TextButton(" HIGH SCORES ", skin);
+		btnMode = new TextButton(" NORMAL EDITION ", skin);
+		btnMode.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				Modes m = screen.getGame().getMode();
+				if (m == Modes.NORMAL) {
+					screen.getGame().setMode(Modes.SENIOR);
+					btnMode.setText(" SENIOR EDITION ");
+				} else if (m == Modes.SENIOR) {
+					screen.getGame().setMode(Modes.KID);
+					btnMode.setText("  KIDS EDITION  ");
+				} else if (m == Modes.KID) {
+					screen.getGame().setMode(Modes.NORMAL);
+					btnMode.setText(" NORMAL EDITION ");
+				}
+			}
+		});
+
 
 		TextButton btnCredits = new TextButton("CREDITS", skin);
 		btnCredits.addListener(new ClickListener() {
@@ -84,10 +103,10 @@ public class MainMenuStage extends BaseStage {
 		root.add();
 		root.row();
 
-		//		root.add();
-		//		root.add(btnTop).center().height(70).fill().spaceBottom(50);
-		//		root.add();
-		//		root.row();
+		root.add();
+		root.add(btnMode).center().height(70).fill().spaceBottom(50);
+		root.add();
+		root.row();
 
 		root.add();
 		root.add(btnCredits).center().height(70).fill().spaceBottom(50);
