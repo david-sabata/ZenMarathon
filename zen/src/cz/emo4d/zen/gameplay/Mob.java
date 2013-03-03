@@ -58,6 +58,8 @@ public class Mob extends Entity {
 			Image im = hearts.get(i - 1);
 			Color c = im.getColor();
 
+			im.setColor(c.r, c.g, c.b, 1);
+
 			if (health < i * hpPerHeart) {
 				float part = (health - ((i - 1) * hpPerHeart)) / (float) hpPerHeart;
 
@@ -66,8 +68,6 @@ public class Mob extends Entity {
 				}
 
 				im.setColor(c.r, c.g, c.b, part);
-			} else {
-				im.setColor(c.r, c.g, c.b, 1);
 			}
 		}
 
