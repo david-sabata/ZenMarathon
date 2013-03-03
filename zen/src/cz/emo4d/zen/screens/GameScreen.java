@@ -90,7 +90,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		effectManager = new EffectManager();
 		bulletManager = new BulletManager(map, new Texture(Gdx.files.internal("data/bullet.png")), effectManager);
 		enemyManager = new EnemyManager();
-		powerupManager = new PowerupManager(effectManager);
+		powerupManager = new PowerupManager(effectManager, this);
 
 		powerupManager.addPowerup(map.getCoord(57, 15));
 		powerupManager.addPowerup(map.getCoord(58, 16));
@@ -405,7 +405,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	public void show() {
 		super.show();
 
-		showDialog(Zen.currentBoss, "YOU SHALL\nNOT PASS !!!", 10);
+		//		showDialog(Zen.currentBoss, "YOU SHALL\nNOT PASS !!!", 10);
 
 		Gdx.input.setInputProcessor(inputMpx);
 	}
