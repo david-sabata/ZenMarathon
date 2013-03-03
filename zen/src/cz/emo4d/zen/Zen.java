@@ -83,7 +83,7 @@ public class Zen extends Game {
 		Array<String> q4 = new Array<String>();
 		q4.add("mosaic\nna vas!");
 		q4.add("sgml mi\ndava silu");
-		q4.add("nesnasim jablka");
+		q4.add("nesnasim\njablka");
 
 		bossQuotes.put(BossPerson.PP, q1);
 		bossQuotes.put(BossPerson.KOLAR, q2);
