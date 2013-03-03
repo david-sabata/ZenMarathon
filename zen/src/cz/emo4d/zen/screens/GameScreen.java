@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import cz.emo4d.zen.Zen;
+import cz.emo4d.zen.gameplay.Boss;
 import cz.emo4d.zen.gameplay.BulletManager;
 import cz.emo4d.zen.gameplay.EffectManager;
 import cz.emo4d.zen.gameplay.Enemy;
@@ -95,53 +96,57 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		powerupManager.addPowerup(map.getCoord(58, 16));
 		powerupManager.addPowerup(map.getCoord(59, 15));
 
-		for (int i = 0; i < 10; i++) {
-			Enemy enemy = new Enemy(map.getCoord(56, 39));
-			enemy.setMap(map);
-			enemyManager.addEnemy(enemy);
-		}
-
-		for (int i = 0; i < 10; i++) {
-			Enemy enemy = new Enemy(map.getCoord(37, 28));
-			enemy.setMap(map);
-			enemyManager.addEnemy(enemy);
-		}
-
-		for (int i = 0; i < 10; i++) {
-			Enemy enemy = new Enemy(map.getCoord(36, 65));
-			enemy.setMap(map);
-			enemyManager.addEnemy(enemy);
-		}
-
-		for (int i = 0; i < 10; i++) {
-			Enemy enemy = new Enemy(map.getCoord(54, 66));
-			enemy.setMap(map);
-			enemyManager.addEnemy(enemy);
-		}
-
-		for (int i = 0; i < 10; i++) {
-			Enemy enemy = new Enemy(map.getCoord(62, 31));
-			enemy.setMap(map);
-			enemyManager.addEnemy(enemy);
-		}
-
-		for (int i = 0; i < 10; i++) {
-			Enemy enemy = new Enemy(map.getCoord(62, 19));
-			enemy.setMap(map);
-			enemyManager.addEnemy(enemy);
-		}
-
-		for (int i = 0; i < 10; i++) {
-			Enemy enemy = new Enemy(map.getCoord(54, 28));
-			enemy.setMap(map);
-			enemyManager.addEnemy(enemy);
-		}
-
-		for (int i = 0; i < 10; i++) {
-			Enemy enemy = new Enemy(map.getCoord(57, 22));
-			enemy.setMap(map);
-			enemyManager.addEnemy(enemy);
-		}
+		Boss boss = new Boss(map.getCoord(56, 39),playerManager.getMainPlayer(), bulletManager);
+		boss.setMap(map);
+		enemyManager.addEnemy(boss);
+		
+//		for (int i = 0; i < 10; i++) {
+//			Enemy enemy = new Enemy(map.getCoord(56, 39));
+//			enemy.setMap(map);
+//			enemyManager.addEnemy(enemy);
+//		}
+//
+//		for (int i = 0; i < 10; i++) {
+//			Enemy enemy = new Enemy(map.getCoord(37, 28));
+//			enemy.setMap(map);
+//			enemyManager.addEnemy(enemy);
+//		}
+//
+//		for (int i = 0; i < 10; i++) {
+//			Enemy enemy = new Enemy(map.getCoord(36, 65));
+//			enemy.setMap(map);
+//			enemyManager.addEnemy(enemy);
+//		}
+//
+//		for (int i = 0; i < 10; i++) {
+//			Enemy enemy = new Enemy(map.getCoord(54, 66));
+//			enemy.setMap(map);
+//			enemyManager.addEnemy(enemy);
+//		}
+//
+//		for (int i = 0; i < 10; i++) {
+//			Enemy enemy = new Enemy(map.getCoord(62, 31));
+//			enemy.setMap(map);
+//			enemyManager.addEnemy(enemy);
+//		}
+//
+//		for (int i = 0; i < 10; i++) {
+//			Enemy enemy = new Enemy(map.getCoord(62, 19));
+//			enemy.setMap(map);
+//			enemyManager.addEnemy(enemy);
+//		}
+//
+//		for (int i = 0; i < 10; i++) {
+//			Enemy enemy = new Enemy(map.getCoord(54, 28));
+//			enemy.setMap(map);
+//			enemyManager.addEnemy(enemy);
+//		}
+//
+//		for (int i = 0; i < 10; i++) {
+//			Enemy enemy = new Enemy(map.getCoord(57, 22));
+//			enemy.setMap(map);
+//			enemyManager.addEnemy(enemy);
+//		}
 
 
 		remoteSlaves = new ArrayList<RemotePlayer>();

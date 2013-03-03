@@ -41,9 +41,10 @@ public class Enemy extends Mob {
 
 	public void update(float deltaTime) {
 
-		if (remainingPauseTime <= 0)
-			timedMove(new Vector2((random.nextFloat() - 0.5f), (random.nextFloat() - 0.5f)), random.nextFloat()*4f, random.nextFloat()*4f);
-			
+		if (!(this instanceof Boss )) {
+			if (remainingPauseTime <= 0)
+				timedMove(new Vector2((random.nextFloat() - 0.5f), (random.nextFloat() - 0.5f)), random.nextFloat()*4f, random.nextFloat()*4f);
+		}	
 				
 		super.update(deltaTime);
 	}
