@@ -66,6 +66,8 @@ public class Mob extends Entity {
 				}
 
 				im.setColor(c.r, c.g, c.b, part);
+			} else {
+				im.setColor(c.r, c.g, c.b, 1);
 			}
 		}
 
@@ -143,7 +145,7 @@ public class Mob extends Entity {
 
 		// Apply damping to the velocity so we don't
 		// walk infinitely once a key was pressed
-		this.velocity.mul(this.DAMPING);
+		this.velocity.mul(Mob.DAMPING);
 	}
 
 
