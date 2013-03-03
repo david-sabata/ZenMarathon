@@ -1,7 +1,10 @@
 package cz.emo4d.zen.gameplay;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+
+import cz.emo4d.zen.Zen.BossPerson;
 
 public class Boss extends Enemy {
 
@@ -10,8 +13,19 @@ public class Boss extends Enemy {
 	
 	float shootFilter = -1;
 	
-	public Boss(Vector2 position, Player p, BulletManager bm) {
+	public Boss(Vector2 position, Player p, BulletManager bm, BossPerson bossSort) {
 		super(position);
+		
+		if (bossSort == BossPerson.KOLAR) {
+			this.effect = new Effect(new Texture(Gdx.files.internal("data/effects/boss_kolar.png")), 1, 1, 0.1f, 1, 0, 0);
+		} else if (bossSort == BossPerson.PP) {
+			this.effect = new Effect(new Texture(Gdx.files.internal("data/effects/boss_pp.png")), 1, 1, 0.1f, 1, 0, 0);
+		} else if (bossSort == BossPerson.KRENA) {
+			this.effect = new Effect(new Texture(Gdx.files.internal("data/effects/boss_krena.png")), 1, 1, 0.1f, 1, 0, 0);
+		} else {
+			this.effect = new Effect(new Texture(Gdx.files.internal("data/effects/boss_hruska.png")), 1, 1, 0.1f, 1, 0, 0);
+		}
+		
 		defaultPlayer = p;
 		bulletManager = bm;
 		factor = 0.5f;

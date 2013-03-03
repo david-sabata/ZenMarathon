@@ -330,7 +330,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 				}
 
 				if (!bossSpawned && newPos.mapName.equals("arena1")) {
-					boss = new Boss(map.getCoord(16, 6), playerManager.getMainPlayer(), bulletManager);
+					boss = new Boss(map.getCoord(16, 6), playerManager.getMainPlayer(), bulletManager, Zen.currentBoss);
 					boss.setMap(map);
 					enemyManager.addEnemy(boss);
 					bossSpawned = true;
@@ -422,6 +422,13 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	@Override
 	public void show() {
 		super.show();
+
+		if (boss != null) {
+			enemyManager.getEnemies().removeValue(boss, true);
+			boss = null;
+		}
+
+		bossSpawned = false;
 
 		//		showDialog(Zen.currentBoss, "YOU SHALL\nNOT PASS !!!", 10);
 

@@ -15,12 +15,12 @@
  </layer>
  <layer name="background1" width="20" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYKAtqMCCcYlXYDMACHZCMTlgJwNl+qkNVtDQvN1AvAeI91LJvNNAfAaIz1LJvNtAfAeI71JgHgicB+ILFJoxGMBMKKYEAAAIGhVj
+   eJxjYKAtqMCCcYlXYDMACHZCMTlgJwNl+qkNVgDxfiA+QEXzYGA3EO8B4r1UMu80EJ8B4rMUmgfz720gvgPEdykwDwTOA/EFCs0YDGAmFFMCAHq9GGE=
   </data>
  </layer>
  <layer name="walls" width="20" height="12">
   <data encoding="base64" compression="zlib">
-   eJxbyMDAsBAJKwGxMgMEwNgL8bDR8UYk/BOIjYDYmAT2RixYkYE6AGaeIZXNcyRR334gPoDHPFIBIfNIDT9C5pEafoTMIzX8cAFyw4+QeejmYkuj5GBqmAcAtV0+Xg==
+   eJxbyMDAsBAJKwGxMgMEwNgL8bDR8UYk/BOIjYDYmAT2RixYkYE6AGaeIZXNc6SyeaSC/UB8AI95pIYfIfOGW/gRMg/dXGxplBxMDfMAQro7YA==
   </data>
  </layer>
  <layer name="overlay2" width="20" height="12">

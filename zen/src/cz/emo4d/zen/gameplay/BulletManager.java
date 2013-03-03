@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 import cz.emo4d.zen.Zen;
+import cz.emo4d.zen.Zen.BossPerson;
 import cz.emo4d.zen.gameplay.Entity.Direction;
 import cz.emo4d.zen.remote.DeviceEvent;
 import cz.emo4d.zen.remote.RemoteControl;
@@ -180,6 +181,10 @@ public class BulletManager {
 						if (b.shooter instanceof Player) {
 							Player pShooter = (Player) b.shooter;
 							pShooter.killedEnemy();
+						}
+
+						if (p instanceof Boss) {
+							screen.showDialog(BossPerson.ZDENEK, "Gratuluji!\njste nejlepsi!", 30);
 						}
 
 						addDeathEffect(b.dir, p.position.x, p.position.y);
