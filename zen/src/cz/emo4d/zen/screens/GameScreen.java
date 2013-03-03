@@ -190,7 +190,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 		bulletManager.update(deltaTime);
 		bulletManager.collisionWithMap(rc);
-		bulletManager.collision(playerManager.getPlayers(), enemyManager.getEnemies());
+		bulletManager.collision(playerManager.getPlayers(), enemyManager.getEnemies(), rc, remoteSlaves, remoteMaster);
 
 		enemyManager.update(deltaTime);
 		/*if (enemy.health > 0) {
