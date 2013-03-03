@@ -16,7 +16,9 @@ public class Enemy extends Mob {
 		
 		double style = random.nextDouble();
 		
-		if (style > 0.8) {
+		if (this instanceof Boss) {
+			this.effect = new Effect(new Texture(Gdx.files.internal("data/effects/boss_1.png")), 1, 1, 0.1f, 1, 0, 0);
+		} else if (style > 0.8) {
 			this.effect = new Effect(new Texture(Gdx.files.internal("data/effects/enemy_sheet.png")), 6, 8, 0.1f, 1, 0, 0);
 		} else if (style > 0.6) {
 			this.effect = new Effect(new Texture(Gdx.files.internal("data/effects/bot_sheet_1.png")), 3, 8, 0.1f, 1, 0, 0);
