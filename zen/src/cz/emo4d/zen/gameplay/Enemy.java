@@ -13,8 +13,22 @@ public class Enemy extends Mob {
 	public Enemy(Vector2 position) {
 		super();
 		this.position = position;
+		
+		double style = random.nextDouble();
+		
+		if (style > 0.8) {
+			this.effect = new Effect(new Texture(Gdx.files.internal("data/effects/enemy_sheet.png")), 6, 8, 0.1f, 1, 0, 0);
+		} else if (style > 0.6) {
+			this.effect = new Effect(new Texture(Gdx.files.internal("data/effects/bot_sheet_1.png")), 3, 8, 0.1f, 1, 0, 0);
+		} else if (style > 0.4) {
+			this.effect = new Effect(new Texture(Gdx.files.internal("data/effects/bot_sheet_2.png")), 3, 8, 0.1f, 1, 0, 0);
+		} else if (style > 0.2) {
+			this.effect = new Effect(new Texture(Gdx.files.internal("data/effects/bot_sheet_3.png")), 3, 8, 0.1f, 1, 0, 0);
+		} else {
+			this.effect = new Effect(new Texture(Gdx.files.internal("data/effects/bot_sheet_4.png")), 3, 8, 0.1f, 1, 0, 0);
+		}
 
-		this.effect = new Effect(new Texture(Gdx.files.internal("data/effects/enemy_sheet.png")), 6, 8, 0.1f, 1, 0, 0);
+		
 		WIDTH = 1 / 32f * (effect.width - 3);
 		HEIGHT = 1 / 32f * (effect.height - 15);
 
