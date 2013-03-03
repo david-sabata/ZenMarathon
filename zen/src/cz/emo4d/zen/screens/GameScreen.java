@@ -159,6 +159,12 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		inputMpx.addProcessor(gameInputAdapter);
 	}
 
+	@Override
+	public void dispose() {
+		rc.killThemAll();
+		super.dispose();
+	}
+
 	public void onKeyPress(int keycode) {
 		//if (keycode == Keys.CONTROL_LEFT) {
 		//bulletManager.shoot(playerManager.getMainPlayer().position,

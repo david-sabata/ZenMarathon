@@ -62,7 +62,7 @@ public class RemoteControl {
 
 	}
 	
-	private void killThemAll() {
+	public void killThemAll() {
 		ada.stop();
 		rca.stop();
 		mg.stop();
