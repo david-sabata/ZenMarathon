@@ -28,6 +28,11 @@ public class RemoteControl {
 	private HashMap<Integer,ClientMove> clientMoves;
 	
 	private ThreadLocal<Integer> clientIdHolder;
+	
+	private RemoteControlAsync rca;
+	MessageGetter mg;
+	AutoDiscoveryAsync ada;
+	
 
 	private DeviceEventHandler callback = null;
 	//private PrintStream output;
@@ -42,19 +47,26 @@ public class RemoteControl {
 		
 		startTCPServer();
 
-		AutoDiscoveryAsync exe = new AutoDiscoveryAsync();
-		exe.start();
+		ada = new AutoDiscoveryAsync();
+		ada.start();
 
 	}
 
 	private void startTCPServer() {
 
-		RemoteControlAsync rca = new RemoteControlAsync();
+		rca = new RemoteControlAsync();
 		rca.start();
 
-		MessageGetter mg = new MessageGetter();
+		mg = new MessageGetter();
 		mg.start();
 
+	}
+	
+	public void killThemAll() {
+		ada.stop();
+		rca.stop();
+		mg.stop();
+		
 	}
 
 	public void RegisterEventHandler(DeviceEventHandler cb) {

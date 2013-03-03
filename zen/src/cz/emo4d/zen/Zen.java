@@ -23,6 +23,13 @@ public class Zen extends Game {
 	public static BossPerson currentBoss;
 
 
+	public enum Modes {
+		NORMAL, SENIOR, KID
+	}
+
+	private Modes mode = Modes.NORMAL;
+
+
 	@Override
 	public void create() {
 		initBosses();
@@ -32,6 +39,15 @@ public class Zen extends Game {
 		} else {
 			showGameScreen();
 		}
+	}
+
+
+	public Modes getMode() {
+		return mode;
+	}
+
+	public void setMode(Modes m) {
+		mode = m;
 	}
 
 
@@ -78,8 +94,10 @@ public class Zen extends Game {
 
 
 	public void showGameScreen() {
-		if (game == null)
-			game = new GameScreen(this);
+		if (game != null)
+			game.dispose();
+
+		game = new GameScreen(this);
 
 		setScreen(game);
 	}
