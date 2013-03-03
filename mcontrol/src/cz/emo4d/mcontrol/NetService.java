@@ -94,6 +94,7 @@ public class NetService extends Service {
 				quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
 
 			boolean discovering = true;
+			int attempts = 5;
 
 			while (discovering) {
 
@@ -121,7 +122,8 @@ public class NetService extends Service {
 
 					discovering = false;
 				} catch (SocketTimeoutException e) {
-
+					attempts--;
+					if (attempts < 1) discovering = false;
 				} catch (Exception e) {
 					e.printStackTrace();
 

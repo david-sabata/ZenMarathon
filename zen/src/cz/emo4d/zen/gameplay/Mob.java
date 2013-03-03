@@ -58,6 +58,8 @@ public class Mob extends Entity {
 			Image im = hearts.get(i - 1);
 			Color c = im.getColor();
 
+			im.setColor(c.r, c.g, c.b, 1);
+
 			if (health < i * hpPerHeart) {
 				float part = (health - ((i - 1) * hpPerHeart)) / (float) hpPerHeart;
 
@@ -143,7 +145,7 @@ public class Mob extends Entity {
 
 		// Apply damping to the velocity so we don't
 		// walk infinitely once a key was pressed
-		this.velocity.mul(this.DAMPING);
+		this.velocity.mul(Mob.DAMPING);
 	}
 
 
