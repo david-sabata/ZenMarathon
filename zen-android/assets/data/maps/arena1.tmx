@@ -20,7 +20,7 @@
  </layer>
  <layer name="walls" width="20" height="12">
   <data encoding="base64" compression="zlib">
-   eJxbyMDAsBAJKwGxMgMEwNgL8bDR8UYk/BOIjYDYmAT2RixYkYE6AGaeIZXNc6SyeaSC/UB8AI95pIYfIfOGW/gRMg/dXGxplBxMDfMAQro7YA==
+   eJxbyMDAsBAJKwGxMgMEwNgL8bDR8UYk/BOIjYDYmAT2RixYkYE6AGaeIZXNc6SyeaSC/UB8AI95pIYfIfOGW/gRMg/dXGxplBwMAlspNAMAb/o8FQ==
   </data>
  </layer>
  <layer name="overlay2" width="20" height="12">
@@ -30,7 +30,7 @@
  </layer>
  <layer name="overlay1" width="20" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUDFUAAAPAAAE=
+   eJxjYBgFo2AUDBSYSaF+ACoAAJo=
   </data>
  </layer>
 </map>

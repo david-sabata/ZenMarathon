@@ -72,19 +72,18 @@ public class Zen extends Game {
 		q1.add("error\nbad pointer");
 
 		Array<String> q2 = new Array<String>();
-		q2.add("tak vy rikate\nze znate normu?");
-		q2.add("nestrelte se\ndo nohy!");
-		q2.add("error\nbad pointer");
+		q2.add("cabal install\nblack-magic");
+		q2.add("pres haskell\nneprojdete!");
+		q2.add("recursion\nsee: recursion");
 
 		Array<String> q3 = new Array<String>();
-		q3.add("tak vy rikate\nze znate normu?");
-		q3.add("nestrelte se\ndo nohy!");
-		q3.add("error\nbad pointer");
+		q3.add("gantt chart\nftw");
+		q3.add("toto pismo\nje skarede!");
 
 		Array<String> q4 = new Array<String>();
-		q4.add("tak vy rikate\nze znate normu?");
-		q4.add("nestrelte se\ndo nohy!");
-		q4.add("error\nbad pointer");
+		q4.add("mosaic\nna vas!");
+		q4.add("sgml mi\ndava silu");
+		q4.add("nesnasim jablka");
 
 		bossQuotes.put(BossPerson.PP, q1);
 		bossQuotes.put(BossPerson.KOLAR, q2);
