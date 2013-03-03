@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import cz.emo4d.zen.Zen;
+import cz.emo4d.zen.Zen.BossPerson;
 import cz.emo4d.zen.gameplay.BulletManager;
 import cz.emo4d.zen.gameplay.EffectManager;
 import cz.emo4d.zen.gameplay.Enemy;
@@ -165,6 +166,9 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	}
 
 	float lastTime = 0;
+
+
+
 
 
 	@Override
@@ -349,6 +353,14 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 
 
+
+	public void showDialog(BossPerson person, String msg, float time) {
+		gui.showGameDialog(person, msg, time);
+	}
+
+
+
+
 	@Override
 	public void acceptEvent(int type, int device, float X, float Y) {
 		if (type == DeviceEvent.MOVE) {
@@ -392,6 +404,8 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	@Override
 	public void show() {
 		super.show();
+
+		showDialog(Zen.currentBoss, "YOU SHALL\nNOT PASS !!!", 10);
 
 		Gdx.input.setInputProcessor(inputMpx);
 	}

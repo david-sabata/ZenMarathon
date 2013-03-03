@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -17,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 import cz.emo4d.zen.Zen;
+import cz.emo4d.zen.Zen.BossPerson;
 import cz.emo4d.zen.gameplay.Player;
 import cz.emo4d.zen.gameplay.PlayerManager;
 import cz.emo4d.zen.screens.GameScreen;
@@ -33,6 +37,7 @@ public class GameGuiStage extends BaseStage {
 
 	private Table rootPlayer;
 	private Table subplayers;
+	private Table dialogRoot;
 
 
 	public GameGuiStage(GameScreen screen, PlayerManager manager) {
@@ -46,14 +51,18 @@ public class GameGuiStage extends BaseStage {
 
 		Table playerGui = createMainPlayerGui(playerManager.getMainPlayer());
 		rootPlayer.add(playerGui).left().spaceBottom(50);
+		rootPlayer.add().expandX();
+
+		dialogRoot = new Table(skin);
+		rootPlayer.add(dialogRoot).top().right();
 
 		subplayers = new Table(skin);
 		//		subplayers.debug();
 		rootPlayer.row();
-		rootPlayer.add(subplayers).left();
+		rootPlayer.add(subplayers).left().colspan(2);
 
 		rootPlayer.row();
-		rootPlayer.add().expand();
+		rootPlayer.add().colspan(2).expand();
 
 		addActor(rootPlayer);
 
@@ -78,6 +87,54 @@ public class GameGuiStage extends BaseStage {
 	}
 
 
+	public void showGameDialog(BossPerson boss, String msg, float time) {
+		if (dialogRoot.getChildren().size > 0)
+			dialogRoot.clear();
+
+		Table box = new Table(skin);
+		box.setBackground(skin.getDrawable("gray-transparent"));
+
+		Image bossImg = getBossImage(boss);
+
+		box.add(new Label(msg, skin)).center().width(300).height(60).pad(10);
+		box.add(bossImg).width(60).height(60).pad(10);
+
+		SequenceAction action = new SequenceAction();
+		action.addAction(Actions.delay(time));
+		action.addAction(Actions.fadeOut(1));
+		action.addAction(Actions.removeActor());
+		action.addAction(new RunnableAction() {
+			@Override
+			public void run() {
+				dialogRoot.clear();
+			}
+		});
+		box.addAction(action);
+
+		dialogRoot.add(box).top().right();
+	}
+
+	private Image getBossImage(BossPerson boss) {
+		String file = null;
+
+		switch (boss) {
+			case PP:
+				file = "boss-pp";
+				break;
+			case HRUSKA:
+				file = "boss-hruska";
+				break;
+			case KOLAR:
+				file = "boss-kolar";
+				break;
+			case KRENA:
+				file = "boss-krena";
+				break;
+		}
+
+		Drawable drw = skin.getDrawable(file);
+		return new Image(drw);
+	}
 
 
 	private Table createMainPlayerGui(Player p) {
