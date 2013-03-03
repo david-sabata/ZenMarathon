@@ -17,11 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import cz.emo4d.zen.Zen;
-
-import cz.emo4d.zen.gameplay.Boss;
-
 import cz.emo4d.zen.Zen.BossPerson;
-
+import cz.emo4d.zen.gameplay.Boss;
 import cz.emo4d.zen.gameplay.BulletManager;
 import cz.emo4d.zen.gameplay.EffectManager;
 import cz.emo4d.zen.gameplay.Enemy;
@@ -71,6 +68,9 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 	private Vector2 kickvector = new Vector2();
 
+	private boolean bossSpawned = false;
+	private Boss boss;
+
 
 	public GameScreen(Zen game) {
 		super(game);
@@ -88,11 +88,11 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 
 		// invertovat Y souradnici pro indexovani s nulou v levem HORNIM rohu
-		playerManager = new PlayerManager(map, map.getCoord(61, 32));
-		playerManager.addPlayer(map.getCoord(54, 31));
+		playerManager = new PlayerManager(map, map.getCoord(34, 66));
+		//		playerManager.addPlayer(map.getCoord(54, 31));
 
 		effectManager = new EffectManager();
-		bulletManager = new BulletManager(map, new Texture(Gdx.files.internal("data/bullet.png")), effectManager);
+		bulletManager = new BulletManager(map, new Texture(Gdx.files.internal("data/bullet.png")), effectManager, this);
 		enemyManager = new EnemyManager();
 		powerupManager = new PowerupManager(effectManager, this);
 
@@ -100,10 +100,6 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		powerupManager.addPowerup(map.getCoord(58, 16));
 		powerupManager.addPowerup(map.getCoord(59, 15));
 
-		Boss boss = new Boss(map.getCoord(56, 39),playerManager.getMainPlayer(), bulletManager, Zen.currentBoss);
-		boss.setMap(map);
-		enemyManager.addEnemy(boss);
-		
 		for (int i = 0; i < 10; i++) {
 			Enemy enemy = new Enemy(map.getCoord(56, 39));
 			enemy.setMap(map);
@@ -324,10 +320,24 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 				Map.Position targetPos = map.inPoints.get(newPos.identifier);
 				playerManager.teleportAllPlayers(map, targetPos.coordinates);
 
-				bulletManager.setMap(map);
-
 				kickvector.set(targetPos.direction);
 				kickvector.y *= -1;
+
+				if (bossSpawned) {
+					boss.setMap(map);
+					boss.position.set(targetPos.coordinates);
+					boss.timedMove(kickvector, 1, 0);
+				}
+
+				if (!bossSpawned && newPos.mapName.equals("arena1")) {
+					boss = new Boss(map.getCoord(16, 6), playerManager.getMainPlayer(), bulletManager, Zen.currentBoss);
+					boss.setMap(map);
+					enemyManager.addEnemy(boss);
+					bossSpawned = true;
+				}
+
+				bulletManager.setMap(map);
+
 				playerManager.applyKick(kickvector);
 			}
 		});
@@ -412,6 +422,13 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	@Override
 	public void show() {
 		super.show();
+
+		if (boss != null) {
+			enemyManager.getEnemies().removeValue(boss, true);
+			boss = null;
+		}
+
+		bossSpawned = false;
 
 		//		showDialog(Zen.currentBoss, "YOU SHALL\nNOT PASS !!!", 10);
 

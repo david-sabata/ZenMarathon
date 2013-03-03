@@ -1,7 +1,5 @@
 package cz.emo4d.zen.gameplay;
 
-import sun.security.pkcs11.Secmod.DbMode;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
