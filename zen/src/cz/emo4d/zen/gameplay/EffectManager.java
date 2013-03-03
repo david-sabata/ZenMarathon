@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Array;
 public class EffectManager {
 
 	public enum AvailableEffects {
-		BULLET_EXPLOSION,//, DIE_EXPLOSION,
+		BULLET_EXPLOSION, POWERUP_TAKE,
 		HIT_BLOOD_E,
 		HIT_BLOOD_N,
 		HIT_BLOOD_NE,
@@ -24,12 +24,13 @@ public class EffectManager {
 	}
 
 	private Array<Effect> activeEffects = new Array<Effect>();
-	private Texture explosionTexture;
+	private Texture explosionTexture, powerupTexture;
 	private Texture bloodTexE, bloodTexN, bloodTexNE, bloodTexNW, bloodTexS, bloodTexSE, bloodTexSW, bloodTexW;
 	private Texture deathTexN, deathTexS, deathTexW, deathTexE;
 
 	public EffectManager() {
 		explosionTexture = new Texture(Gdx.files.internal("data/effects/fx_bombsplosion_big_32.png"));
+		powerupTexture = new Texture(Gdx.files.internal("data/effects/effect_shine_big_13.png"));
 		
 		deathTexN = new Texture(Gdx.files.internal("data/effects/blood_death_n.png"));
 		deathTexS = new Texture(Gdx.files.internal("data/effects/blood_death_s.png"));
@@ -51,6 +52,9 @@ public class EffectManager {
 		switch (effect) {
 			case BULLET_EXPLOSION:
 				activeEffects.add(new Effect(explosionTexture, 8, 1, 0.05f, 0, posX, posY));
+				break;
+			case POWERUP_TAKE:
+				activeEffects.add(new Effect(powerupTexture, 7, 1, 0.1f, 0, posX, posY));
 				break;
 			
 			case DEATH_BLOOD_N:

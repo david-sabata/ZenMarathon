@@ -10,10 +10,12 @@ public class PowerupManager {
 	
 	private Array<Powerup> powerups = new Array<Powerup>();
 	private Texture tex;
+	private EffectManager em;
 	
 		
-	public PowerupManager() {
-		tex = new Texture(Gdx.files.internal("data/effects/avatar.png"));
+	public PowerupManager(EffectManager em) {
+		tex = new Texture(Gdx.files.internal("data/effects/pickup_gem_diamond_24.png"));
+		this.em = em;
 		
 	}
 	
@@ -23,8 +25,21 @@ public class PowerupManager {
 	}
 	
 	public void collision(Array<Player> players) {
-		
-		
+		for (int i = 0; i < powerups.size; i++) {
+			Powerup pu = powerups.get(i);
+			for (int j = 0; j < players.size; j++) {
+				Player p = players.get(j);
+
+				if (pu.collision(p)) {
+					if (p.takePowerup(pu)) {
+						em.addEffect(EffectManager.AvailableEffects.POWERUP_TAKE, pu.position.x, pu.position.y);
+						SoundManager.getSound("powerup.wav").play();
+						powerups.removeIndex(i);
+						break;
+					}
+				}
+			}
+		}
 	}
 
 	public void update(float deltaTime) {
