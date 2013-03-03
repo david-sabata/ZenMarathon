@@ -13,7 +13,7 @@ public class Zen extends Game {
 	private GameScreen game;
 
 	public enum BossPerson {
-		PP, KRENA, HRUSKA, KOLAR
+		PP, KRENA, HRUSKA, KOLAR, ZDENEK
 	}
 
 	public final static ObjectMap<String, BossPerson> bossTypes = new ObjectMap<String, BossPerson>();
@@ -24,9 +24,6 @@ public class Zen extends Game {
 	@Override
 	public void create() {
 		initBosses();
-
-		game = new GameScreen(this);
-		menu = new MainMenuScreen(this);
 
 		if (true) {
 			showMenuScreen();
@@ -55,12 +52,18 @@ public class Zen extends Game {
 
 
 	public void showGameScreen() {
+		if (game == null)
+			game = new GameScreen(this);
+
 		setScreen(game);
 	}
 
 
 
 	public void showMenuScreen() {
+		if (menu == null)
+			menu = new MainMenuScreen(this);
+
 		setScreen(menu);
 	}
 
