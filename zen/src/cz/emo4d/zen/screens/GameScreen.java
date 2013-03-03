@@ -36,6 +36,9 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 	private static final float SHOOT_INTERVAL = 0.14f;
 
+	// celkovy cas od spusteni hry
+	private float elapsedTime = 0;
+
 	private Map map;
 
 	private GameGuiStage gui;
@@ -67,6 +70,8 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	public GameScreen(Zen game) {
 		super(game);
 
+		elapsedTime = 0;
+
 		map = new Map("floor1");
 
 		SoundManager.getSound("background.wav").loop();
@@ -85,7 +90,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		bulletManager = new BulletManager(map, new Texture(Gdx.files.internal("data/bullet.png")), effectManager);
 		enemyManager = new EnemyManager();
 		powerupManager = new PowerupManager(effectManager);
-		
+
 		powerupManager.addPowerup(map.getCoord(57, 15));
 		powerupManager.addPowerup(map.getCoord(58, 16));
 		powerupManager.addPowerup(map.getCoord(59, 15));
@@ -95,49 +100,49 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 			enemy.setMap(map);
 			enemyManager.addEnemy(enemy);
 		}
-		
+
 		for (int i = 0; i < 10; i++) {
 			Enemy enemy = new Enemy(map.getCoord(37, 28));
 			enemy.setMap(map);
 			enemyManager.addEnemy(enemy);
 		}
-		
+
 		for (int i = 0; i < 10; i++) {
 			Enemy enemy = new Enemy(map.getCoord(36, 65));
 			enemy.setMap(map);
 			enemyManager.addEnemy(enemy);
 		}
-		
+
 		for (int i = 0; i < 10; i++) {
 			Enemy enemy = new Enemy(map.getCoord(54, 66));
 			enemy.setMap(map);
 			enemyManager.addEnemy(enemy);
 		}
-		
+
 		for (int i = 0; i < 10; i++) {
 			Enemy enemy = new Enemy(map.getCoord(62, 31));
 			enemy.setMap(map);
 			enemyManager.addEnemy(enemy);
 		}
-		
+
 		for (int i = 0; i < 10; i++) {
 			Enemy enemy = new Enemy(map.getCoord(62, 19));
 			enemy.setMap(map);
 			enemyManager.addEnemy(enemy);
 		}
-		
+
 		for (int i = 0; i < 10; i++) {
 			Enemy enemy = new Enemy(map.getCoord(54, 28));
 			enemy.setMap(map);
 			enemyManager.addEnemy(enemy);
 		}
-		
+
 		for (int i = 0; i < 10; i++) {
 			Enemy enemy = new Enemy(map.getCoord(57, 22));
 			enemy.setMap(map);
 			enemyManager.addEnemy(enemy);
 		}
-		
+
 
 		remoteSlaves = new ArrayList<RemotePlayer>();
 		pendingSlaves = new ArrayList<RemotePlayer>();
@@ -164,6 +169,8 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 	@Override
 	public void render(float deltaTime) {
+		elapsedTime += deltaTime;
+
 		// clear the screen
 		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
@@ -273,8 +280,8 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		powerupManager.render(batch);
 		playerManager.render(batch);
 		enemyManager.render(batch);
-		bulletManager.render(batch);		
-		effectManager.render(batch);		
+		bulletManager.render(batch);
+		effectManager.render(batch);
 
 		batch.end();
 
