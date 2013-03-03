@@ -7,6 +7,7 @@ import javax.naming.AuthenticationException;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -22,9 +23,6 @@ import cz.emo4d.zen.screens.BaseScreen;
 public class MainMenuStage extends BaseStage {
 
 
-	private final Table mainMenuRoot;
-
-
 
 
 	public MainMenuStage(BaseScreen screen) {
@@ -34,8 +32,17 @@ public class MainMenuStage extends BaseStage {
 		bgRoot.setFillParent(true);
 		addActor(bgRoot);
 
-		mainMenuRoot = prepareMainMenu();
-		addActor(mainMenuRoot);
+		Table root = new Table();
+		//		root.debug();
+		root.setFillParent(true);
+
+		root.add(new Image(skin.getDrawable("fit"))).center().spaceRight(80);
+
+		Table menu = prepareMainMenu();
+		root.add(menu);
+
+
+		addActor(root);
 	}
 
 
@@ -43,7 +50,6 @@ public class MainMenuStage extends BaseStage {
 	private Table prepareMainMenu() {
 		Table root = new Table();
 		//		root.debug();
-		root.setFillParent(true);
 
 		TextButton btnPlay = new TextButton("PLAY", skin);
 		btnPlay.addListener(new ClickListener() {
@@ -52,7 +58,7 @@ public class MainMenuStage extends BaseStage {
 			}
 		});
 
-		TextButton btnTop = new TextButton(" HIGH SCORES ", skin);
+		//		TextButton btnTop = new TextButton(" HIGH SCORES ", skin);
 
 		TextButton btnCredits = new TextButton("CREDITS", skin);
 		btnCredits.addListener(new ClickListener() {
@@ -78,10 +84,10 @@ public class MainMenuStage extends BaseStage {
 		root.add();
 		root.row();
 
-		root.add();
-		root.add(btnTop).center().height(70).fill().spaceBottom(50);
-		root.add();
-		root.row();
+		//		root.add();
+		//		root.add(btnTop).center().height(70).fill().spaceBottom(50);
+		//		root.add();
+		//		root.row();
 
 		root.add();
 		root.add(btnCredits).center().height(70).fill().spaceBottom(50);
