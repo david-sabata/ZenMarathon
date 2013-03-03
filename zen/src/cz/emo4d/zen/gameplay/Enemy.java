@@ -21,14 +21,14 @@ public class Enemy extends Mob {
 		effect.update(0, true); // 0 = Direction.S
 		
 		//timedMove(new Vector2(- 0.2f, 0.2f), 1f);
-		timedMove(new Vector2((random.nextFloat() - 0.5f), (random.nextFloat() - 0.5f)), random.nextFloat(), random.nextFloat()*4f);
+		timedMove(new Vector2((random.nextFloat() - 0.5f), (random.nextFloat() - 0.5f)), random.nextFloat()*4f, random.nextFloat()*4f);
 		factor = 0.2f;
 	}
 
 	public void update(float deltaTime) {
 
 		if (remainingPauseTime <= 0)
-			timedMove(new Vector2((random.nextFloat() - 0.5f), (random.nextFloat() - 0.5f)), random.nextFloat(), random.nextFloat()*4f);
+			timedMove(new Vector2((random.nextFloat() - 0.5f), (random.nextFloat() - 0.5f)), random.nextFloat()*4f, random.nextFloat()*4f);
 			
 				
 		super.update(deltaTime);
