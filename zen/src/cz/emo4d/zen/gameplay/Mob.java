@@ -60,6 +60,10 @@ public class Mob extends Entity {
 
 			im.setColor(c.r, c.g, c.b, 1);
 
+			if (health == 0) {
+				im.setColor(c.r, c.g, c.b, 0);
+			}
+
 			if (health < i * hpPerHeart) {
 				float part = (health - ((i - 1) * hpPerHeart)) / (float) hpPerHeart;
 
