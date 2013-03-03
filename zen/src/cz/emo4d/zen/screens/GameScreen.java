@@ -100,7 +100,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		powerupManager.addPowerup(map.getCoord(58, 16));
 		powerupManager.addPowerup(map.getCoord(59, 15));
 
-		Boss boss = new Boss(map.getCoord(56, 39),playerManager.getMainPlayer(), bulletManager);
+		Boss boss = new Boss(map.getCoord(56, 39),playerManager.getMainPlayer(), bulletManager, Zen.currentBoss);
 		boss.setMap(map);
 		enemyManager.addEnemy(boss);
 		
