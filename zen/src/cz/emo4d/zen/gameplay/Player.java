@@ -16,8 +16,8 @@ import cz.emo4d.zen.ui.AnimatedImage;
 
 public class Player extends Mob {
 
-	private static Color[] shadowColors = { Color.CLEAR, Color.WHITE, Color.BLACK, Color.RED, Color.GREEN, Color.BLUE, Color.GRAY, Color.PINK, Color.ORANGE,
-			Color.YELLOW, Color.MAGENTA, Color.CYAN };
+	private static Color[] shadowColors = { Color.CLEAR, Color.WHITE, /*Color.BLACK,*/Color.RED, Color.GREEN, Color.BLUE, Color.GRAY, Color.PINK,
+			Color.ORANGE, Color.YELLOW, Color.MAGENTA, Color.CYAN };
 
 	private final static Texture shadow = new Texture(Gdx.files.internal("data/shadow.png"));
 	public final Color shadowColor;
@@ -41,6 +41,8 @@ public class Player extends Mob {
 	// gui sem nastavuje obrazky s listkama, ktere si pak hrac updatuje
 	public final Array<Image> leaves = new Array<Image>();
 
+	// cas ktery stravi hrac jako mrtvy; postupne se odecita, az je nula tak se spawne
+	private float respawnTimer;
 
 	// gui hracovy tabulky
 	private AnimatedImage faceAnimation;
@@ -61,6 +63,60 @@ public class Player extends Mob {
 		shadowColor = shadowColors[nextShadowColor % shadowColors.length];
 		nextShadowColor++;
 	}
+
+
+
+
+	@Override
+	public int getMaxHealth() {
+		return 200;
+	}
+
+
+	/**
+	 * Vola se ve chvili kdy hrac umre
+	 */
+	public void setDead() {
+		alive = false;
+		zen = 0;
+		health = 0;
+
+		updateHearts();
+		updateLeaves();
+
+		float timeDead = 5;
+		respawnTimer = timeDead;
+
+		Gdx.app.log("", "Player respawn in " + respawnTimer + " seconds");
+	}
+
+
+
+
+
+	@Override
+	public void update(float deltaTime) {
+		if (respawnTimer > 0) {
+			respawnTimer -= deltaTime;
+
+			if (respawnTimer <= 0) {
+				respawnTimer = 0;
+				alive = true;
+				health = getMaxHealth();
+
+				updateHearts();
+				updateLeaves();
+
+				Gdx.app.log("", "Player respawning");
+			}
+
+			return;
+		}
+
+		super.update(deltaTime);
+	}
+
+
 
 
 	/**

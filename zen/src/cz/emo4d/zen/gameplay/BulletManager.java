@@ -1,6 +1,10 @@
 package cz.emo4d.zen.gameplay;
 
+
 import java.util.ArrayList;
+
+import java.util.Random;
+
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -26,7 +30,15 @@ public class BulletManager {
 	private Texture tex;
 	private EffectManager em;
 
+
+	public void setMap(Map map) {
+		this.map = map;
+	}
+
 	public void shoot(Vector2 origin, Direction dir, Player player) {
+		if (!player.alive)
+			return;
+
 		Bullet bullet = new Bullet(tex);
 		bullet.setMap(map);
 		bullet.shoot(origin, dir, player.getDamage(), player);
@@ -83,6 +95,12 @@ public class BulletManager {
 				em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_E, posX, posY);
 				break;
 		}
+		
+		Random rnd = new Random();
+		if (rnd.nextBoolean())		
+			SoundManager.getSound("squish1.wav").play();
+		else
+			SoundManager.getSound("squish2.wav").play();
 	}
 
 	public void collision(Array<Player> players, Array<Enemy> enemies, RemoteControl rc, ArrayList<RemotePlayer> remoteSlaves, int remoteMaster) {
@@ -91,7 +109,7 @@ public class BulletManager {
 			Bullet b = activeBullets.get(i);
 
 			for (int j = 0; j < players.size; j++) {
-				Mob p = players.get(j);
+				Player p = (Player) players.get(j);
 
 				if (p.alive && p != b.shooter && b.collision(p)) {
 					p.takeHit(b.strength);
@@ -115,7 +133,7 @@ public class BulletManager {
 						}
 
 						addDeathEffect(b.dir, p.position.x, p.position.y);
-						p.alive = false;
+						p.setDead();
 					}
 
 					activeBullets.removeIndex(i);

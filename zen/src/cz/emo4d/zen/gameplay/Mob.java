@@ -11,8 +11,7 @@ public class Mob extends Entity {
 
 	public static float MAX_VELOCITY = 8f;
 	public static float DAMPING = 0.87f;
-	public static int MAX_HEALTH = 200;
-	public int health = MAX_HEALTH;
+	public int health;
 	public boolean alive = true;
 
 	// gui sem nastavuje obrazky se srdickama, ktere si pak hrac updatuje
@@ -32,8 +31,12 @@ public class Mob extends Entity {
 	public Mob() {
 		super();
 
-		//Random r = new Random();
-		//health = Math.round(r.nextFloat() * 100);
+		health = getMaxHealth();
+	}
+
+
+	public int getMaxHealth() {
+		return 50;
 	}
 
 
@@ -49,7 +52,7 @@ public class Mob extends Entity {
 	}
 
 	public void updateHearts() {
-		float hpPerHeart = Player.MAX_HEALTH / 5f;
+		float hpPerHeart = getMaxHealth() / 5f;
 
 		for (int i = 1; i <= 5; i++) {
 			Image im = hearts.get(i - 1);
@@ -63,6 +66,8 @@ public class Mob extends Entity {
 				}
 
 				im.setColor(c.r, c.g, c.b, part);
+			} else {
+				im.setColor(c.r, c.g, c.b, 1);
 			}
 		}
 
@@ -140,7 +145,7 @@ public class Mob extends Entity {
 
 		// Apply damping to the velocity so we don't
 		// walk infinitely once a key was pressed
-		this.velocity.mul(this.DAMPING);
+		this.velocity.mul(Mob.DAMPING);
 	}
 
 

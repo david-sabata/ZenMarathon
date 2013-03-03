@@ -252,6 +252,8 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 				Map.Position targetPos = map.inPoints.get(newPos.identifier);
 				playerManager.teleportAllPlayers(map, targetPos.coordinates);
 
+				bulletManager.setMap(map);
+
 				kickvector.set(targetPos.direction);
 				kickvector.y *= -1;
 				playerManager.applyKick(kickvector);

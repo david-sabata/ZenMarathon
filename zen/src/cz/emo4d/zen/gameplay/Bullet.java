@@ -44,7 +44,7 @@ public class Bullet extends Entity {
 		this.shooter = shooter;
 		this.dir = dir;
 
-		SoundManager.getSound("shot.wav").play();
+		SoundManager.getSound("shot.wav").play(0.25f);
 
 		switch (dir) {
 			case S:
