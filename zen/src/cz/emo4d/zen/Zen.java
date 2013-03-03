@@ -2,6 +2,7 @@ package cz.emo4d.zen;
 
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 
 import cz.emo4d.zen.screens.GameScreen;
@@ -17,6 +18,7 @@ public class Zen extends Game {
 	}
 
 	public final static ObjectMap<String, BossPerson> bossTypes = new ObjectMap<String, BossPerson>();
+	public final static ObjectMap<BossPerson, Array<String>> bossQuotes = new ObjectMap<BossPerson, Array<String>>();
 
 	public static BossPerson currentBoss;
 
@@ -47,6 +49,31 @@ public class Zen extends Game {
 		bossTypes.put("IIS", BossPerson.HRUSKA);
 		bossTypes.put("PIS", BossPerson.HRUSKA);
 		bossTypes.put("WAP", BossPerson.HRUSKA);
+
+		Array<String> q1 = new Array<String>();
+		q1.add("tak vy rikate\nze znate normu?");
+		q1.add("nestrelte se\ndo nohy!");
+		q1.add("error\nbad pointer");
+
+		Array<String> q2 = new Array<String>();
+		q2.add("tak vy rikate\nze znate normu?");
+		q2.add("nestrelte se\ndo nohy!");
+		q2.add("error\nbad pointer");
+
+		Array<String> q3 = new Array<String>();
+		q3.add("tak vy rikate\nze znate normu?");
+		q3.add("nestrelte se\ndo nohy!");
+		q3.add("error\nbad pointer");
+
+		Array<String> q4 = new Array<String>();
+		q4.add("tak vy rikate\nze znate normu?");
+		q4.add("nestrelte se\ndo nohy!");
+		q4.add("error\nbad pointer");
+
+		bossQuotes.put(BossPerson.PP, q1);
+		bossQuotes.put(BossPerson.KOLAR, q2);
+		bossQuotes.put(BossPerson.KRENA, q3);
+		bossQuotes.put(BossPerson.HRUSKA, q4);
 	}
 
 

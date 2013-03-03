@@ -2,41 +2,44 @@ package cz.emo4d.zen.gameplay;
 
 
 import java.util.ArrayList;
-
 import java.util.Random;
-
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
+import cz.emo4d.zen.Zen;
 import cz.emo4d.zen.gameplay.Entity.Direction;
 import cz.emo4d.zen.remote.DeviceEvent;
 import cz.emo4d.zen.remote.RemoteControl;
+import cz.emo4d.zen.screens.GameScreen;
 import cz.emo4d.zen.screens.Map;
 
 public class BulletManager {
-
-	public BulletManager(Map map, Texture tex, EffectManager em) {
-		super();
-		this.map = map;
-		this.tex = tex;
-		this.em = em;
-	}
 
 	private Array<Bullet> activeBullets = new Array<Bullet>();
 	private Map map;
 	private Texture tex;
 	private EffectManager em;
+	private final GameScreen screen;
+
+
+	public BulletManager(Map map, Texture tex, EffectManager em, GameScreen screen) {
+		super();
+		this.map = map;
+		this.tex = tex;
+		this.em = em;
+		this.screen = screen;
+	}
 
 
 	public void setMap(Map map) {
 		this.map = map;
 	}
-	
+
 	public void shoot(Vector2 origin, Direction dir, Boss boss) {
-		
+
 		Bullet bullet = new Bullet(tex);
 		bullet.setMap(map);
 		bullet.shoot(origin, dir, boss.getDamage(), boss);
@@ -103,9 +106,9 @@ public class BulletManager {
 				em.addEffect(EffectManager.AvailableEffects.DEATH_BLOOD_E, posX, posY);
 				break;
 		}
-		
+
 		Random rnd = new Random();
-		if (rnd.nextBoolean())		
+		if (rnd.nextBoolean())
 			SoundManager.getSound("squish1.wav").play();
 		else
 			SoundManager.getSound("squish2.wav").play();
@@ -122,16 +125,17 @@ public class BulletManager {
 				if (p.alive && p != b.shooter && b.collision(p)) {
 					p.takeHit(b.strength);
 					em.addEffect(EffectManager.AvailableEffects.BULLET_EXPLOSION, b.position.x, b.position.y);
-					
+
 					//vibration
-					
-					if ((j == 0) && (remoteMaster != -1)) rc.emitEvent(remoteMaster, DeviceEvent.VIBRATE);
-					
+
+					if ((j == 0) && (remoteMaster != -1))
+						rc.emitEvent(remoteMaster, DeviceEvent.VIBRATE);
+
 					for (int z = 0; z < remoteSlaves.size(); z++) {
 						if (j == remoteSlaves.get(z).localId)
 							rc.emitEvent(remoteSlaves.get(z).remoteId, DeviceEvent.VIBRATE);
 					}
-					
+
 					addHitEffect(b.dir, p.position.x, p.position.y);
 
 					if (p.health <= 0) {
@@ -163,7 +167,16 @@ public class BulletManager {
 
 					addHitEffect(b.dir, p.position.x, p.position.y);
 
+					if (p instanceof Boss) {
+						Random rand = new Random();
+						if (rand.nextFloat() < 0.1f) {
+							int quoteIdx = rand.nextInt(Zen.bossQuotes.get(Zen.currentBoss).size);
+							screen.showDialog(Zen.currentBoss, Zen.bossQuotes.get(Zen.currentBoss).get(quoteIdx), 3);
+						}
+					}
+
 					if (p.health <= 0) {
+
 						if (b.shooter instanceof Player) {
 							Player pShooter = (Player) b.shooter;
 							pShooter.killedEnemy();

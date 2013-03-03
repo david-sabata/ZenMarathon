@@ -69,6 +69,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	private Vector2 kickvector = new Vector2();
 
 	private boolean bossSpawned = false;
+	private Boss boss;
 
 
 	public GameScreen(Zen game) {
@@ -87,11 +88,11 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 
 		// invertovat Y souradnici pro indexovani s nulou v levem HORNIM rohu
-		playerManager = new PlayerManager(map, map.getCoord(61, 32));
-		playerManager.addPlayer(map.getCoord(54, 31));
+		playerManager = new PlayerManager(map, map.getCoord(34, 66));
+		//		playerManager.addPlayer(map.getCoord(54, 31));
 
 		effectManager = new EffectManager();
-		bulletManager = new BulletManager(map, new Texture(Gdx.files.internal("data/bullet.png")), effectManager);
+		bulletManager = new BulletManager(map, new Texture(Gdx.files.internal("data/bullet.png")), effectManager, this);
 		enemyManager = new EnemyManager();
 		powerupManager = new PowerupManager(effectManager, this);
 
@@ -319,8 +320,17 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 				Map.Position targetPos = map.inPoints.get(newPos.identifier);
 				playerManager.teleportAllPlayers(map, targetPos.coordinates);
 
+				kickvector.set(targetPos.direction);
+				kickvector.y *= -1;
+
+				if (bossSpawned) {
+					boss.setMap(map);
+					boss.position.set(targetPos.coordinates);
+					boss.timedMove(kickvector, 1, 0);
+				}
+
 				if (!bossSpawned && newPos.mapName.equals("arena1")) {
-					Boss boss = new Boss(map.getCoord(16, 6), playerManager.getMainPlayer(), bulletManager);
+					boss = new Boss(map.getCoord(16, 6), playerManager.getMainPlayer(), bulletManager);
 					boss.setMap(map);
 					enemyManager.addEnemy(boss);
 					bossSpawned = true;
@@ -328,8 +338,6 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 
 				bulletManager.setMap(map);
 
-				kickvector.set(targetPos.direction);
-				kickvector.y *= -1;
 				playerManager.applyKick(kickvector);
 			}
 		});
