@@ -1,5 +1,6 @@
 package cz.emo4d.zen.gameplay;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -13,6 +14,13 @@ public class Mob extends Entity {
 	public static float DAMPING = 0.87f;
 	public int health;
 	public boolean alive = true;
+	
+	public float factor = 1;
+	
+	Vector2 movingVector;
+	float remainingTime = 0.0f;
+	float remainingPauseTime = 0.0f;
+
 
 	// gui sem nastavuje obrazky se srdickama, ktere si pak hrac updatuje
 	public final Array<Image> hearts = new Array<Image>();
@@ -60,6 +68,10 @@ public class Mob extends Entity {
 
 			im.setColor(c.r, c.g, c.b, 1);
 
+			if (health == 0) {
+				im.setColor(c.r, c.g, c.b, 0);
+			}
+
 			if (health < i * hpPerHeart) {
 				float part = (health - ((i - 1) * hpPerHeart)) / (float) hpPerHeart;
 
@@ -75,7 +87,13 @@ public class Mob extends Entity {
 	}
 
 
-
+		
+	public void timedMove(Vector2 dir, float seconds, float pause) {
+		movingVector = dir;
+		remainingTime = seconds;
+		remainingPauseTime = pause;
+	}
+	
 
 	public void move(Vector2 dir) {
 		float dirAngle = dir.angle();
@@ -99,17 +117,31 @@ public class Mob extends Entity {
 		} else
 			currentDir = Direction.E;
 
-		velocity.set(dir.nor().mul(MAX_VELOCITY));
+		velocity.set(dir.nor().mul(MAX_VELOCITY*factor));
 		state = State.Walking;
 	}
 
 	public void update(float deltaTime) {
+		
+		// check for timed move
+		if (remainingTime > 0) {
+			remainingTime -= deltaTime;
+			move(movingVector);
+		}  // if there is planned pause for this person, let him free
+		else if (remainingPauseTime > 0) {
+				remainingPauseTime -= deltaTime;
+				state = State.Standing;
+		}
+		
+		//if (velocity.x != 0)
+		//	Gdx.app.log("VECTOR", Float.toString(velocity.x));
+
 
 		// clamp the velocity to the maximum
-		if (Math.abs(velocity.x) > MAX_VELOCITY) {
+		if ((Math.abs(velocity.x) > MAX_VELOCITY) && (Math.abs(velocity.x) < -MAX_VELOCITY)) {
 			velocity.x = Math.signum(velocity.x) * MAX_VELOCITY;
 		}
-		if (Math.abs(velocity.y) > MAX_VELOCITY) {
+		if ((Math.abs(velocity.y) > MAX_VELOCITY) && (Math.abs(velocity.y) < -MAX_VELOCITY)) {
 			velocity.y = Math.signum(velocity.y) * MAX_VELOCITY;
 		}
 

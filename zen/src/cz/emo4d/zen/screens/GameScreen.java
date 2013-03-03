@@ -22,6 +22,7 @@ import cz.emo4d.zen.gameplay.EffectManager;
 import cz.emo4d.zen.gameplay.Enemy;
 import cz.emo4d.zen.gameplay.EnemyManager;
 import cz.emo4d.zen.gameplay.PlayerManager;
+import cz.emo4d.zen.gameplay.PowerupManager;
 import cz.emo4d.zen.gameplay.RemotePlayer;
 import cz.emo4d.zen.gameplay.SoundManager;
 import cz.emo4d.zen.remote.ClientMove;
@@ -46,6 +47,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	private BulletManager bulletManager;
 	private EffectManager effectManager;
 	private EnemyManager enemyManager;
+	private PowerupManager powerupManager;
 
 	private GameInputAdapter gameInputAdapter = new GameInputAdapter(this);
 	private InputMultiplexer inputMpx = new InputMultiplexer();
@@ -82,12 +84,60 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		effectManager = new EffectManager();
 		bulletManager = new BulletManager(map, new Texture(Gdx.files.internal("data/bullet.png")), effectManager);
 		enemyManager = new EnemyManager();
+		powerupManager = new PowerupManager(effectManager);
+		
+		powerupManager.addPowerup(map.getCoord(57, 15));
+		powerupManager.addPowerup(map.getCoord(58, 16));
+		powerupManager.addPowerup(map.getCoord(59, 15));
 
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 10; i++) {
 			Enemy enemy = new Enemy(map.getCoord(56, 39));
 			enemy.setMap(map);
 			enemyManager.addEnemy(enemy);
 		}
+		
+		for (int i = 0; i < 10; i++) {
+			Enemy enemy = new Enemy(map.getCoord(37, 28));
+			enemy.setMap(map);
+			enemyManager.addEnemy(enemy);
+		}
+		
+		for (int i = 0; i < 10; i++) {
+			Enemy enemy = new Enemy(map.getCoord(36, 65));
+			enemy.setMap(map);
+			enemyManager.addEnemy(enemy);
+		}
+		
+		for (int i = 0; i < 10; i++) {
+			Enemy enemy = new Enemy(map.getCoord(54, 66));
+			enemy.setMap(map);
+			enemyManager.addEnemy(enemy);
+		}
+		
+		for (int i = 0; i < 10; i++) {
+			Enemy enemy = new Enemy(map.getCoord(62, 31));
+			enemy.setMap(map);
+			enemyManager.addEnemy(enemy);
+		}
+		
+		for (int i = 0; i < 10; i++) {
+			Enemy enemy = new Enemy(map.getCoord(62, 19));
+			enemy.setMap(map);
+			enemyManager.addEnemy(enemy);
+		}
+		
+		for (int i = 0; i < 10; i++) {
+			Enemy enemy = new Enemy(map.getCoord(54, 28));
+			enemy.setMap(map);
+			enemyManager.addEnemy(enemy);
+		}
+		
+		for (int i = 0; i < 10; i++) {
+			Enemy enemy = new Enemy(map.getCoord(57, 22));
+			enemy.setMap(map);
+			enemyManager.addEnemy(enemy);
+		}
+		
 
 		remoteSlaves = new ArrayList<RemotePlayer>();
 		pendingSlaves = new ArrayList<RemotePlayer>();
@@ -204,6 +254,8 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 				}
 			}
 		}*/
+		powerupManager.update(deltaTime);
+		powerupManager.collision(playerManager.getPlayers());
 
 		effectManager.update(deltaTime);
 
@@ -218,10 +270,11 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		// render players & dynamic entities 
 		SpriteBatch batch = map.renderer.getSpriteBatch();
 		batch.begin();
+		powerupManager.render(batch);
 		playerManager.render(batch);
 		enemyManager.render(batch);
-		bulletManager.render(batch);
-		effectManager.render(batch);
+		bulletManager.render(batch);		
+		effectManager.render(batch);		
 
 		batch.end();
 

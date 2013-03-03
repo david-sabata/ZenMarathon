@@ -19,14 +19,18 @@ public class Enemy extends Mob {
 		HEIGHT = 1 / 32f * (effect.height - 15);
 
 		effect.update(0, true); // 0 = Direction.S
-
-		MAX_VELOCITY = 8f;
+		
+		//timedMove(new Vector2(- 0.2f, 0.2f), 1f);
+		timedMove(new Vector2((random.nextFloat() - 0.5f), (random.nextFloat() - 0.5f)), random.nextFloat()*4f, random.nextFloat()*4f);
+		factor = 0.2f;
 	}
 
 	public void update(float deltaTime) {
 
-		move((new Vector2(random.nextFloat() - 0.5f, random.nextFloat() - 0.5f)));
-
+		if (remainingPauseTime <= 0)
+			timedMove(new Vector2((random.nextFloat() - 0.5f), (random.nextFloat() - 0.5f)), random.nextFloat()*4f, random.nextFloat()*4f);
+			
+				
 		super.update(deltaTime);
 	}
 }
