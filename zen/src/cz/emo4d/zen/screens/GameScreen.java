@@ -17,7 +17,11 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import cz.emo4d.zen.Zen;
+
+import cz.emo4d.zen.gameplay.Boss;
+
 import cz.emo4d.zen.Zen.BossPerson;
+
 import cz.emo4d.zen.gameplay.BulletManager;
 import cz.emo4d.zen.gameplay.EffectManager;
 import cz.emo4d.zen.gameplay.Enemy;
@@ -90,12 +94,16 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 		effectManager = new EffectManager();
 		bulletManager = new BulletManager(map, new Texture(Gdx.files.internal("data/bullet.png")), effectManager);
 		enemyManager = new EnemyManager();
-		powerupManager = new PowerupManager(effectManager);
+		powerupManager = new PowerupManager(effectManager, this);
 
 		powerupManager.addPowerup(map.getCoord(57, 15));
 		powerupManager.addPowerup(map.getCoord(58, 16));
 		powerupManager.addPowerup(map.getCoord(59, 15));
 
+		Boss boss = new Boss(map.getCoord(56, 39),playerManager.getMainPlayer(), bulletManager);
+		boss.setMap(map);
+		enemyManager.addEnemy(boss);
+		
 		for (int i = 0; i < 10; i++) {
 			Enemy enemy = new Enemy(map.getCoord(56, 39));
 			enemy.setMap(map);
@@ -405,7 +413,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 	public void show() {
 		super.show();
 
-		showDialog(Zen.currentBoss, "YOU SHALL\nNOT PASS !!!", 10);
+		//		showDialog(Zen.currentBoss, "YOU SHALL\nNOT PASS !!!", 10);
 
 		Gdx.input.setInputProcessor(inputMpx);
 	}

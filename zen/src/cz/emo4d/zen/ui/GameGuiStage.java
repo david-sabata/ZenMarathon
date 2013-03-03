@@ -101,8 +101,6 @@ public class GameGuiStage extends BaseStage {
 
 		SequenceAction action = new SequenceAction();
 		action.addAction(Actions.delay(time));
-		action.addAction(Actions.fadeOut(1));
-		action.addAction(Actions.removeActor());
 		action.addAction(new RunnableAction() {
 			@Override
 			public void run() {
@@ -129,6 +127,9 @@ public class GameGuiStage extends BaseStage {
 				break;
 			case KRENA:
 				file = "boss-krena";
+				break;
+			case ZDENEK:
+				file = "boss-zdenek";
 				break;
 		}
 

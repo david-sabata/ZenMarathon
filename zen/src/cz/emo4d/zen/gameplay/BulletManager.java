@@ -34,6 +34,14 @@ public class BulletManager {
 	public void setMap(Map map) {
 		this.map = map;
 	}
+	
+	public void shoot(Vector2 origin, Direction dir, Boss boss) {
+		
+		Bullet bullet = new Bullet(tex);
+		bullet.setMap(map);
+		bullet.shoot(origin, dir, boss.getDamage(), boss);
+		activeBullets.add(bullet);
+	}
 
 	public void shoot(Vector2 origin, Direction dir, Player player) {
 		if (!player.alive)
