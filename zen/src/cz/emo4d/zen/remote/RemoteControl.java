@@ -33,6 +33,9 @@ public class RemoteControl {
 	MessageGetter mg;
 	AutoDiscoveryAsync ada;
 	
+	DatagramSocket udpSocket = null;
+	ServerSocket server = null;
+	
 
 	private DeviceEventHandler callback = null;
 	//private PrintStream output;
@@ -66,6 +69,14 @@ public class RemoteControl {
 		ada.stop();
 		rca.stop();
 		mg.stop();
+		
+		if (udpSocket != null) udpSocket.close();
+		if (server != null)
+			try {
+				server.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		
 	}
 
@@ -108,15 +119,15 @@ public class RemoteControl {
 	class AutoDiscoveryAsync extends Thread {
 		@Override
 		public void run() {
-			while (true) {
-				try {
-					DatagramSocket socket = new DatagramSocket(discoveryPort);
+			try {
+				while (true) {
+					udpSocket = new DatagramSocket(discoveryPort);
 					// socket.setBroadcast(true);
 
 					byte[] buf = new byte[1024];
 					DatagramPacket packet = new DatagramPacket(buf, buf.length);
 					Gdx.app.log("", "Discovery waiting");
-					socket.receive(packet);
+					udpSocket.receive(packet);
 
 					InetAddress clientAddr = packet.getAddress();
 
@@ -125,7 +136,7 @@ public class RemoteControl {
 
 					Gdx.app.log("Discovery", clientAddr.getHostAddress());
 
-					socket.close();
+					udpSocket.close();
 					
 					Thread.sleep(300);
 
@@ -138,11 +149,13 @@ public class RemoteControl {
 					socket2.close();
 
 					Gdx.app.log("", "Discovery sent");
+				}
 
 				} catch (Exception e) {
 					e.printStackTrace();
+					
 				}
-			}
+			
 
 		}
 	}
@@ -151,7 +164,7 @@ public class RemoteControl {
 
 		@Override
 		public void run() {
-			ServerSocket server = null;
+			
 
 			try {
 				server = new ServerSocket();
