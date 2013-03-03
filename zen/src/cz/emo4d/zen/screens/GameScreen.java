@@ -319,7 +319,7 @@ public class GameScreen extends BaseScreen implements DeviceEventHandler {
 				Map.Position targetPos = map.inPoints.get(newPos.identifier);
 				playerManager.teleportAllPlayers(map, targetPos.coordinates);
 
-				if (!bossSpawned) {
+				if (!bossSpawned && newPos.mapName.equals("arena1")) {
 					Boss boss = new Boss(map.getCoord(16, 6), playerManager.getMainPlayer(), bulletManager);
 					boss.setMap(map);
 					enemyManager.addEnemy(boss);
