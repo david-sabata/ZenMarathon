@@ -142,8 +142,18 @@ public class Player extends Mob {
 	}
 
 	public boolean takePowerup(Powerup powerup) {
+		if (health >= getMaxHealth()) {
+			return false;
+		}
+		else {
+			health += (int)((powerup.getBonus() / 100f) * getMaxHealth());
+			if (health > getMaxHealth())
+				health = getMaxHealth();
+			
+			updateHearts();
 		
-		return true;
+			return true;
+		}
 	}
 
 	public void addZen(int diff) {
