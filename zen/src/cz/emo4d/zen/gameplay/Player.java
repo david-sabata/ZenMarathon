@@ -16,8 +16,8 @@ import cz.emo4d.zen.ui.AnimatedImage;
 
 public class Player extends Mob {
 
-	private static Color[] shadowColors = { Color.WHITE, /*Color.BLACK,*/Color.RED, Color.GREEN, Color.BLUE, Color.GRAY, Color.PINK, Color.ORANGE,
-			Color.YELLOW, Color.MAGENTA, Color.CYAN };
+	private static Color[] shadowColors = { Color.BLACK, Color.RED, Color.GREEN, Color.BLUE, Color.GRAY, Color.WHITE, Color.PINK, Color.ORANGE, Color.YELLOW,
+			Color.MAGENTA, Color.CYAN };
 
 	private final static Texture shadow = new Texture(Gdx.files.internal("data/shadow.png"));
 	public final Color shadowColor;

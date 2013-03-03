@@ -55,6 +55,12 @@ public class MainMenuStage extends BaseStage {
 		TextButton btnTop = new TextButton(" HIGH SCORES ", skin);
 
 		TextButton btnCredits = new TextButton("CREDITS", skin);
+		btnCredits.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				showCredits();
+			}
+		});
 
 		TextButton btnExit = new TextButton("EXIT", skin);
 		btnExit.addListener(new ClickListener() {
@@ -195,6 +201,39 @@ public class MainMenuStage extends BaseStage {
 	}
 
 
+
+
+	public void showCredits() {
+		final Dialog dlg = new Dialog("", skin);
+		dlg.pad(50);
+		dlg.row();
+
+		dlg.add(new Label("ZEN @ FIT", skin)).center().spaceBottom(40);
+
+		dlg.row();
+		dlg.add(new Label("TOMAS HOLOMEK", skin)).center();
+		dlg.row();
+		dlg.add(new Label("TOMAS KIMER", skin)).center();
+		dlg.row();
+		dlg.add(new Label("VOJTECH SMEJKAL", skin)).center();
+		dlg.row();
+		dlg.add(new Label("DAVID SABATA", skin)).center();
+
+		dlg.row();
+		dlg.add(new Label("March 2013", skin)).spaceTop(30).center();
+
+		dlg.row();
+		TextButton btn = new TextButton("OK", skin);
+		dlg.add(btn).spaceTop(30).center();
+		btn.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				dlg.hide();
+			}
+		});
+
+		dlg.show(this);
+	}
 
 
 
