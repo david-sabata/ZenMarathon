@@ -1,11 +1,11 @@
 ZenMarathon
 ===========
 
-48h marathon project
-
-top-down pixel-graphics game about making your way through a university
-
-built using awesome forces of Libgdx
+- 48h marathon project
+- top-down pixel-graphics game about making your way through a university
+- fight your personal boss! (requires FIT BUT credentials; uses random boss otherwise)
+- multiplayer using Android phones as controllers
+- built using awesome forces of Libgdx
 
 
 Authors
